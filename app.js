@@ -6,6 +6,7 @@ var mongoose = require('mongoose')
 var session = require('client-sessions')
 var moment = require('moment')
 var config = require('./config.js').config
+moment.locale('zh-cn')
 
 app.use(bodyParser.urlencoded({extended: true}))
 //app.use(bodyParser.json())

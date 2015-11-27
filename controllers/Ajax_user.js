@@ -7,11 +7,11 @@ var _ = require('lodash')
 
 exports.register = function (req, res, next) {
     var error
-    var username = Utils.trim(req.body.username)
-    var name = Utils.trim(req.body.name)
-    var email = Utils.trim(req.body.email)
-    var password = Utils.trim(req.body.password)
-    var passwordcf = Utils.trim(req.body.passwordcf)
+    var username = validator.trim(req.body.username).toLowerCase()
+    var name = validator.trim(req.body.name)
+    var email = validator.trim(req.body.email).toLowerCase()
+    var password = validator.trim(req.body.password)
+    var passwordcf = validator.trim(req.body.passwordcf)
     var gender = req.body.gender
 
     if(!validator.isUserName(username)){
@@ -35,24 +35,22 @@ exports.register = function (req, res, next) {
                     msg : '该用户名已存在'
                 })
             }else{
-                var slat = Utils.gen_salt()
-                var newPassword = Utils.encrypt(password, slat)
-                req.body.password = newPassword
-                req.body.salt = slat
-                if(!name) req.body.name = username
-                var user = new User(req.body)
-                user.save(function(err, user){
-                    if(err) return console.log(err)//todo : 优化处理 err 方式
-
-                    req.session.user = {
-                        id : user._id,
-                        username : user.username,
-                        name : user.name,
-                        email : user.email
-                    }
-                    res.json({
-                        status : 1,
-                        msg : '注册成功'
+                Utils.pwHash(password, function(err, passwordHash){
+                    req.body.password = passwordHash
+                    if(!name) req.body.name = username
+                    var user = new User(req.body)
+                    user.save(function(err, user){
+                        if(err) return console.log(err)//todo : 优化处理 err 方式
+                        req.session.user = {
+                            id : user._id,
+                            username : user.username,
+                            name : user.name,
+                            email : user.email
+                        }
+                        res.json({
+                            status : 1,
+                            msg : '注册成功'
+                        })
                     })
                 })
             }
@@ -62,8 +60,8 @@ exports.register = function (req, res, next) {
 
 exports.login = function (req, res, next) {
     var error
-    var username = Utils.trim(req.body.username)
-    var password = Utils.trim(req.body.password)
+    var username = validator.trim(req.body.username).toLowerCase()
+    var password = validator.trim(req.body.password)
 
     if(!validator.isUserName(username)){
         error = "用户名5-12个英文字符"
@@ -84,23 +82,25 @@ exports.login = function (req, res, next) {
                     msg : '该用户名不存在'
                 })
             }else{
-                if(username === user.username && user.password === Utils.encrypt(password, user.salt)){
-                    req.session.user = {
-                        id : user._id,
-                        username : user.username,
-                        name : user.name,
-                        email : user.email
+                Utils.pwVertify(password, user.password, function(err, bool){
+                    if(!bool){
+                        res.json({
+                            status : 0,
+                            msg : '用户名或密码错误'
+                        })
+                    }else{
+                        req.session.user = {
+                            id : user._id,
+                            username : user.username,
+                            name : user.name,
+                            email : user.email
+                        }
+                        res.json({
+                            status : 1,
+                            msg : '登录成功'
+                        })
                     }
-                    res.json({
-                        status : 1,
-                        msg : '登录成功'
-                    })
-                }else{
-                    res.json({
-                        status : 0,
-                        msg : '用户名或密码错误'
-                    })
-                }
+                })
             }
         })
     }
@@ -110,13 +110,14 @@ exports.setting = function(req, res){
     var error
     var id = req.session.user.id
     var username = req.body.username
-    var name = Utils.trim(req.body.name)
-    var email = Utils.trim(req.body.email)
-    //var gender = req.body.gender
+    var newInfo = {
+        name : validator.trim(req.body.name),
+        email : validator.trim(req.body.email).toLowerCase(),
+        gender : req.body.gender
+    }
 
     if(id){
-
-        if(!validator.isEmail(email)) error = "请填写正确的邮箱地址"
+        if(!validator.isEmail(newInfo.email)) error = "请填写正确的邮箱地址"
 
         if(error){
             res.json({
@@ -124,12 +125,11 @@ exports.setting = function(req, res){
                 msg : error
             })
         }else {
-            if(!name) req.body.name = username
+            if(!newInfo.name) req.body.name = username
 
             User.findById(id, function (err, user) {
-                if (err) return console.log(err)//todo : 优化处理 err 方式
-
-                _user = _.assign(user, req.body)
+                if (err) return console.log(err) //todo : 优化处理 err 方式
+                _user = _.assign(user, newInfo)
                 _user.save(function (err, user) {
                     if (err) {
                         res.json({
@@ -159,9 +159,9 @@ exports.setting = function(req, res){
 exports.password = function(req, res){
     var error
     var id = req.session.user.id
-    var password = Utils.trim(req.body.password)
-    var newpassword = Utils.trim(req.body.newpassword)
-    var newpasswordcf = Utils.trim(req.body.newpasswordcf)
+    var password = validator.trim(req.body.password)
+    var newpassword = validator.trim(req.body.newpassword)
+    var newpasswordcf = validator.trim(req.body.newpasswordcf)
 
     if(id){
         if(!password || !newpassword || !newpasswordcf) {
@@ -169,7 +169,6 @@ exports.password = function(req, res){
         }else if(newpassword !== newpasswordcf){
             error = '新密码与确认密码不一致'
         }
-
         if(error){
             res.json({
                 status : 0,
@@ -177,29 +176,35 @@ exports.password = function(req, res){
             })
         }else{
             User.findById(id, function (err, user) {
-                if (err) return console.log(err)//todo : 优化处理 err 方式
+                if (err) return console.log(err) //todo : 优化处理 err 方式
 
-                if(Utils.encrypt(password, user.salt) === user.password){
-                    user.password = Utils.encrypt(newpassword, user.salt)
-                    user.save(function(err){
-                        if(err){
-                            res.json({
-                                status: 0,
-                                msg: err
+                Utils.pwVertify(password, user.password, function(err, bool){
+
+                    if(!bool){
+                        res.json({
+                            status : 0,
+                            msg : '原始密码错误'
+                        })
+                    }else{
+                        Utils.pwHash(newpassword, function(err, passwordHash){
+                            user.password = passwordHash
+                            user.save(function(err){
+                                if(err){
+                                    res.json({
+                                        status: 0,
+                                        msg: err
+                                    })
+                                }else{
+                                    res.json({
+                                        status: 1,
+                                        msg: '密码修改成功'
+                                    })
+                                }
                             })
-                        }else{
-                            res.json({
-                                status: 1,
-                                msg: '密码修改成功'
-                            })
-                        }
-                    })
-                }else{
-                    res.json({
-                        status : 0,
-                        msg : '原始密码错误'
-                    })
-                }
+                        })
+                    }
+
+                })
             })
         }
     }else{

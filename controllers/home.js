@@ -7,6 +7,6 @@ exports.index = function (req, res, next) {
             session : req.session.user,
             threads : threads
         })
-        console.log(threads)
+        //console.log(threads)
     })
 }

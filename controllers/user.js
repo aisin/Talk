@@ -68,30 +68,6 @@ exports.password = function (req, res) {
 }
 
 
-exports.doSettingPassword = function (req, res, next) {
-    var id = req.session.user.id
-    var password = Utils.trim(req.body.user.password)
-    var newpassword = Utils.trim(req.body.user.newpassword)
-    var newpasswordcf = Utils.trim(req.body.user.newpasswordcf)
-
-    if(id){
-        //User.findOne({_id : id}, function(err, user){
-        //    if(err){
-        //        res.render('user/setting', {
-        //            title : '设置页面',
-        //            session : req.session.user,
-        //            user : user,
-        //            err : err
-        //        })
-        //    }else{
-        //
-        //    }
-        //
-        //
-        //})
-    }
-}
-
 exports.ajax = function(req, res){
     var name = req.body.n
     var pass = req.body.p
