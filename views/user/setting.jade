@@ -1,0 +1,79 @@
+extends ../common/layout
+block prepend style
+    link(href="/css/weui.css", rel="stylesheet")
+    link(href="/essage/essage.css", rel="stylesheet")
+block header
+    include ../common/header
+block append main
+    .main
+        .wrap
+            //.hd
+                .page_title Talk
+                .page_desc Register for Talk
+            form#settingForm.bd
+                .weui_cells_title 修改资料
+                .weui_cells.weui_cells_form
+                    .weui_cell
+                        .weui_cell_hd
+                            label.weui_label 用户名
+                        .weui_cell_bd.weui_cell_primary
+                            input.weui_input(type="text", name="username", value="#{user.username}", disabled)
+                    .weui_cell
+                        .weui_cell_hd
+                            label.weui_label 昵称
+                        .weui_cell_bd.weui_cell_primary
+                            input.weui_input(type="text", name="name", value="#{user.name}")
+                    .weui_cell
+                        .weui_cell_hd
+                            label.weui_label 邮箱
+                        .weui_cell_bd.weui_cell_primary
+                            input.weui_input(type="text", name="email", value="#{user.email}")
+                .weui_cells_title 性别
+                .weui_cells.weui_cells_radio
+                    label.weui_cell.weui_check_label(for="male")
+                        .weui_cell_bd.weui_cell_primary
+                            p 男
+                        .weui_cell_ft
+                            if user.gender == 'male'
+                                input.weui_check(type="radio", name="gender", id="male", value="male", checked)
+                            else
+                                input.weui_check(type="radio", name="gender", id="male", value="male")
+                            span.weui_icon_checked
+                    label.weui_cell.weui_check_label(for="female")
+                        .weui_cell_bd.weui_cell_primary
+                            p 女
+                        .weui_cell_ft
+                            if user.gender == 'male'
+                                input.weui_check(type="radio", name="gender", id="female", value="female")
+                            else
+                                input.weui_check(type="radio", name="gender", id="female", value="female", checked)
+                            span.weui_icon_checked
+                .weui_btn_area
+                    input#submit.weui_btn.weui_btn_primary(type="button", value="保存设置")
+
+block footer
+    include ../common/footer
+
+block append script
+    script(type="text/javascript", src="/essage/essage.js")
+    script(type="text/javascript").
+        jQuery(function ($) {
+            $('#submit').click(function(){
+                var formVal = $('#settingForm').serialize();
+                $.post('/setting', formVal, function(data){
+                    if(data.status == 1){
+                        Essage.show({
+                            message: data.msg,
+                            status: 'success'
+                        }, 2000);
+                    }else{
+                        Essage.show({
+                            message: data.msg,
+                            status: 'error'
+                        }, 2000);
+                    }
+                },'json');
+            });
+
+
+        });

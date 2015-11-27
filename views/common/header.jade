@@ -1,0 +1,25 @@
+header#Header.clearfix
+    .container
+        .navbar.fl
+            a(href="/")
+                span.text-blue Talk
+                //small.hide-narrow  挖掘最优质的互联网技术
+        ul.actions.fr
+            if session
+                li.highlight
+                    a.text-blue(href="/thread/new") 创建主题
+                li
+                    a(href="/") 首页
+                li
+                    a(href="/setting") 个人设置
+                li
+                    a(href="/password") 修改密码
+                li
+                    a(href="/logout") 登出
+            else
+                li
+                    a(href="/") 首页
+                li
+                    a(href="/login") 登录
+                li
+                    a(href="/register") 注册

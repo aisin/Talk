@@ -1,0 +1,49 @@
+extends common/layout
+
+block header
+    include common/header
+
+block append main
+    #Wrap
+        .container
+            #Main
+                .box
+                    #Tab.inner
+                        a(href="#") 技术
+                        a(href="#") 创意
+                        a(href="#") 好玩
+                        a(href="#") Apple
+                        a(href="#") 酷工作
+                        a(href="#") 城市
+                        a(href="#") 问与答
+                    each thread in threads
+                        .cell.item
+                            .avatar
+                                a(href="#")
+                                    img(src="//imgs.duwu.me/duwu/avatar/000/00/12/75.jpg")
+                            .all
+                                h2.title
+                                    a(href="/thread/#{thread._id}") #{thread.title}
+                                .meta.small.fade
+                                    a.node(href="#") 技术帖
+                                    span &nbsp;•&nbsp;
+                                    strong
+                                        a(href="#") #{thread.author}
+                                    span &nbsp;•&nbsp;#{moment(thread.create_at).fromNow()}
+                            .reply
+                                a.replay_count(href="#") 18
+                    .inner
+                        a(href="#")
+                            span.chevron →&nbsp;
+                            | 更多新主题
+                .box
+                    .cell
+                        span.fade
+                            strong V2EX
+                            |&nbsp;/ 节点导航
+                        .fr
+                            a(href="#") 浏览全部节点
+
+
+block footer
+    include common/footer

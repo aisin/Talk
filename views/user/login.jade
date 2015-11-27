@@ -1,0 +1,49 @@
+extends ../common/layout
+
+block prepend style
+    link(href="/css/weui.css", rel="stylesheet")
+    link(href="/essage/essage.css", rel="stylesheet")
+
+block append main
+    .wrap
+        .hd
+            .page_title Talk
+            .page_desc Login for Talk
+        form.bd
+            .weui_cells.weui_cells_form
+                .weui_cell
+                    .weui_cell_hd
+                        label.weui_label 用户名
+                    .weui_cell_bd.weui_cell_primary
+                        input#username.weui_input(type="text", name="user[username]", value)
+                .weui_cell
+                    .weui_cell_hd
+                        label.weui_label 密码
+                    .weui_cell_bd.weui_cell_primary
+                        input#password.weui_input(type="password", name="user[password]", value)
+            .weui_btn_area
+                input#submit.weui_btn.weui_btn_primary(type="button", value="确定")
+
+block append script
+    script(type="text/javascript", src="/essage/essage.js")
+    script(type="text/javascript").
+        jQuery(function ($) {
+            $('#submit').click(function(){
+                var username = $('#username').val();
+                var password = $('#password').val();
+                $.post('/login', {username: username, password : password}, function(data){
+                    if(data.status == 1){
+                        Essage.show({
+                            message: data.msg,
+                            status: 'success',
+                            redirect : '/'
+                        }, 2000);
+                    }else{
+                        Essage.show({
+                            message: data.msg,
+                            status: 'error'
+                        }, 2000);
+                    }
+                },'json');
+            });
+        });
