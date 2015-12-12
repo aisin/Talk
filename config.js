@@ -1,7 +1,7 @@
 var config = {
-  "views" : "views",
+  "views" : "./application/views",
   "assets" : "assets",
-  "routes" : "./routes",
+  "routes" : "./application/routes",
 
   "view_engine" : "jade",
   "port" : 9900,

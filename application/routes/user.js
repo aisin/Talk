@@ -34,6 +34,6 @@ router.post('/password', Auth.userRequiredAjax, Ajax_user.password)
 
 //测试 Ajax
 
-router.post('/ajax', Auth.userRequiredAjax, user.ajax)
+//router.post('/ajax', Auth.userRequiredAjax, user.ajax)
 
 module.exports = router

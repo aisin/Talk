@@ -34,7 +34,7 @@ exports.profile = function(req, res){
 }
 
 exports.setting = function(req, res){
-    var id = req.session.user.id
+    var id = req.session.user._id
     User.findOne({_id : id}, function(err, user){
         if(!user){
             res.render('user/login', {
@@ -51,7 +51,7 @@ exports.setting = function(req, res){
 }
 
 exports.password = function (req, res) {
-    var id = req.session.user.id
+    var id = req.session.user._id
     User.findOne({_id : id}, function(err, user){
         if(!user){
             res.render('user/login', {
@@ -65,28 +65,4 @@ exports.password = function (req, res) {
             })
         }
     })
-}
-
-
-exports.ajax = function(req, res){
-    var name = req.body.n
-    var pass = req.body.p
-
-
-    console.log(req.body)
-
-    console.log(name)
-    console.log(pass)
-
-    if(name == pass){
-        res.json({
-            result : 1,
-            mag : '等于'
-        })
-    }else{
-        res.json({
-            result : 0,
-            mag : '不等于'
-        })
-    }
 }
