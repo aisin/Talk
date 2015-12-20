@@ -1,0 +1,39 @@
+extends common/layout
+
+block append main
+    .container
+        .row
+            .col-lg-12
+                form#adminLogin.bootstrap-admin-login-form(method="post", action="")
+                    h1 Login
+                    .form-group
+                        input.form-control(type="text", name="username", placeholder="E-mail")
+                    .form-group
+                        input.form-control(type="password", name="password", placeholder="Password")
+                    .form-group
+                        label
+                            input(type="checkbox", name="remember_me")
+                            | Remember me
+                    button#submit.btn.btn-lg.btn-primary(type="button") Submit
+
+block append script
+    script(type="text/javascript").
+        jQuery(function ($) {
+            $('#submit').click(function () {
+                var formVal = $('#adminLogin').serialize();
+                $.post('/admin/login', formVal, function (data) {
+                    if (data.status == 1) {
+                        Essage.show({
+                            message: data.msg,
+                            status: 'success',
+                            redirect: '/admin/dashboard'
+                        }, 2000);
+                    } else {
+                        Essage.show({
+                            message: data.msg,
+                            status: 'error'
+                        }, 2000);
+                    }
+                }, 'json');
+            });
+        });

@@ -8,7 +8,7 @@ var EventProxy = require('eventproxy')
 exports.register = function (req, res, next) {
     var data = {
         username : validator.trim(req.body.username).toLowerCase(),
-        name : validator.trim(req.body.name),
+        nickname : validator.trim(req.body.nickname),
         email : validator.trim(req.body.email).toLowerCase(),
         gender : req.body.gender
     }
@@ -36,7 +36,7 @@ exports.register = function (req, res, next) {
         }else{
             Utils.pwHash(password, ep.done(function(passwordHash){
                 data.password = passwordHash
-                if(!data.name) data.name = data.username
+                if(!data.nickname) data.nickname = data.username
                 var user = new User(data)
                 user.save(function(err, _user){
                     if(err) return next(err)
@@ -74,7 +74,7 @@ exports.login = function (req, res, next) {
                     ep.emit('errors', "用户名或密码错误")
                 }else{
                     req.session.user = user
-                    Utils.jsonMsg(res, 0, '登录成功')
+                    Utils.jsonMsg(res, 1, '登录成功')
                 }
             }))
         }
@@ -85,7 +85,7 @@ exports.setting = function(req, res, next){
     var id = req.session.user._id
     var username = req.body.username
     var data = {
-        name : validator.trim(req.body.name),
+        nickname : validator.trim(req.body.nickname),
         email : validator.trim(req.body.email).toLowerCase(),
         gender : req.body.gender
     }
@@ -99,7 +99,7 @@ exports.setting = function(req, res, next){
     if(id){
         if(!validator.isEmail(data.email)) return ep.emit('errors', "请填写正确的邮箱地址")
 
-        if(!data.name) data.name = username
+        if(!data.nickname) data.nickname = username
 
         User.findById(id, function (err, user) {
             if (err) return next(err)
@@ -115,7 +115,7 @@ exports.setting = function(req, res, next){
     }
 }
 
-exports.password = function(req, res){
+exports.password = function(req, res, next){
     var id = req.session.user._id
     var password = validator.trim(req.body.password)
     var newpassword = validator.trim(req.body.newpassword)

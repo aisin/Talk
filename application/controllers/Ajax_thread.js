@@ -1,4 +1,5 @@
 var Thread = require('../models/thread')
+var Utils = require('../libs/Utils')
 
 exports.new = function(req, res){
     var error
@@ -10,9 +11,6 @@ exports.new = function(req, res){
     thread.save(function(err, thread){
         if(err) return console.log(err)//todo : 优化处理 err 方式
 
-        res.json({
-            status : 1,
-            msg : '主题发布成功'
-        })
+        Utils.jsonMsg(res, 1, '主题发布成功')
     })
 }

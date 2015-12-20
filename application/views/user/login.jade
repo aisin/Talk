@@ -1,37 +1,58 @@
 extends ../common/layout
 
+block header
+    include ../common/header
+
 block prepend style
-    link(href="/css/weui.css", rel="stylesheet")
     link(href="/essage/essage.css", rel="stylesheet")
 
 block append main
-    .wrap
-        .hd
-            .page_title Talk
-            .page_desc Login for Talk
-        form.bd
-            .weui_cells.weui_cells_form
-                .weui_cell
-                    .weui_cell_hd
-                        label.weui_label 用户名
-                    .weui_cell_bd.weui_cell_primary
-                        input#username.weui_input(type="text", name="user[username]", value)
-                .weui_cell
-                    .weui_cell_hd
-                        label.weui_label 密码
-                    .weui_cell_bd.weui_cell_primary
-                        input#password.weui_input(type="password", name="user[password]", value)
-            .weui_btn_area
-                input#submit.weui_btn.weui_btn_primary(type="button", value="确定")
+    #Wrap
+        .container
+            #Main
+                .box
+                    .crumbs
+                        a(href="/") V2EX
+                        span.chevron &nbsp;›&nbsp;
+                        | 登录
+                    .cell
+                        form#loginForm
+                            .form-unit
+                                span.key 用户名
+                                span.val
+                                    input.tp(type="text", name="username")
+                            .form-unit
+                                span.key 密码
+                                span.val
+                                    input.tp(type="password", name="password")
+                            .form-submit
+                                input#submit.super.normal.button(type="button", value="登录")
+                                | &nbsp;&nbsp;
+                                a(href="") 忘记密码？
+                    .inner
+                        a(href="#")
+                            span.chevron →&nbsp;
+                            | 更多新主题
+                .box
+                    .cell
+                        span.fade
+                            strong V2EX
+                            | &nbsp;/ 节点导航
+                        .fr
+                            a(href="#") 浏览全部节点
+
+            include ../common/sidebar
+
+block footer
+    include ../common/footer
 
 block append script
     script(type="text/javascript", src="/essage/essage.js")
     script(type="text/javascript").
         jQuery(function ($) {
             $('#submit').click(function(){
-                var username = $('#username').val();
-                var password = $('#password').val();
-                $.post('/login', {username: username, password : password}, function(data){
+                var formVal = $('#loginForm').serialize();
+                $.post('/login', formVal, function(data){
                     if(data.status == 1){
                         Essage.show({
                             message: data.msg,

@@ -1,6 +1,5 @@
 var mongoose = require('mongoose')
 var ObjectId  = mongoose.Schema.ObjectId
-var BaseModel = require('./base_model')
 
 var threadSchema = new mongoose.Schema({
 
@@ -22,8 +21,6 @@ var threadSchema = new mongoose.Schema({
     }
 
 })
-
-threadSchema.plugin(BaseModel)
 
 var Thread = mongoose.model('Thread', threadSchema)
 

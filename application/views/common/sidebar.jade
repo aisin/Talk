@@ -1,0 +1,22 @@
+#Sidebar
+    .box
+        if session
+            .cell
+                .avatar
+                    a(href="#")
+                        img(src="//imgs.duwu.me/duwu/avatar/000/00/12/75.jpg")
+                .all
+                    h2.title
+                        a(href="#") #{session.nickname}
+                    .meta.small.fade
+                        | 前端开发工程师
+        else
+            .cell.lh
+                strong V2ex = way to explore
+                div.fade V2EX 是一个关于分享和探索的地方
+            .inner
+                .ladder.text-center
+                    a.super.normal.button.inline-block(href="/register") 现在注册
+                .ladder.text-center
+                    | 已注册用户请&nbsp;
+                    a(href="/login") 登录

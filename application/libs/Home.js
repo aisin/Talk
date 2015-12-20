@@ -29,7 +29,7 @@ exports.getThreads = function(callback){
                 //console.log(author + ' is author...')
                 if(author){
                     //console.log(thread + '............BEFORE')
-                    thread.author = author.name
+                    thread.author = author.nickname
                     //console.log(Thread.create_at_ago().toString())
                     //thread.create_at = Thread.create_at_ago(true)
                     //console.log(thread.author)

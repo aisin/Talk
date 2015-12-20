@@ -2,40 +2,32 @@ extends ../common/layout
 
 block prepend style
     link(href="/simditor/styles/simditor.css", rel="stylesheet")
-    link(href="/css/weui.css", rel="stylesheet")
     link(href="/essage/essage.css", rel="stylesheet")
 
 block header
     include ../common/header
 block append main
-    #banner.banner.main
+    #Wrap
         .container
-            a(href="/")
-                img(src="http://gold.xitu.io/images/banners/app_2.0.png")
-    .main
-        .navigation
-            .container
-                a.now(href="#") 热门
-                a(href="#") 最新
-                a(href="#") 精华
-    .wrap
-        //.hd
-            .page_title Talk
-            .page_desc Login for Talk
-        form#newThreadForm.bd
-            .weui_cells_title 发布主题
-            .weui_cells.weui_cells_form
-                .weui_cell
-                    .weui_cell_hd
-                        label.weui_label 主题标题
-                    .weui_cell_bd.weui_cell_primary
-                        input#title.weui_input(type="text", name="title", value)
-                .weui_cell
-                    .weui_cell_bd.weui_cell_primary
-                        textarea#editor(autofocus)
-                    input#content(type="hidden", name="content")
-            .weui_btn_area
-                input#submit.weui_btn.weui_btn_primary(type="button" value="发布主题")
+            #Main
+                .box
+                    .crumbs
+                        a(href="/") V2EX
+                        span.chevron &nbsp;›&nbsp;
+                        | 创作新主题
+                    form#newThreadForm
+                        .cell 主题标题
+                            #titleLength.fr.fade 120
+                        .cell.full
+                            input#title(type="text", name="title", autofocus, placeholder="请输入主题标题，如果标题能够表达完整内容，则正文可以为空")
+                        .cell 正文
+                            #contentLength.fr.fade 2000
+                        .cell.full
+                            textarea#editor
+                        .cell
+                            input#submit.super.normal.button(type="button", value="发布主题")
+
+            include ../common/sidebar
 
 block footer
     include ../common/footer
@@ -47,13 +39,14 @@ block append script
     script(type="text/javascript", src="/simditor/scripts/simditor.js")
     script(type="text/javascript", src="/essage/essage.js")
     script(type="text/javascript").
-        var editor = new Simditor({
-            textarea: $('#editor'),
-            placeholder: 'hehehe this is root',
-            defaultImage: 'images/image.png'
-        });
-
         $(function(){
+            //editor
+            var editor = new Simditor({
+                textarea: $('#editor'),
+                placeholder: '文明上网，文明发言',
+                defaultImage: 'images/image.png'
+            });
+
             $('#submit').click(function(){
                 var title = $('#title').val();
                 var content = editor.getValue();

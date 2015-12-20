@@ -1,0 +1,25 @@
+doctype html
+html
+    head
+        meta(http-equiv="Content-Type", content="text/html; charset=UTF-8")
+        meta(name="viewport", content="width=device-width,initial-scale=1,user-scalable=0")
+        if title
+            title #{title} - Talk Admin
+        else
+            title Talk Admin...
+        block style
+            link(href="/bootstrap/css/bootstrap.css", rel="stylesheet")
+            link(href="/admin/css/bootstrap-admin-theme.css", rel="stylesheet")
+            link(href="/essage/essage.css", rel="stylesheet")
+    body
+        block header
+
+        block main
+
+        block footer
+
+        block script
+            script(type="text/javascript" src="/js/jquery.js")
+            script(type="text/javascript" src="/bootstrap/js/bootstrap.js")
+            script(type="text/javascript", src="/essage/essage.js")
+            script(type="text/javascript", src="http://github.meritoo.pl/Bootstrap-3-Admin-Theme/js/twitter-bootstrap-hover-dropdown.min.js")
