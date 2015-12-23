@@ -1,53 +1,48 @@
 extends ../common/layout
-block header
-    include ../common/header
+
 block append main
-    .container
-        .row
-            include ../common/navigation
-            .col-md-10
-                .row
-                    .col-lg-12
-                        .page-header
-                            h3 分类管理
-                .row
-                    .col-lg-12
-                        .panel.panel-default.bootstrap-admin-no-table-panel
-                            .panel-heading
-                                .text-muted.bootstrap-admin-box-title Form Example
-                            .bootstrap-admin-no-table-panel-content.bootstrap-admin-panel-content.collapse.in
-                                form.form-horizontal
-                                    fieldset
-                                        //legend Form Horizontal
-                                        .form-group
-                                            label.col-lg-2.control-label(for="focusedInput") Focused input
-                                            .col-lg-10
-                                                input.form-control(type="text", placeholder="type in")
-                                        .form-group
-                                            label.col-lg-2.control-label(for="typeahead") Text input
-                                            .col-lg-10
-                                                input#typeahead.form-control.col-md-6(type="text", autocomplete="off", data-provide="typeahead", data-items="4", data-source="['Alabama','Alaska','Arizona','Arkansas','California','Colorado','Connecticut','Delaware','Florida','Georgia','Hawaii','Idaho','Illinois','Indiana','Iowa','Kansas','Kentucky','Louisiana','Maine','Maryland','Massachusetts','Michigan','Minnesota','Mississippi','Missouri','Montana','Nebraska','Nevada','New Hampshire','New Jersey','New Mexico','New York','North Dakota','North Carolina','Ohio','Oklahoma','Oregon','Pennsylvania','Rhode Island','South Carolina','South Dakota','Tennessee','Texas','Utah','Vermont','Virginia','Washington','West Virginia','Wisconsin','Wyoming']")
-                                                p.help-block Start typing to activate auto complete!
-                                        .form-group
-                                            label.col-lg-2.control-label(for="optionsCheckbox") Checkbox
-                                            .col-lg-10
-                                                label.uniform
-                                                    input#optionsCheckbox.uniform_on(type="checkbox", value="option1")
-                                                    | Option one is this and that&#8212;be sure
-                                        .form-group
-                                            label.col-lg-2.control-label(for="selectError") Select with success
-                                            .col-lg-10
-                                                select#selectError.form-control
-                                                    option 1
-                                                    option 2
-                                                    option 3
-                                                    option 4
-                                                    option 5
-                                                span.help-block Woohoo!
-                                        .form-group
-                                            label.col-lg-2.control-label(for="textarea-wysihtml5") Textarea WYSIWYG
-                                            .col-lg-10
-                                                textarea#textarea-wysihtml5.form-control.textarea-wysihtml5(placeholder="Enter text...", style="width: 100%; height: 200px")
-                                        button.btn.btn-primary(type="submit") Save changes
-                                        button.btn.btn-default(type="reset") Cancel
-    include ../common/footer
+    .content-wrapper
+        // Content Header (Page header)
+        section.content-header
+            h1
+                | General Form Elements
+                small Preview
+            ol.breadcrumb
+                li
+                    a(href="#")
+                        i.fa.fa-dashboard
+                        | Home
+                li
+                    a(href="#") Forms
+                li.active General Elements
+        // Main content
+        section.content
+            .row
+                // right column
+                .col-md-6
+                    // Horizontal Form
+                    .box.box-info
+                        .box-header.with-border
+                            h3.box-title Horizontal Form
+                        // /.box-header
+                        // form start
+                        form.form-horizontal
+                            .box-body
+                                .form-group
+                                    label.col-sm-2.control-label(for="inputEmail3") Email
+                                    .col-sm-10
+                                        input#inputEmail3.form-control(type="email", placeholder="Email")
+                                .form-group
+                                    label.col-sm-2.control-label(for="inputPassword3") Password
+                                    .col-sm-10
+                                        input#inputPassword3.form-control(type="password", placeholder="Password")
+                                .form-group
+                                    .col-sm-offset-2.col-sm-10
+                                        .checkbox
+                                            label
+                                                input(type="checkbox")
+                                                | Remember me
+                            // /.box-body
+                            .box-footer
+                                button.btn.btn-default(type="submit") Cancel
+                                button.btn.btn-info.pull-right(type="submit") Sign in

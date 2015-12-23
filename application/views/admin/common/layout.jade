@@ -1,25 +1,35 @@
 doctype html
 html
     head
-        meta(http-equiv="Content-Type", content="text/html; charset=UTF-8")
-        meta(name="viewport", content="width=device-width,initial-scale=1,user-scalable=0")
+        meta(charset="utf-8")
+        meta(http-equiv="X-UA-Compatible", content="IE=edge")
+        meta(name="viewport", content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no")
         if title
             title #{title} - Talk Admin
         else
             title Talk Admin...
         block style
             link(href="/bootstrap/css/bootstrap.css", rel="stylesheet")
-            link(href="/admin/css/bootstrap-admin-theme.css", rel="stylesheet")
+            link(href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css", rel="stylesheet")
+            link(href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css", rel="stylesheet")
+            link(href="/admin/dist/css/AdminLTE.css", rel="stylesheet")
+            link(href="/admin/dist/css/skins/_all-skins.min.css", rel="stylesheet")
             link(href="/essage/essage.css", rel="stylesheet")
-    body
-        block header
+    body.hold-transition.skin-blue.sidebar-mini
+        .wrapper
+            block header
+                include header
 
-        block main
+            block main
+                include navigation
 
-        block footer
+            block footer
+                include footer
 
         block script
-            script(type="text/javascript" src="/js/jquery.js")
-            script(type="text/javascript" src="/bootstrap/js/bootstrap.js")
+            script(type="text/javascript", src="/js/jquery.js")
+            script(type="text/javascript", src="/bootstrap/js/bootstrap.js")
+            script(type="text/javascript", src="/admin/dist/js/app.min.js")
+            script(type="text/javascript", src="/admin/dist/js/pages/dashboard.js")
+            script(type="text/javascript", src="/admin/dist/js/app.min.js")
             script(type="text/javascript", src="/essage/essage.js")
-            script(type="text/javascript", src="http://github.meritoo.pl/Bootstrap-3-Admin-Theme/js/twitter-bootstrap-hover-dropdown.min.js")

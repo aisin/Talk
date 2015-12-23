@@ -1,44 +1,68 @@
 extends ../common/layout
-block header
-    include ../common/header
+
 block append main
-    .container
-        .row
-            include ../common/navigation
-            .col-md-10
-                .row
-                    .col-lg-12
-                        .page-header
-                            h3 分类管理
-                .row
-                    .col-lg-12
-                        .panel.panel-default
-                            .panel-heading
-                                .text-muted.bootstrap-admin-box-title Hover Table
-                            .bootstrap-admin-panel-content
-                                table.table.table-hover
-                                    thead
-                                        tr
-                                            th #
-                                            th First Name
-                                            th Last Name
-                                            th Username
-                                    tbody
-                                        tr
-                                            td 1
-                                            td Mark
-                                            td Otto
-                                            td @mdo
-                                        tr
-                                            td 2
-                                            td Jacob
-                                            td Thornton
-                                            td @fat
-                                        tr
-                                            td 3
-                                            td Larry
-                                            td the Bird
-                                            td @twitter
 
-
-    include ../common/footer
+    .content-wrapper
+        // Content Header (Page header)
+        section.content-header
+            h1
+                | Simple Tables
+                small preview of simple tables
+            ol.breadcrumb
+                li
+                    a(href="#")
+                        i.fa.fa-dashboard
+                        | Home
+                li
+                    a(href="#") Tables
+                li.active Simple
+        // Main content
+        section.content
+            .row
+                .col-xs-12
+                    .box
+                        .box-header
+                            h3.box-title Responsive Hover Table
+                            .box-tools
+                                .input-group(style="width: 150px;")
+                                    input.form-control.input-sm.pull-right(type="text", name="table_search", placeholder="Search")
+                                    .input-group-btn
+                                        button.btn.btn-sm.btn-default
+                                            i.fa.fa-search
+                        // /.box-header
+                        .box-body.table-responsive.no-padding
+                            table.table.table-hover
+                                tr
+                                    th ID
+                                    th User
+                                    th Date
+                                    th Status
+                                    th Reason
+                                tr
+                                    td 183
+                                    td John Doe
+                                    td 11-7-2014
+                                    td
+                                        span.label.label-success Approved
+                                    td Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.
+                                tr
+                                    td 219
+                                    td Alexander Pierce
+                                    td 11-7-2014
+                                    td
+                                        span.label.label-warning Pending
+                                    td Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.
+                                tr
+                                    td 657
+                                    td Bob Doe
+                                    td 11-7-2014
+                                    td
+                                        span.label.label-primary Approved
+                                    td Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.
+                                tr
+                                    td 175
+                                    td Mike Doe
+                                    td 11-7-2014
+                                    td
+                                        span.label.label-danger Denied
+                                    td Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.
