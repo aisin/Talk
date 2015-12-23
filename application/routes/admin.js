@@ -16,4 +16,6 @@ router.get('/admin/dashboard', Admin.dashboard)
 //category
 router.get('/admin/category', Admin.category)
 
+router.get('/admin/category/add', Admin.categoryAdd)
+
 module.exports = router

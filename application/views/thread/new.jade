@@ -25,7 +25,9 @@ block append main
                         .cell.full
                             textarea#editor
                         .cell
-                            input#submit.super.normal.button(type="button", value="发布主题")
+                            button#submit.super.normal.button(type="button")
+                                i.fa.fa-paper-plane
+                                | &nbsp;发布主题
 
             include ../common/sidebar
 

@@ -10,9 +10,15 @@ exports.dashboard = function(req, res, next){
     })
 }
 
-//·ÖÀà
+//åˆ†ç±»
 exports.category = function(req, res, next){
     res.render('admin/category/categoryList', {
         title : 'Admin Category'
+    })
+}
+
+exports.categoryAdd = function(req, res, next){
+    res.render('admin/category/categoryAdd', {
+        title : 'Adming Category'
     })
 }

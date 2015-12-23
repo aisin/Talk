@@ -3,8 +3,7 @@ var ObjectId  = mongoose.Schema.ObjectId
 
 var categorySchema = new mongoose.Schema({
 
-    //todo
-
+    category : String,
     create_at : {
         type : Date,
         default : Date.now
