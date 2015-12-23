@@ -103,6 +103,7 @@ exports.setting = function(req, res, next){
 
         User.findById(id, function (err, user) {
             if (err) return next(err)
+            data.update_at = Date.now()
             _user = _.assign(user, data)
             _user.save(function (err, user) {
                 if (err) return next(err)
