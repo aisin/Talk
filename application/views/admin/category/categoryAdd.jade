@@ -1,3 +1,6 @@
+block variables
+    -var title = 'Category Add'
+
 extends ../common/layout
 
 block append main
@@ -5,7 +8,7 @@ block append main
         // Content Header (Page header)
         section.content-header
             h1
-                | General Form Elements
+                | 分类添加
                 small Preview
             ol.breadcrumb
                 li
@@ -14,7 +17,7 @@ block append main
                         | Home
                 li
                     a(href="#") Forms
-                li.active General Elements
+                li.active 分类添加
         // Main content
         section.content
             .row
@@ -23,26 +26,16 @@ block append main
                     // Horizontal Form
                     .box.box-info
                         .box-header.with-border
-                            h3.box-title Horizontal Form
+                            h3.box-title 分类添加
                         // /.box-header
                         // form start
                         form.form-horizontal
                             .box-body
                                 .form-group
-                                    label.col-sm-2.control-label(for="inputEmail3") Email
+                                    label.col-sm-2.control-label(for="inputEmail3") 分类名称
                                     .col-sm-10
-                                        input#inputEmail3.form-control(type="email", placeholder="Email")
-                                .form-group
-                                    label.col-sm-2.control-label(for="inputPassword3") Password
-                                    .col-sm-10
-                                        input#inputPassword3.form-control(type="password", placeholder="Password")
-                                .form-group
-                                    .col-sm-offset-2.col-sm-10
-                                        .checkbox
-                                            label
-                                                input(type="checkbox")
-                                                | Remember me
+                                        input.form-control(type="text", name="categoryName", placeholder="分类名称")
                             // /.box-body
                             .box-footer
-                                button.btn.btn-default(type="submit") Cancel
-                                button.btn.btn-info.pull-right(type="submit") Sign in
+                                button.btn.btn-default(type="reset") 取消
+                                button.btn.btn-info.pull-right(type="submit") 确定

@@ -1,12 +1,11 @@
 var express = require('express')
 var router = express.Router()
 var Admin = require('../controllers/admin')
-var AdminAjax = require('../controllers/adminAjax')
 var Auth = require('../libs/Auth')
 
 router.get('/admin', Admin.index)
 
-router.post('/admin/login', AdminAjax.login)
+router.post('/admin', Admin.login)
 
 router.get('/admin/*', Auth.adminRequired)
 
@@ -17,5 +16,7 @@ router.get('/admin/dashboard', Admin.dashboard)
 router.get('/admin/category', Admin.category)
 
 router.get('/admin/category/add', Admin.categoryAdd)
+
+router.post('/admin/category/add', Admin.categoryDoAdd)
 
 module.exports = router

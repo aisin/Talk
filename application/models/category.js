@@ -3,7 +3,7 @@ var ObjectId  = mongoose.Schema.ObjectId
 
 var categorySchema = new mongoose.Schema({
 
-    category : String,
+    name : String,
     create_at : {
         type : Date,
         default : Date.now
@@ -15,6 +15,6 @@ var categorySchema = new mongoose.Schema({
 
 })
 
-var Category = mongoose.model('Thread', categorySchema)
+var Category = mongoose.model('Category', categorySchema)
 
 module.exports = Category

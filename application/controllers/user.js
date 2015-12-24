@@ -8,17 +8,13 @@ var Utils = require('../libs/Utils')
 
 
 exports.register = function (req, res) {
-    res.render('user/register', {
-        title : '注册页面'
-    })
+    res.render('user/register')
 }
 
 
 
 exports.login = function (req, res) {
-    res.render('user/login', {
-        title : '登录页面'
-    })
+    res.render('user/login')
 }
 
 exports.logout = function(req, res){
@@ -27,22 +23,16 @@ exports.logout = function(req, res){
 }
 
 exports.profile = function(req, res){
-    res.render('user/profile', {
-        title : '个人中心页面',
-        //session : req.session.user
-    })
+    res.render('user/profile')
 }
 
 exports.setting = function(req, res){
     var id = req.session.user._id
     User.findOne({_id : id}, function(err, user){
         if(!user){
-            res.render('user/login', {
-                title : '登录页面'
-            })
+            res.render('user/login')
         }else{
             res.render('user/setting', {
-                title : '设置页面',
                 session : req.session.user,
                 user : user
             })
@@ -54,12 +44,9 @@ exports.password = function (req, res) {
     var id = req.session.user._id
     User.findOne({_id : id}, function(err, user){
         if(!user){
-            res.render('user/login', {
-                title : '登录页面'
-            })
+            res.render('user/login')
         }else{
             res.render('user/password', {
-                title : '修改密码',
                 session : req.session.user,
                 user : user
             })

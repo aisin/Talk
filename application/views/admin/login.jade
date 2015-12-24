@@ -1,39 +1,53 @@
-extends common/layout
-
-block append main
-    .container
-        .row
-            .col-lg-12
-                form#adminLogin.bootstrap-admin-login-form(method="post", action="")
-                    h1 Login
-                    .form-group
-                        input.form-control(type="text", name="username", placeholder="E-mail")
-                    .form-group
+doctype html
+html
+    head
+        meta(charset="utf-8")
+        meta(http-equiv="X-UA-Compatible", content="IE=edge")
+        meta(name="viewport", content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no")
+        title Login - Talk Admin
+        link(href="/bootstrap/css/bootstrap.css", rel="stylesheet")
+        link(rel="stylesheet", href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css")
+        link(rel="stylesheet", href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css")
+        link(href="/admin/dist/css/AdminLTE.css", rel="stylesheet")
+    body.hold-transition.login-page
+        .login-box
+            .login-logo
+                a(href="../../index2.html")
+                    b Admin
+                    | LTE
+            // /.login-logo
+            .login-box-body
+                p.login-box-msg Sign in to start your session
+                form(action="/admin", method="post")
+                    .form-group.has-feedback
+                        input.form-control(type="text", name="username", value=username ? "#{username}" : "", placeholder="Username")
+                        span.glyphicon.glyphicon-user.form-control-feedback
+                    .form-group.has-feedback
                         input.form-control(type="password", name="password", placeholder="Password")
-                    .form-group
-                        label
-                            input(type="checkbox", name="remember_me")
-                            | Remember me
-                    button#submit.btn.btn-lg.btn-primary(type="button") Submit
-
-block append script
-    script(type="text/javascript").
-        jQuery(function ($) {
-            $('#submit').click(function () {
-                var formVal = $('#adminLogin').serialize();
-                $.post('/admin/login', formVal, function (data) {
-                    if (data.status == 1) {
-                        Essage.show({
-                            message: data.msg,
-                            status: 'success',
-                            redirect: '/admin/dashboard'
-                        }, 2000);
-                    } else {
-                        Essage.show({
-                            message: data.msg,
-                            status: 'error'
-                        }, 2000);
-                    }
-                }, 'json');
-            });
-        });
+                        span.glyphicon.glyphicon-lock.form-control-feedback
+                    .row
+                        .col-xs-8
+                            .checkbox
+                                label
+                                    input(type="checkbox")
+                                    | Remember Me
+                        // /.col
+                        .col-xs-4
+                            button.btn.btn-primary.btn-block.btn-flat(type="submit") Sign In
+                if errors
+                    p.text-danger
+                        strong #{errors}
+                        // /.col
+                //.social-auth-links.text-center
+                    p - OR -
+                    a.btn.btn-block.btn-social.btn-facebook.btn-flat(href="#")
+                        i.fa.fa-facebook
+                        | Sign in using Facebook
+                    a.btn.btn-block.btn-social.btn-google.btn-flat(href="#")
+                        i.fa.fa-google-plus
+                        | Sign in using Google+
+                //a(href="#") I forgot my password
+                //br
+                //a.text-center(href="register.html") Register a new membership
+        //script(type="text/javascript", src="/js/jquery.js")
+        //script(type="text/javascript", src="/bootstrap/js/bootstrap.js")
