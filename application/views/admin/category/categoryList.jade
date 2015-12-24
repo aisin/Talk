@@ -24,7 +24,7 @@ block append main
                 .col-xs-12
                     .box
                         .box-header
-                            h3.box-title Responsive Hover Table
+                            h3.box-title 所有分类
                             .box-tools
                                 .input-group(style="width: 150px;")
                                     input.form-control.input-sm.pull-right(type="text", name="table_search", placeholder="Search")
@@ -37,34 +37,14 @@ block append main
                                 tr
                                     th ID
                                     th 名称
-                                    th 修改时间
                                     th 创建时间
+                                    th 修改时间
                                     th Reason
-                                tr
-                                    td 183
-                                    td John Doe
-                                    td 11-7-2014
-                                    td
-                                        span.label.label-success Approved
-                                    td Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.
-                                tr
-                                    td 219
-                                    td Alexander Pierce
-                                    td 11-7-2014
-                                    td
-                                        span.label.label-warning Pending
-                                    td Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.
-                                tr
-                                    td 657
-                                    td Bob Doe
-                                    td 11-7-2014
-                                    td
-                                        span.label.label-primary Approved
-                                    td Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.
-                                tr
-                                    td 175
-                                    td Mike Doe
-                                    td 11-7-2014
-                                    td
-                                        span.label.label-danger Denied
-                                    td Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.
+                                -var index = 0
+                                each category in categories
+                                    tr
+                                        td= ++index
+                                        td #{category.name}
+                                        td #{moment(category.create_at).fromNow()}
+                                        td #{moment(category.update_at).fromNow()}
+                                        td Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.

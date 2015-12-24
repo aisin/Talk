@@ -3,7 +3,8 @@ var Category = require('../models/category')
 var validator = require('validator')
 require('../libs/validator_extend')
 var Utils = require('../libs/Utils')
-var Admin = require('../libs/Admin')
+var _Admin = require('../libs/Admin')
+var _Category = require('../libs/Category')
 var EventProxy = require('eventproxy')
 
 //Get : 登录页
@@ -36,7 +37,7 @@ exports.login = function (req, res, next) {
         return ep.emit('errors', "密码不能为空")
     }
 
-    Admin.getAdminByUsername(username, function(err, user){
+    _Admin.getAdminByUsername(username, function(err, user){
         if(err) return next(err)
         if(!user){
             ep.emit('errors', "该管理员不存在")
@@ -63,7 +64,12 @@ exports.dashboard = function(req, res, next){
 
 //分类
 exports.category = function(req, res, next){
-    res.render('admin/category/categoryList')
+    _Category.getAllCategories(function(err, categories){
+        if(err) return next(err)
+        res.render('admin/category/categoryList', {
+            categories : categories
+        })
+    })
 }
 
 exports.categoryAdd = function(req, res, next){
@@ -76,7 +82,7 @@ exports.categoryDoAdd = function(req, res, next){
     if(name){
         category.name = name
         category.save(function(){
-            res.render('admin/category/categoryList')
+            res.redirect('/admin/category')
         })
     }else{
         res.render('admin/category/categoryAdd', {

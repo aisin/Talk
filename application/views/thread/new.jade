@@ -6,7 +6,7 @@ extends ../common/layout
 block prepend style
     link(href="/simditor/styles/simditor.css", rel="stylesheet")
     link(href="/essage/essage.css", rel="stylesheet")
-
+    link(href="/select2/css/select2.min.css", rel="stylesheet")
 block header
     include ../common/header
 block append main
@@ -28,6 +28,12 @@ block append main
                         .cell.full
                             textarea#editor
                         .cell
+                            select#category(style="width:300px;", data-placeholder="请选择一个分类")
+                                option
+                                each category in categories
+                                    option(value="#{category._id}") #{category.name}
+
+                        .cell
                             button#submit.super.normal.button(type="button")
                                 i.fa.fa-paper-plane
                                 | &nbsp;发布主题
@@ -42,9 +48,11 @@ block append script
     script(type="text/javascript", src="/simditor/scripts/hotkeys.js")
     script(type="text/javascript", src="/simditor/scripts/uploader.js")
     script(type="text/javascript", src="/simditor/scripts/simditor.js")
+    script(type="text/javascript", src="/select2/js/select2.min.js")
     script(type="text/javascript", src="/essage/essage.js")
     script(type="text/javascript").
         $(function(){
+            $("#category").select2();
             //editor
             var editor = new Simditor({
                 textarea: $('#editor'),

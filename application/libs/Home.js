@@ -1,7 +1,7 @@
 var EventProxy = require('eventproxy')
 var Thread = require('../models/thread')
 var User = require('../models/user')
-var _user = require('./User')
+var _User = require('./User')
 
 exports.getThreads = function(callback){
 
@@ -42,7 +42,7 @@ exports.getThreads = function(callback){
             })
 
             //用查询出的创建者ID去查询用户名
-            _user.getUserById(thread.author_id, proxy.done('author'))
+            _User.getUserById(thread.author_id, proxy.done('author'))
         })
     })
 }

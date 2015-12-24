@@ -4,7 +4,7 @@ var User = require('../models/user')
  * 根据用户名，查找管理员用户
  * Callback:
  * - err, 数据库异常
- * - user, 用户
+ * - User, 用户表
  * @param {String} username 用户名
  * @param {Function} callback 回调函数
  */
