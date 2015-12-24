@@ -7,7 +7,7 @@ router.get('/admin', Admin.index)
 
 router.post('/admin', Admin.login)
 
-router.get('/admin/*', Auth.adminRequired)
+router.all('/admin/*', Auth.adminRequired)
 
 //dashboard
 router.get('/admin/dashboard', Admin.dashboard)

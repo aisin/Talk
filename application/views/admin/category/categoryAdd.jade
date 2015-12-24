@@ -21,7 +21,10 @@ block append main
         // Main content
         section.content
             .row
-                // right column
+                -if (errors)
+                 .col-md-12
+                    .callout.callout-danger
+                        p #{errors}
                 .col-md-6
                     // Horizontal Form
                     .box.box-info
@@ -29,7 +32,7 @@ block append main
                             h3.box-title 分类添加
                         // /.box-header
                         // form start
-                        form.form-horizontal
+                        form.form-horizontal(action="/admin/category/add", method="post")
                             .box-body
                                 .form-group
                                     label.col-sm-2.control-label(for="inputEmail3") 分类名称

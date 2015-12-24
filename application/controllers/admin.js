@@ -73,8 +73,14 @@ exports.categoryAdd = function(req, res, next){
 exports.categoryDoAdd = function(req, res, next){
     var name = validator.trim(req.body.categoryName)
     var category = new Category()
-    category.name = name
-    category.save(function(){
-        res.render('admin/category/categoryList')
-    })
+    if(name){
+        category.name = name
+        category.save(function(){
+            res.render('admin/category/categoryList')
+        })
+    }else{
+        res.render('admin/category/categoryAdd', {
+            errors: "分类名称不能为空"
+        })
+    }
 }
