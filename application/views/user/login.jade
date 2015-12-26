@@ -6,9 +6,6 @@ extends ../common/layout
 block header
     include ../common/header
 
-block prepend style
-    link(href="/essage/essage.css", rel="stylesheet")
-
 block append main
     #Wrap
         .container
@@ -19,18 +16,23 @@ block append main
                         span.chevron &nbsp;›&nbsp;
                         | 登录&nbsp;&nbsp;
                         i.fa.fa-lock
+                    -if (errors)
+                     .problem
+                        | 请解决以下问题然后再提交：
+                        ul
+                            li #{errors}
                     .cell
-                        form#loginForm
+                        form(action="/login", method="post")
                             .form-unit
                                 span.key 用户名
                                 span.val
-                                    input.tp(type="text", name="username")
+                                    input.tp(type="text", name="username", value=username ? "#{username}" : "",)
                             .form-unit
                                 span.key 密码
                                 span.val
                                     input.tp(type="password", name="password")
                             .form-submit
-                                input#submit.super.normal.button(type="button", value="登录")
+                                input.super.normal.button(type="submit", value="登录")
                                 | &nbsp;&nbsp;
                                 a(href="") 忘记密码？
                     .inner
@@ -49,26 +51,3 @@ block append main
 
 block footer
     include ../common/footer
-
-block append script
-    script(type="text/javascript", src="/essage/essage.js")
-    script(type="text/javascript").
-        jQuery(function ($) {
-            $('#submit').click(function(){
-                var formVal = $('#loginForm').serialize();
-                $.post('/login', formVal, function(data){
-                    if(data.status == 1){
-                        Essage.show({
-                            message: data.msg,
-                            status: 'success',
-                            redirect : '/'
-                        }, 2000);
-                    }else{
-                        Essage.show({
-                            message: data.msg,
-                            status: 'error'
-                        }, 2000);
-                    }
-                },'json');
-            });
-        });

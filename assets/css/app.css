@@ -221,6 +221,25 @@ a.replay-count:hover{
     padding: 5px 0;
 }
 
+.problem{
+    padding: 10px;
+    font-size: 13px;
+    line-height: 120%;
+    text-align: left;
+    background-color: #ffffc0;
+    border-left: 5px solid #fff000;
+    border-bottom: 1px solid #e2e2e2;
+    color: #333;
+}
+.problem ul{
+    list-style: square;
+    margin: 1em 0px 1em 1em;
+    padding: 0px;
+}
+.problem>*:last-child{
+    margin-bottom: 0!important;
+}
+
 /**/
 #Header{position:relative;top:0;right:0;left:0;z-index:5;min-height:40px;border-bottom: 1px solid rgba(0, 0, 0, 0.22);background:#fff;color:#909090;}
 .container{position:relative;margin-right:auto;margin-left:auto;width:960px;}

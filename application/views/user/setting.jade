@@ -15,8 +15,13 @@ block append main
                         a(href="/") V2EX
                         span.chevron &nbsp;›&nbsp;
                         | 修改资料
+                    -if (errors)
+                     .problem
+                        | 请解决以下问题然后再提交：
+                        ul
+                            li #{errors}
                     .cell
-                        form#settingForm
+                        form(action="/setting", method="post")
                             .form-unit
                                 span.key 用户名
                                 span.val
@@ -47,7 +52,7 @@ block append main
                                             input(type="radio", name="gender", value="female", checked)
                                             | 女
                             .form-submit
-                                input#submit.super.normal.button(type="button", value="保存修改")
+                                input.super.normal.button(type="submit", value="保存修改")
 
             include ../common/sidebar
 

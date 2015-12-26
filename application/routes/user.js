@@ -8,7 +8,7 @@ router.get('/register', user.register)
 
 router.get('/login', user.login)
 
-router.post('/login', userAjax.login)
+router.post('/login', user.doLogin)
 
 router.post('/register', userAjax.register)
 
@@ -22,11 +22,11 @@ router.get('/profile', user.profile)
 
 router.get('/setting', Auth.userRequired, user.setting)
 
-router.post('/setting', Auth.userRequiredAjax, userAjax.setting)
+router.post('/setting', Auth.userRequiredAjax, user.doSetting)
 
 router.get('/password', Auth.userRequired, user.password)
 
-router.post('/password', Auth.userRequiredAjax, userAjax.password)
+router.post('/password', Auth.userRequiredAjax, user.doPassword)
 
 //router.post('/doSettingProfile', Auth.userRequired, user.doSettingProfile)
 

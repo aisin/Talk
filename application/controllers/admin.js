@@ -8,7 +8,7 @@ var _Category = require('../libs/Category')
 var EventProxy = require('eventproxy')
 
 //Get : 登录页
-exports.index = function (req, res) {
+exports.login = function (req, res) {
     if(!req.session.user || req.session.user.role !== 'admin'){
         res.render('admin/login')
     }else{
@@ -17,7 +17,7 @@ exports.index = function (req, res) {
 }
 
 //Post : 登录操作
-exports.login = function (req, res, next) {
+exports.doLogin = function (req, res, next) {
     var username = validator.trim(req.body.username).toLowerCase()
     var password = validator.trim(req.body.password)
     var ep = new EventProxy()
@@ -48,7 +48,7 @@ exports.login = function (req, res, next) {
                         ep.emit('errors', "管理员用户名或密码错误")
                     }else{
                         req.session.user = user
-                        res.render('admin/dashboard')
+                        res.redirect('/admin/dashboard')
                     }
                 }))
             }else{

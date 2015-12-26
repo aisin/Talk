@@ -3,9 +3,9 @@ var router = express.Router()
 var Admin = require('../controllers/admin')
 var Auth = require('../libs/Auth')
 
-router.get('/admin', Admin.index)
+router.get('/admin', Admin.login)
 
-router.post('/admin', Admin.login)
+router.post('/admin', Admin.doLogin)
 
 router.all('/admin/*', Auth.adminRequired)
 
