@@ -2,6 +2,7 @@ var EventProxy = require('eventproxy')
 var Thread = require('../models/thread')
 var User = require('../models/user')
 var _User = require('./User')
+var _Category = require('./Category')
 
 exports.getThreads = function(callback){
 
@@ -25,11 +26,13 @@ exports.getThreads = function(callback){
         threads.forEach(function(thread, i){
             var proxy = new EventProxy()
 
-            proxy.all('author', function(author){ //use `on` instead of `all`
+            proxy.all('author', 'category', function(author, category){ //use `on` instead of `all`
                 //console.log(author + ' is author...')
+                //console.log(category)
                 if(author){
                     //console.log(thread + '............BEFORE')
                     thread.author = author.nickname
+                    thread.categoryName = category.name
                     //console.log(Thread.create_at_ago().toString())
                     //thread.create_at = Thread.create_at_ago(true)
                     //console.log(thread.author)
@@ -43,6 +46,7 @@ exports.getThreads = function(callback){
 
             //用查询出的创建者ID去查询用户名
             _User.getUserById(thread.author_id, proxy.done('author'))
+            _Category.getCategoryById(thread.category, proxy.done('category'))
         })
     })
 }

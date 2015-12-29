@@ -28,7 +28,7 @@ block append main
                                 h2.title
                                     a(href="/thread/#{thread._id}") #{thread.title}
                                 .meta.small.fade
-                                    a.node(href="#") 技术帖
+                                    a.node(href="/category/#{thread.category}") #{thread.categoryName}
                                     span &nbsp;•&nbsp;
                                     strong
                                         a(href="/member/#{thread.author_id}") #{thread.author}

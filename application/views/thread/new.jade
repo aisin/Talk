@@ -31,7 +31,9 @@ block append main
                         .cell 正文
                             #contentLength.fr.fade 2000
                         .cell.full
-                            textarea#content(name="content", value=threadContent ? "#{threadContent}" : "")
+                            textarea#content(name="content")
+                                - if (threadContent)
+                                 | #{threadContent}
                         .cell
                             select#category(style="width:300px;", name="category", data-placeholder="请选择一个分类")
                                 option
@@ -61,6 +63,7 @@ block append script
     script(type="text/javascript", src="/essage/essage.js")
     script(type="text/javascript").
         $(function(){
+            console.log('#{threadContent}');
             $("#category").select2();
 
             var editor = new Simditor({

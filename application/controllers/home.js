@@ -1,7 +1,7 @@
-var _home = require('../libs/Home')
+var _Home = require('../libs/Home')
 
 exports.index = function (req, res, next) {
-    _home.getThreads(function(err, threads){
+    _Home.getThreads(function(err, threads){
         res.render('home', {
             session : req.session.user,
             threads : threads
