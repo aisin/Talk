@@ -18,21 +18,26 @@ block append main
                         a(href="/") V2EX
                         span.chevron &nbsp;›&nbsp;
                         | 注册
+                    -if (errors)
+                     .problem
+                        | 请解决以下问题然后再提交：
+                        ul
+                            li #{errors}
                     .cell
-                        form#registerForm
+                        form(action="/register", method="post")
                             .form-unit
                                 span.key 用户名
                                 span.val
-                                    input.tp(type="text", name="username")
+                                    input.tp(type="text", name="username", value=username ? "#{username}" : "")
                                 .tips 请使用 5-12 个半角的 a-z 或数字 0-9
                             .form-unit
                                 span.key 昵称
                                 span.val
-                                    input.tp(type="text", name="nickname")
+                                    input.tp(type="text", name="nickname", value=nickname ? "#{nickname}" : "")
                             .form-unit
                                 span.key 邮箱
                                 span.val
-                                    input.tp(type="text", name="email")
+                                    input.tp(type="text", name="email", value=email ? "#{email}" : "")
                                 .tips 请使用真实电子邮箱注册，我们不会将你的邮箱地址分享给任何人
                             .form-unit
                                 span.key 性别
@@ -52,7 +57,7 @@ block append main
                                 span.val
                                     input.tp(type="password", name="passwordcf")
                             .form-submit
-                                input#submit.super.normal.button(type="button", value="注册")
+                                input.super.normal.button(type="submit", value="注册")
 
             include ../common/sidebar
 

@@ -1,52 +1,52 @@
-var User = require('../models/user')
-var validator = require('validator')
-require('../libs/validator_extend')
-var Utils = require('../libs/Utils')
-var _ = require('lodash')
-var EventProxy = require('eventproxy')
+//var User = require('../models/user')
+//var validator = require('validator')
+//require('../libs/validator_extend')
+//var Utils = require('../libs/Utils')
+//var _ = require('lodash')
+//var EventProxy = require('eventproxy')
 
-exports.register = function (req, res, next) {
-    var data = {
-        username : validator.trim(req.body.username).toLowerCase(),
-        nickname : validator.trim(req.body.nickname),
-        email : validator.trim(req.body.email).toLowerCase(),
-        gender : req.body.gender
-    }
-    var password = validator.trim(req.body.password)
-    var passwordcf = validator.trim(req.body.passwordcf)
-    var ep = new EventProxy()
-    ep.fail(next)
-
-    ep.on('errors', function(msg){
-        Utils.jsonMsg(res, 0, msg)
-    })
-
-    if(!validator.isUserName(data.username)){
-        return ep.emit('errors', "用户名5-12个英文字符")
-    }else if(!validator.isEmail(data.email)){
-        return ep.emit('errors', "请填写正确的邮箱地址")
-    }else if(!password || password !== passwordcf){
-        return ep.emit('errors', "密码不能为空，并且两次要输入一致")
-    }
-
-    User.findOne({username : data.username}, function(err, user){
-        if(err) return next(err)
-        if(user){
-            ep.emit('errors', "该用户名已存在")
-        }else{
-            Utils.pwHash(password, ep.done(function(passwordHash){
-                data.password = passwordHash
-                if(!data.nickname) data.nickname = data.username
-                var user = new User(data)
-                user.save(function(err, _user){
-                    if(err) return next(err)
-                    req.session.user = _user
-                    Utils.jsonMsg(res, 1, '注册成功')
-                })
-            }))
-        }
-    })
-}
+//exports.register = function (req, res, next) {
+//    var data = {
+//        username : validator.trim(req.body.username).toLowerCase(),
+//        nickname : validator.trim(req.body.nickname),
+//        email : validator.trim(req.body.email).toLowerCase(),
+//        gender : req.body.gender
+//    }
+//    var password = validator.trim(req.body.password)
+//    var passwordcf = validator.trim(req.body.passwordcf)
+//    var ep = new EventProxy()
+//    ep.fail(next)
+//
+//    ep.on('errors', function(msg){
+//        Utils.jsonMsg(res, 0, msg)
+//    })
+//
+//    if(!validator.isUserName(data.username)){
+//        return ep.emit('errors', "用户名5-12个英文字符")
+//    }else if(!validator.isEmail(data.email)){
+//        return ep.emit('errors', "请填写正确的邮箱地址")
+//    }else if(!password || password !== passwordcf){
+//        return ep.emit('errors', "密码不能为空，并且两次要输入一致")
+//    }
+//
+//    User.findOne({username : data.username}, function(err, user){
+//        if(err) return next(err)
+//        if(user){
+//            ep.emit('errors', "该用户名已存在")
+//        }else{
+//            Utils.pwHash(password, ep.done(function(passwordHash){
+//                data.password = passwordHash
+//                if(!data.nickname) data.nickname = data.username
+//                var user = new User(data)
+//                user.save(function(err, _user){
+//                    if(err) return next(err)
+//                    req.session.user = _user
+//                    Utils.jsonMsg(res, 1, '注册成功')
+//                })
+//            }))
+//        }
+//    })
+//}
 
 //exports.login = function (req, res, next) {
 //    var username = validator.trim(req.body.username).toLowerCase()

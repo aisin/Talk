@@ -18,23 +18,32 @@ block append main
                         a(href="/") V2EX
                         span.chevron &nbsp;›&nbsp;
                         | 创作新主题
-                    form#newThreadForm
+                    - if (errors)
+                     .problem
+                        | 请解决以下问题然后再提交：
+                        ul
+                            li #{errors}
+                    form(action="/thread/new", method="post")
                         .cell 主题标题
                             #titleLength.fr.fade 120
                         .cell.full
-                            input#title(type="text", name="title", autofocus, placeholder="请输入主题标题，如果标题能够表达完整内容，则正文可以为空")
+                            input(type="text", name="title", autofocus, placeholder="请输入主题标题", value=threadTitle ? "#{threadTitle}" : "")
                         .cell 正文
                             #contentLength.fr.fade 2000
                         .cell.full
-                            textarea#editor
+                            textarea#content(name="content", value=threadContent ? "#{threadContent}" : "")
                         .cell
-                            select#category(style="width:300px;", data-placeholder="请选择一个分类")
+                            select#category(style="width:300px;", name="category", data-placeholder="请选择一个分类")
                                 option
                                 each category in categories
-                                    option(value="#{category._id}") #{category.name}
+                                    if threadCategory == category._id
+                                        option(value="#{category._id}", selected) #{category.name}
+                                    else
+                                        option(value="#{category._id}") #{category.name}
+
 
                         .cell
-                            button#submit.super.normal.button(type="button")
+                            button.super.normal.button(type="submit")
                                 i.fa.fa-paper-plane
                                 | &nbsp;发布主题
 
@@ -53,9 +62,9 @@ block append script
     script(type="text/javascript").
         $(function(){
             $("#category").select2();
-            //editor
+
             var editor = new Simditor({
-                textarea: $('#editor'),
+                textarea: $('#content'),
                 placeholder: '文明上网，文明发言',
                 defaultImage: 'images/image.png'
             });

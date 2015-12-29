@@ -31,7 +31,6 @@ block append main
                                     .input-group-btn
                                         button.btn.btn-sm.btn-default
                                             i.fa.fa-search
-                        // /.box-header
                         .box-body.table-responsive.no-padding
                             table.table.table-hover
                                 tr
@@ -40,11 +39,10 @@ block append main
                                     th 创建时间
                                     th 修改时间
                                     th Reason
-                                -var index = 0
-                                each category in categories
+                                each category, i in categories
                                     tr
-                                        td= ++index
+                                        td= i+1
                                         td #{category.name}
                                         td #{moment(category.create_at).fromNow()}
                                         td #{moment(category.update_at).fromNow()}
-                                        td Bacon ipsum dolor sit amet salami venison chicken flank fatback doner.
+                                        td Bacon ipsum

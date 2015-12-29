@@ -6,6 +6,6 @@ var Auth = require('../libs/Auth')
 
 router.get('/thread/new', Auth.userRequired, thread.new)
 
-router.post('/thread/new', Auth.userRequired, threadAjax.new)
+router.post('/thread/new', Auth.userRequired, thread.doNew)
 
 module.exports = router

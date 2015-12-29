@@ -1,7 +1,7 @@
 var express = require('express')
 var router = express.Router()
 var user = require('../controllers/user')
-var userAjax = require('../controllers/userAjax')
+//var userAjax = require('../controllers/userAjax')
 var Auth = require('../libs/Auth')
 
 router.get('/register', user.register)
@@ -10,7 +10,7 @@ router.get('/login', user.login)
 
 router.post('/login', user.doLogin)
 
-router.post('/register', userAjax.register)
+router.post('/register', user.doRegister)
 
 //router.post('/doLogin', user.doLogin)
 
@@ -22,11 +22,11 @@ router.get('/profile', user.profile)
 
 router.get('/setting', Auth.userRequired, user.setting)
 
-router.post('/setting', Auth.userRequiredAjax, user.doSetting)
+router.post('/setting', Auth.userRequired, user.doSetting)
 
 router.get('/password', Auth.userRequired, user.password)
 
-router.post('/password', Auth.userRequiredAjax, user.doPassword)
+router.post('/password', Auth.userRequired, user.doPassword)
 
 //router.post('/doSettingProfile', Auth.userRequired, user.doSettingProfile)
 

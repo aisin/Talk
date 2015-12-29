@@ -5,6 +5,7 @@ var threadSchema = new mongoose.Schema({
 
     title : String,
     content : String,
+    category : ObjectId,
     author_id: ObjectId,
     last_reply: ObjectId,
     deleted: {
