@@ -7,4 +7,6 @@ router.get('/thread/new', Auth.userRequired, thread.new)
 
 router.post('/thread/new', Auth.userRequired, thread.doNew)
 
+router.get('/thread/:id', thread.detail)
+
 module.exports = router

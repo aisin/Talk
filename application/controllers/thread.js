@@ -60,3 +60,8 @@ exports.doNew = function(req, res, next){
         })
     }
 }
+
+//Get : 主题详情页
+exports.detail = function(req, res, next){
+    res.render('thread/detail')
+}

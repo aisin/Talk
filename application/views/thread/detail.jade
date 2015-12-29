@@ -1,0 +1,49 @@
+block variables
+    -var title = '主题详情'
+extends ../common/layout
+block header
+    include ../common/header
+block append main
+    #Wrap
+        .container
+            #Main
+                .box
+                    .suggest
+                        .fr
+                            a(href="")
+                                img.avatar(src="//imgs.duwu.me/duwu/avatar/000/00/12/75.jpg")
+                        a(href="/") V2EX
+                        span.chevron &nbsp;›&nbsp;
+                        a(href="#") 分享发现
+                        h1 乐视网太牛逼
+                        #topic_246889_votes.votes
+                            a.vote(href="javascript:", onclick="upVoteTopic(123);")
+                                li.fa.fa-chevron-up
+                            | &nbsp;&nbsp;
+                            a.vote(href="javascript:", onclick="downVoteTopic(123);")
+                                li.fa.fa-chevron-down
+                        | &nbsp;&nbsp;
+                        small.grey
+                            a(href="#") Aisin
+                            | &nbsp;·&nbsp;x 小时 xx 分钟前&nbsp;·&nbsp;xx 次点击
+                    .cell
+                        .detail
+                            p
+                    .thread-handle.clearfix
+                        .views xx 次点击
+                        a.tb(href="#") 加入收藏
+                        | &nbsp;
+                        a.tb(href="#") 忽略主题
+                        | &nbsp;
+                        a.tb(href="#") 感谢
+
+                .box
+                    .cell
+                        span.fade
+                            strong V2EX
+                            | &nbsp;/ 节点导航
+                        .fr
+                            a(href="#") 浏览全部节点
+            include ../common/sidebar
+block footer
+    include ../common/footer
