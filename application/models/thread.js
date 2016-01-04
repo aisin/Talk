@@ -8,6 +8,10 @@ var threadSchema = new mongoose.Schema({
     category : ObjectId,
     author_id: ObjectId,
     last_reply: ObjectId,
+    views: {
+        type: Number,
+        default: 0
+    },
     deleted: {
         type: Boolean,
         default: false

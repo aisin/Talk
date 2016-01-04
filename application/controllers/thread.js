@@ -1,5 +1,7 @@
 var Thread = require('../models/thread')
 var _Category = require('../libs/Category')
+var _User = require('../libs/User')
+var _Thread = require('../libs/Thread')
 var EventProxy = require('eventproxy')
 
 //Get : 发布主题页
@@ -63,5 +65,31 @@ exports.doNew = function(req, res, next){
 
 //Get : 主题详情页
 exports.detail = function(req, res, next){
-    res.render('thread/detail')
+    var id = req.params.id
+    var ep = new EventProxy()
+    var events = ['thread', 'author', 'category']
+
+    ep.fail(next)
+
+    ep.all(events, function (thread, author, category) {
+
+        res.render('thread/detail', {
+            session: req.session.user,
+            thread : thread,
+            author : author,
+            category : category
+        })
+
+    })
+
+    _Thread.getThreadById(id, function(err, thread){
+        if(err) return next(err)
+        _Thread.updateViewsOfThread(thread._id, function(){
+            thread.views += 1
+            thread.save()
+            ep.emit('thread', thread)
+        })
+        _User.getUserById(thread.author_id, ep.done('author'))
+        _Category.getCategoryById(thread.category, ep.done('category'))
+    })
 }

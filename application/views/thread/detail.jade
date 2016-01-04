@@ -14,23 +14,23 @@ block append main
                                 img.avatar(src="//imgs.duwu.me/duwu/avatar/000/00/12/75.jpg")
                         a(href="/") V2EX
                         span.chevron &nbsp;›&nbsp;
-                        a(href="#") 分享发现
-                        h1 乐视网太牛逼
-                        #topic_246889_votes.votes
-                            a.vote(href="javascript:", onclick="upVoteTopic(123);")
+                        a(href="/category/#{category._id}") #{category.name}
+                        h1 #{thread.title}
+                        #thread_votes.votes
+                            a.vote(href="javascript:;", onclick="upVote('#{thread._id}');")
                                 li.fa.fa-chevron-up
                             | &nbsp;&nbsp;
-                            a.vote(href="javascript:", onclick="downVoteTopic(123);")
+                            a.vote(href="javascript:;", onclick="downVote('#{thread._id}');")
                                 li.fa.fa-chevron-down
                         | &nbsp;&nbsp;
                         small.grey
-                            a(href="#") Aisin
-                            | &nbsp;·&nbsp;x 小时 xx 分钟前&nbsp;·&nbsp;xx 次点击
+                            a(href="/member/#{author._id}") #{author.nickname}
+                            | &nbsp;·&nbsp;#{moment(thread.create_at).fromNow()}&nbsp;·&nbsp;#{thread.views} 次点击
                     .cell
                         .detail
-                            p
+                            | !{thread.content}
                     .thread-handle.clearfix
-                        .views xx 次点击
+                        .views #{thread.views} 次点击
                         a.tb(href="#") 加入收藏
                         | &nbsp;
                         a.tb(href="#") 忽略主题
