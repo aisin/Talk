@@ -83,6 +83,9 @@ h2{
 h3{
     font-size: 16px;
 }
+.f12{
+    font-size: 12px;
+}
 
 /*a*/
 #Tab a:link, #Tab a:visited, #Tab a:active {
@@ -435,6 +438,16 @@ ul.actions li.highlight a:hover{
     line-height: 150%;
     margin: 10px 0px 10px 0px;
     padding: 0px;
+}
+.suggest .thumb{
+    float: left;
+    display: inline-block;
+    margin-right: 10px;
+}
+.suggest .desc{
+    font-size: 12px;
+    color: #999;
+    margin: 8px 0;
 }
 .votes {
     display: inline-block;

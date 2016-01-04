@@ -1,0 +1,49 @@
+block variables
+    -var title = '欢迎来到 Talk'
+extends ../common/layout
+block header
+    include ../common/header
+block append main
+    #Wrap
+        .container
+            #Main
+                .box
+                    .suggest
+                        .thumb
+                            img(src="//cdn.v2ex.co/navatar/c9f0/f895/8_large.png?m=1450059980")
+                        .fr.fade.f12
+                            span 主题总数
+                            strong.grey  2332
+                        a(href="/") V2EX
+                        span.chevron &nbsp;›&nbsp;
+                        a(href="/category/#{category._id}") #{category.name}
+                        .desc 这里讨论各种 Python 语言编程话题，也包括 Django，Tornado 等框架的讨论。
+                        a.super.normal.button.inline-block(href="#") 创建新主题
+                    each thread in threads
+                        .cell.item
+                            .avatar
+                                a(href="#")
+                                    img(src="//imgs.duwu.me/duwu/avatar/000/00/12/75.jpg")
+                            .all
+                                h2.title
+                                    a(href="/thread/#{thread._id}") #{thread.title}
+                                .meta.small.fade
+                                    strong
+                                        a(href="/member/#{thread.author_id}") #{thread.author}
+                                    span &nbsp;•&nbsp;#{moment(thread.create_at).fromNow()}
+                            .reply
+                                a.replay-count(href="#") 18
+                    .inner
+                        a(href="#")
+                            span.chevron →&nbsp;
+                            | 更多新主题
+                .box
+                    .cell
+                        span.fade
+                            strong V2EX
+                            | &nbsp;/ 节点导航
+                        .fr
+                            a(href="#") 浏览全部节点
+            include ../common/sidebar
+block footer
+    include ../common/footer
