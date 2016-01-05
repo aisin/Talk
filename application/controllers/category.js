@@ -1,6 +1,7 @@
 var EventProxy = require('eventproxy')
 var Thread = require('../models/thread')
 var _User = require('../libs/User')
+var _Thread = require('../libs/Thread')
 var _Category = require('../libs/Category')
 
 exports.list = function(req, res, next){
@@ -17,13 +18,18 @@ exports.list = function(req, res, next){
 
         })
 
-        ep.all(['threads_ready', 'category'], function(threads, category){
+        ep.all(['threads_ready', 'category', 'count'], function(threads, category, count){
             res.render('category/list', {
                 session : req.session.user,
                 category : category,
-                threads : threads
+                threads : threads,
+                count : count
             })
         })
+
+        _Thread.getCountByCategory(id, ep.done(function(count){
+            ep.emit('count', count)
+        }))
 
         _Category.getCategoryById(id, ep.done('category'))
 
@@ -38,5 +44,5 @@ exports.list = function(req, res, next){
 
             _User.getUserById(thread.author_id, proxy.done('author'))
         })
-    })
+    }).sort({update_at: -1})
 }

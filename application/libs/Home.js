@@ -48,5 +48,5 @@ exports.getThreads = function(callback){
             _User.getUserById(thread.author_id, proxy.done('author'))
             _Category.getCategoryById(thread.category, proxy.done('category'))
         })
-    })
+    }).sort({update_at: -1})
 }
