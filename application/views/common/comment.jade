@@ -1,0 +1,28 @@
+.box
+    .cell
+        span.grey #{comments.length}&nbsp;回复
+        strong.snow &nbsp;&nbsp;|&nbsp;&nbsp;
+        span.grey 直到 3 小时前
+    each comment, i in comments
+        .cell
+            .fr.fade= i+1
+            .avatar
+                a(href="/member/" + "#{comment.commenter_id}")
+                    img(src="/uploads/avatar/" + "#{comment.avatar}")
+            .whole
+                strong
+                    a(href="/member/" + "#{comment.commenter_id}") #{comment.nickname}
+                | &nbsp;&nbsp;
+                span.small.fade #{moment(comment.create_at).fromNow()}
+                .major #{comment.content}
+.box
+    .cell
+        .fr
+            a(href="#") 回到顶部
+        | 添加一条回复
+    .cell
+        form.wide(method="post", action="/thread/comment/#{thread._id}")
+            textarea.tp(name="content", rows="4")
+            .bx
+                .fr.grey 请尽量让自己的回复能够对别人有帮助
+                input.super.normal.button(type="submit", value="回复")

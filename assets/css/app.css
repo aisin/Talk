@@ -69,6 +69,9 @@ a.tb:hover {
 .grey{
     color: #999;
 }
+.snow{
+    color: #e2e2e2;
+}
 .lh{
      line-height: 180%!important;
  }
@@ -215,7 +218,7 @@ a.replay-count:hover{
     margin-right: 10px;
     cursor: pointer;
 }
-.form-unit .tp{
+.tp{
     border-radius: 3px;
     padding: 4px 5px;
     font-size: 14px;
@@ -223,13 +226,14 @@ a.replay-count:hover{
     width: 310px;
     line-height: 1.2;
 }
-.form-unit textarea.tp{
+textarea.tp{
     vertical-align: top;
+    resize: none;
 }
-.form-unit .tp:disabled{
+.tp:disabled{
     background-color: #F9F9F9;
 }
-.form-unit .tp:focus{
+.tp:focus{
     border: 1px solid rgba(128, 128, 160, 0.6);
     outline: none;
 }
@@ -245,6 +249,12 @@ a.replay-count:hover{
 .form-submit{
     margin-left: 120px;
     padding: 5px 0;
+}
+.wide .tp{
+    width: 100%;
+}
+.wide .bx{
+    margin-top: 10px;
 }
 .problem{
     padding: 10px;
@@ -375,7 +385,8 @@ ul.actions li.highlight a:hover{
     width: 100%;
     border-radius: 4px;
 }
-.cell .all{
+.cell .all,
+.cell .whole{
     padding-left: 58px;
     min-height: 48px;
     padding-right: 18px;
@@ -386,6 +397,11 @@ ul.actions li.highlight a:hover{
     text-shadow: 0px 1px 0px #fff;
     word-wrap: break-word;
     margin-bottom: 5px;
+}
+.cell .whole .major{
+    font-size: 14px;
+    line-height: 1.6em;
+    margin-top: 5px;
 }
 .full{
     padding: 0;

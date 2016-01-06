@@ -2,6 +2,7 @@ var Thread = require('../models/thread')
 var _Category = require('../libs/Category')
 var _User = require('../libs/User')
 var _Thread = require('../libs/Thread')
+var _Comment = require('../libs/Comment')
 var EventProxy = require('eventproxy')
 
 //Get : 发布主题页
@@ -67,19 +68,18 @@ exports.doNew = function(req, res, next){
 exports.detail = function(req, res, next){
     var id = req.params.id
     var ep = new EventProxy()
-    var events = ['thread', 'author', 'category']
+    var events = ['thread', 'author', 'category', 'comments_ready']
 
     ep.fail(next)
 
-    ep.all(events, function (thread, author, category) {
-
+    ep.all(events, function (thread, author, category, comments) {
         res.render('thread/detail', {
             session: req.session.user,
             thread : thread,
             author : author,
-            category : category
+            category : category,
+            comments : comments
         })
-
     })
 
     _Thread.getThreadById(id, function(err, thread){
@@ -91,5 +91,22 @@ exports.detail = function(req, res, next){
         })
         _User.getUserById(thread.author_id, ep.done('author'))
         _Category.getCategoryById(thread.category, ep.done('category'))
+        _Comment.getCommentsByThread(thread._id, function(err, comments){
+            comments.forEach(function(comment, i){
+                var proxy = new EventProxy()
+                proxy.on('commenter', function(commenter){
+                    comment.avatar = commenter.avatar
+                    comment.nickname = commenter.nickname
+
+                    ep.emit('comments_all')
+                })
+
+                _User.getUserById(comment.commenter_id, proxy.done('commenter'))
+            })
+
+            ep.after('comments_all', comments.length, function(){
+                ep.emit('comments_ready', comments)
+            })
+        })
     })
 }

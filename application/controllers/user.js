@@ -18,7 +18,7 @@ exports.doRegister = function (req, res, next) {
         nickname : validator.trim(req.body.nickname),
         email : validator.trim(req.body.email).toLowerCase(),
         gender : req.body.gender,
-        description : validator.trim(req.body.description)
+        description : validator.trim(req.body.description) || '这个人很懒，什么也没有留下~'
     }
     var password = validator.trim(req.body.password)
     var passwordcf = validator.trim(req.body.passwordcf)
@@ -238,7 +238,7 @@ exports.doPassword = function(req, res, next){
     }
 }
 
-//头像上传
+//Get : 修改头像页
 exports.avatar = function(req, res, next){
     var id = req.session.user._id
     _User.getUserById(id, function(err, user){
@@ -253,16 +253,11 @@ exports.avatar = function(req, res, next){
     })
 }
 
+//Post : 修改头像操作
 exports.doAvatar = function(req, res, next){
-    //console.log('files:', req.file)
-    //console.log('/uploads/avatar/' + req.file.filename)
     var id = req.session.user._id
-    var data = {
-        avatar : req.file.filename
-    }
     var ep = new EventProxy()
     ep.fail(next)
-
     ep.on('errors', function(msg){
         res.status(403)
         return res.render('user/avatar', {
@@ -271,20 +266,21 @@ exports.doAvatar = function(req, res, next){
             errors : msg
         })
     })
-
-    if(id){
-        _User.getUserById(id, function (err, user) {
-            if (err) return next(err)
-            data.update_at = Date.now()
-            _user = _.assign(user, data)
-            _user.save(function (err, user) {
-                if (err) return next(err)
-                req.session.user = user
-                res.redirect('/avatar')
-            })
-        })
-    }else{
-        ep.emit('errors', "请登录后操作")
+    if(!req.file){
+        return ep.emit('errors', "请选择图片再上传")
+    }
+    var data = {
+        avatar : req.file.filename
     }
 
+    _User.getUserById(id, function (err, user) {
+        if (err) return next(err)
+        data.update_at = Date.now()
+        _user = _.assign(user, data)
+        _user.save(function (err, user) {
+            if (err) return next(err)
+            req.session.user = user
+            res.redirect('/avatar')
+        })
+    })
 }
