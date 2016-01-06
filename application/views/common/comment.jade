@@ -5,7 +5,8 @@
         span.grey 直到 3 小时前
     each comment, i in comments
         .cell
-            .fr.fade= i+1
+            .fr.fade
+                span.no= i+1
             .avatar
                 a(href="/member/" + "#{comment.commenter_id}")
                     img(src="/uploads/avatar/" + "#{comment.avatar}")

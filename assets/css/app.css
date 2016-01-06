@@ -256,6 +256,16 @@ textarea.tp{
 .wide .bx{
     margin-top: 10px;
 }
+.no{
+    font-size: 9px;
+    line-height: 9px;
+    font-weight: 500;
+    border-radius: 10px;
+    display: inline-block;
+    background-color: #f0f0f0;
+    color: #ccc;
+    padding: 2px 5px 2px 5px;
+}
 .problem{
     padding: 10px;
     font-size: 13px;
