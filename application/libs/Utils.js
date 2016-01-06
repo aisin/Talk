@@ -1,4 +1,5 @@
 var bcrypt = require("bcryptjs")
+var crypto = require('crypto')
 
 var Utils = {
 
@@ -18,6 +19,11 @@ var Utils = {
             status : status,
             msg : msg
         })
+    },
+
+    //Md5
+    md5 : function(str){
+        return crypto.createHash('md5').update(str).digest("hex")
     }
 
 }

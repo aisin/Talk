@@ -9,7 +9,6 @@ var config = require('./config.js').config
 moment.locale('zh-cn')
 
 app.use(bodyParser.urlencoded({extended: true}))
-//app.use(bodyParser.json())
 app.use(express.static(path.join(__dirname, config.assets)))
 app.set('views', path.join(__dirname, config.views))
 app.set('view engine', config.view_engine)

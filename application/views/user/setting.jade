@@ -51,6 +51,10 @@ block append main
                                         label
                                             input(type="radio", name="gender", value="female", checked)
                                             | 女
+                            .form-unit
+                                span.key 描述
+                                span.val
+                                    textarea.tp(name="description", rows="4") #{user.description}
                             .form-submit
                                 input.super.normal.button(type="submit", value="保存修改")
 
@@ -58,27 +62,3 @@ block append main
 
 block footer
     include ../common/footer
-
-block append script
-    script(type="text/javascript", src="/essage/essage.js")
-    script(type="text/javascript").
-        jQuery(function ($) {
-            $('#submit').click(function(){
-                var formVal = $('#settingForm').serialize();
-                $.post('/setting', formVal, function(data){
-                    if(data.status == 1){
-                        Essage.show({
-                            message: data.msg,
-                            status: 'success'
-                        }, 2000);
-                    }else{
-                        Essage.show({
-                            message: data.msg,
-                            status: 'error'
-                        }, 2000);
-                    }
-                },'json');
-            });
-
-
-        });

@@ -1,0 +1,36 @@
+block variables
+    -var title = '修改头像'
+extends ../common/layout
+block prepend style
+    link(href="/essage/essage.css", rel="stylesheet")
+block header
+    include ../common/header
+block append main
+    #Wrap
+        .container
+            #Main
+                .box
+                    .crumbs
+                        a(href="/") V2EX
+                        span.chevron &nbsp;›&nbsp;
+                        | 修改资料
+                    -if (errors)
+                     .problem
+                        | 请解决以下问题然后再提交：
+                        ul
+                            li #{errors}
+                    .cell
+                        form(role="form", action="/avatar", method="post", enctype="multipart/form-data")
+                            .form-unit
+                                span.key 当前头像
+                                span.val
+                                    img(src="/uploads/avatar/" + "#{user.avatar}" + "?v=#{moment(user.update_at).unix()}", width="60")
+                            .form-unit
+                                span.key 上传头像
+                                span.val
+                                    input(type="file", name="avatar")
+                            .form-submit
+                                input.super.normal.button(type="submit", value="保存")
+            include ../common/sidebar
+block footer
+    include ../common/footer

@@ -1,8 +1,21 @@
 var express = require('express')
 var router = express.Router()
 var user = require('../controllers/user')
-//var userAjax = require('../controllers/userAjax')
 var Auth = require('../libs/Auth')
+var Utils = require('../libs/Utils')
+//upload
+var multer = require('multer')
+var storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, './assets/uploads/avatar/')
+    },
+    filename: function (req, file, cb) {
+        var email = req.session.user.email
+        cb(null, Utils.md5(email) + '.jpg')
+    }
+})
+var upload = multer({storage: storage})
+
 
 router.get('/register', user.register)
 
@@ -16,8 +29,6 @@ router.post('/register', user.doRegister)
 
 router.get('/logout', user.logout)
 
-router.get('/profile', user.profile)
-
 //router.post('/updateProfile', Auth.userRequired, user.updateProfile)
 
 router.get('/setting', Auth.userRequired, user.setting)
@@ -28,9 +39,16 @@ router.get('/password', Auth.userRequired, user.password)
 
 router.post('/password', Auth.userRequired, user.doPassword)
 
-//router.post('/doSettingProfile', Auth.userRequired, user.doSettingProfile)
+//头像上传
+router.get('/avatar', Auth.userRequired, user.avatar)
 
-//router.post('/doSettingPassword', Auth.userRequired, user.doSettingPassword)
+router.post('/avatar', Auth.userRequired, upload.single('avatar'), user.doAvatar)
+
+//
+
+
+
+
 
 //测试 Ajax
 

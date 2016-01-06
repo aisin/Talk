@@ -23,7 +23,7 @@ block append main
                         .cell.item
                             .avatar
                                 a(href="/member/#{thread.author_id}")
-                                    img(src="//imgs.duwu.me/duwu/avatar/000/00/12/75.jpg")
+                                    img(src="/uploads/avatar/" + "#{thread.authorAvatar}")
                             .all
                                 h2.title
                                     a(href="/thread/#{thread._id}") #{thread.title}

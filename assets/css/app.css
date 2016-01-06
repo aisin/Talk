@@ -223,6 +223,9 @@ a.replay-count:hover{
     width: 310px;
     line-height: 1.2;
 }
+.form-unit textarea.tp{
+    vertical-align: top;
+}
 .form-unit .tp:disabled{
     background-color: #F9F9F9;
 }

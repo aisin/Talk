@@ -38,6 +38,7 @@ exports.list = function(req, res, next){
 
             proxy.on('author', function(author){
                 thread.author = author.nickname
+                thread.authorAvatar = author.avatar
 
                 ep.emit('threads_all')
             })

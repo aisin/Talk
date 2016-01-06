@@ -3,13 +3,13 @@
         if session
             .cell
                 .avatar
-                    a(href="#")
-                        img(src="//imgs.duwu.me/duwu/avatar/000/00/12/75.jpg")
+                    a(href="/member/" + "#{session._id}")
+                        img(src="/uploads/avatar/" + "#{session.avatar}" + "?v=#{moment(session.update_at).unix()}")
                 .all
                     h2.title
-                        a(href="#") #{session.nickname}
+                        a(href="/member/" + "#{session._id}") #{session.nickname}
                     .meta.small.fade
-                        | 前端开发工程师
+                        | #{session.description}
         else
             .cell.lh
                 strong V2ex = way to explore

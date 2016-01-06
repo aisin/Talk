@@ -7,6 +7,14 @@ var userSchema = new mongoose.Schema({
     email : String,
     password : String,
     gender : String,
+    avatar : {
+        type : String,
+        default : 'user.jpg'
+    },
+    description : {
+        type : String,
+        default : '这个人很懒，什么也没有留下~'
+    },
     role : {
         type : String,
         default : 'user'

@@ -15,9 +15,7 @@ exports.getThreads = function(callback){
         var ep = new EventProxy()
 
         ep.after('threads_ready', threads.length, function(){
-            //console.log(threads + '............FINAL')
-
-            return callback(null, threads) //最后返回给 view 层
+            return callback(null, threads)
         })
 
         ep.fail(callback)
@@ -26,17 +24,11 @@ exports.getThreads = function(callback){
         threads.forEach(function(thread, i){
             var proxy = new EventProxy()
 
-            proxy.all('author', 'category', function(author, category){ //use `on` instead of `all`
-                //console.log(author + ' is author...')
-                //console.log(category)
+            proxy.all('author', 'category', function(author, category){
                 if(author){
-                    //console.log(thread + '............BEFORE')
                     thread.author = author.nickname
+                    thread.authorAvatar = author.avatar
                     thread.categoryName = category.name
-                    //console.log(Thread.create_at_ago().toString())
-                    //thread.create_at = Thread.create_at_ago(true)
-                    //console.log(thread.author)
-                    //console.log(thread + '............AFTER')
                 }else{
                     threads[i] = null
                 }
@@ -44,7 +36,6 @@ exports.getThreads = function(callback){
                 ep.emit('threads_ready')
             })
 
-            //用查询出的创建者ID去查询用户名
             _User.getUserById(thread.author_id, proxy.done('author'))
             _Category.getCategoryById(thread.category, proxy.done('category'))
         })

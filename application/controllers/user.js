@@ -17,7 +17,8 @@ exports.doRegister = function (req, res, next) {
         username : validator.trim(req.body.username).toLowerCase(),
         nickname : validator.trim(req.body.nickname),
         email : validator.trim(req.body.email).toLowerCase(),
-        gender : req.body.gender
+        gender : req.body.gender,
+        description : validator.trim(req.body.description)
     }
     var password = validator.trim(req.body.password)
     var passwordcf = validator.trim(req.body.passwordcf)
@@ -30,6 +31,7 @@ exports.doRegister = function (req, res, next) {
             username : data.username,
             nickname : data.nickname,
             email : data.email,
+            description : description,
             errors : msg
         })
     })
@@ -136,7 +138,8 @@ exports.doSetting = function(req, res, next){
     var data = {
         nickname : validator.trim(req.body.nickname),
         email : validator.trim(req.body.email).toLowerCase(),
-        gender : req.body.gender
+        gender : req.body.gender,
+        description : validator.trim(req.body.description)
     }
     var ep = new EventProxy()
     ep.fail(next)
@@ -233,4 +236,55 @@ exports.doPassword = function(req, res, next){
     }else{
         ep.emit('errors', "请登录后操作")
     }
+}
+
+//头像上传
+exports.avatar = function(req, res, next){
+    var id = req.session.user._id
+    _User.getUserById(id, function(err, user){
+        if(!user){
+            res.render('user/login')
+        }else{
+            res.render('user/avatar', {
+                session : req.session.user,
+                user : user
+            })
+        }
+    })
+}
+
+exports.doAvatar = function(req, res, next){
+    //console.log('files:', req.file)
+    //console.log('/uploads/avatar/' + req.file.filename)
+    var id = req.session.user._id
+    var data = {
+        avatar : req.file.filename
+    }
+    var ep = new EventProxy()
+    ep.fail(next)
+
+    ep.on('errors', function(msg){
+        res.status(403)
+        return res.render('user/avatar', {
+            user: req.session.user,
+            session : req.session.user,
+            errors : msg
+        })
+    })
+
+    if(id){
+        _User.getUserById(id, function (err, user) {
+            if (err) return next(err)
+            data.update_at = Date.now()
+            _user = _.assign(user, data)
+            _user.save(function (err, user) {
+                if (err) return next(err)
+                req.session.user = user
+                res.redirect('/avatar')
+            })
+        })
+    }else{
+        ep.emit('errors', "请登录后操作")
+    }
+
 }
