@@ -33,9 +33,10 @@ block append main
                                     strong
                                         a(href="/member/#{thread.author_id}") #{thread.author}
                                     span &nbsp;•&nbsp;#{moment(thread.create_at).fromNow()}
-                                    span &nbsp;•&nbsp;最后回复来自&nbsp;
-                                    strong
-                                        a(href="/member/#{thread.last_reply}") #{thread.lastReplyName}
+                                    if thread.comments > 0
+                                        span &nbsp;•&nbsp;最后回复来自&nbsp;
+                                        strong
+                                            a(href="/member/#{thread.last_reply}") #{thread.lastReplyName}
                             .reply
                                 a.replay-count(href="#") #{thread.comments}
                     .inner

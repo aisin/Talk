@@ -3,6 +3,7 @@ var _Category = require('../libs/Category')
 var _User = require('../libs/User')
 var _Thread = require('../libs/Thread')
 var _Comment = require('../libs/Comment')
+var validator = require('validator')
 var EventProxy = require('eventproxy')
 
 //Get : 发布主题页
@@ -20,8 +21,8 @@ exports.new = function (req, res, next) {
 exports.doNew = function(req, res, next){
 
     var _thread = {
-        title : req.body.title,
-        content : req.body.content,
+        title : validator.trim(req.body.title),
+        content : validator.trim(req.body.content),
         category : req.body.category,
         author_id : req.session.user._id,
         last_reply : req.session.user._id

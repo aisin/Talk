@@ -65,6 +65,8 @@ a.tb:hover {
 }
 .fl{float:left;}
 .fr{float:right;}
+
+
 .text-blue{color:#4285F4;}
 .grey{
     color: #999;
@@ -421,6 +423,12 @@ ul.actions li.highlight a:hover{
     border: none;
     padding: 5px 10px;
     outline: none;
+}
+.transparent{
+    background-color: transparent;
+    border: 2px dashed rgba(0, 0, 0, 0.1);
+    border-radius: 3px;
+    box-shadow: none;
 }
 #newThreadForm .full input[type=text]{
     background-color: #F9F9F9;
