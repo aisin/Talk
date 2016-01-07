@@ -10,7 +10,7 @@ var Comment = require('../models/comment')
  */
 exports.getCommentsByThread = function(id, callback){
     if(!id) return callback()
-    Comment.find({thread_id: id}, callback).sort({create_at: -1})
+    Comment.find({thread_id: id}, callback).sort({create_at: 1})
 }
 
 /**

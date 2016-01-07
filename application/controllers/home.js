@@ -7,17 +7,23 @@ var EventProxy = require('eventproxy')
 exports.index = function (req, res, next) {
     _Thread.getAllThreads(function(err, threads){
         var ep = new EventProxy()
-        ep.after('threads_ready', threads.length, function(){
+        ep.fail(next)
+        ep.after('threads_all', threads.length, function(){
+            ep.emit('threads_ready', threads)
+        })
+        ep.all('threads_ready', 'categories', function(threads, categories){
             res.render('home', {
                 session : req.session.user,
-                threads : threads
+                threads : threads,
+                categories : categories
             })
         })
-        ep.fail(next)
 
+        //处理每一条主题
         threads.forEach(function(thread, i){
             var proxy = new EventProxy()
-            proxy.all('author', 'category', 'comments', 'last_reply', function(author, category, comments, lastReply){
+            var events = ['author', 'category', 'comments', 'last_reply']
+            proxy.all(events, function(author, category, comments, lastReply){
                 if(author && category){
                     thread.author = author.nickname
                     thread.authorAvatar = author.avatar
@@ -27,12 +33,17 @@ exports.index = function (req, res, next) {
                 }else{
                     threads[i] = null
                 }
-                ep.emit('threads_ready')
+                ep.emit('threads_all')
             })
             _User.getUserById(thread.author_id, proxy.done('author'))
             _Category.getCategoryById(thread.category, proxy.done('category'))
             _Comment.getCountByThread(thread._id, proxy.done('comments'))
             _User.getUserById(thread.last_reply, proxy.done('last_reply'))
+        })
+
+        //获取分类
+        _Category.getAllCategories(function(err, categories){
+            ep.emit('categories', categories)
         })
     })
 }

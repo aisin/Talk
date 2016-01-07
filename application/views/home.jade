@@ -12,13 +12,8 @@ block append main
             #Main
                 .box
                     #Tab.inner
-                        a(href="#") 技术
-                        a(href="#") 创意
-                        a(href="#") 好玩
-                        a(href="#") Apple
-                        a(href="#") 酷工作
-                        a(href="#") 城市
-                        a(href="#") 问与答
+                        each category in categories
+                            a(href="/category/#{category._id}") #{category.name}
                     each thread in threads
                         .cell.item
                             .avatar
