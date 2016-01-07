@@ -3,6 +3,8 @@ block variables
 extends ../common/layout
 block header
     include ../common/header
+block prepend style
+    link(href="/essage/essage.css", rel="stylesheet")
 block append main
     #Wrap
         .container
@@ -31,7 +33,7 @@ block append main
                             | !{thread.content}
                     .thread-handle.clearfix
                         .views #{thread.views} 次点击
-                        a.tb(href="#") 加入收藏
+                        a.tb(href="javascript:;", onclick="collect(this, '#{thread._id}')") #{collect ? '取消收藏' : '加入收藏'}
                         | &nbsp;
                         a.tb(href="#") 忽略主题
                         | &nbsp;
@@ -42,3 +44,25 @@ block append main
             include ../common/sidebar
 block footer
     include ../common/footer
+
+block append script
+    script(type="text/javascript", src="/essage/essage.js")
+    script(type="text/javascript").
+        function collect(self, id){
+            var self = $(self);
+            var thread_id = id;
+            $.post('/thread/collect', {thread_id: thread_id}, function (data) {
+                if(data.login == 0){
+                    Essage.show({
+                        message: data.msg,
+                        status: 'error'
+                    }, 2000);
+                }else{
+                    data.status == 1 ? self.text('取消收藏') : self.text('加入收藏');
+                    Essage.show({
+                        message: data.msg,
+                        status: 'success'
+                    }, 2000);
+                }
+            });
+        }

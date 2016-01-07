@@ -3,6 +3,7 @@ var _Category = require('../libs/Category')
 var _User = require('../libs/User')
 var _Thread = require('../libs/Thread')
 var _Comment = require('../libs/Comment')
+var Utils = require('../libs/Utils')
 var validator = require('validator')
 var EventProxy = require('eventproxy')
 
@@ -67,23 +68,33 @@ exports.doNew = function(req, res, next){
 
 //Get : 主题详情页
 exports.detail = function(req, res, next){
-    var id = req.params.id
+    var myId = req.session.user && req.session.user._id
+    var thread = req.params.id
     var ep = new EventProxy()
-    var events = ['thread', 'author', 'category', 'comments_ready']
+    var events = ['thread', 'author', 'category', 'comments_ready', 'collect']
 
     ep.fail(next)
 
-    ep.all(events, function (thread, author, category, comments) {
+    ep.all(events, function (thread, author, category, comments, collect) {
         res.render('thread/detail', {
             session: req.session.user,
             thread : thread,
             author : author,
             category : category,
-            comments : comments
+            comments : comments,
+            collect : collect
         })
     })
 
-    _Thread.getThreadById(id, function(err, thread){
+    if(myId){
+        _Thread.getCollectById(myId, thread, ep.done(function(thread){
+            return thread ? ep.emit('collect', true) : ep.emit('collect', false)
+        }))
+    }else{
+        ep.emit('collect', null)
+    }
+
+    _Thread.getThreadById(thread, function(err, thread){
         if(err) return next(err)
         _Thread.updateViewsOfThread(thread._id, function(){
             thread.views += 1
@@ -109,5 +120,34 @@ exports.detail = function(req, res, next){
                 ep.emit('comments_ready', comments)
             })
         })
+    })
+}
+
+//主题收藏
+exports.collect = function(req, res, next){
+    var data = {
+        user_id : req.session.user._id,
+        thread_id : req.body.thread_id
+    }
+    _Thread.getThreadById(data.thread_id, function(err, thread){
+        if(!thread){
+            Utils.json(res, 0, '该主题不存在')
+        }else{
+            var ep = new EventProxy()
+
+            _Thread.getCollectById(data.user_id, data.thread_id, ep.done('handler'))
+
+            ep.on('handler', function(result){
+                if(!result){
+                    _Thread.collectThread(data.user_id, data.thread_id, function(){
+                        Utils.json(res, 1, '加入收藏成功')
+                    })
+                }else{
+                    _Thread.removeCollectThread(data.user_id, data.thread_id, function(){
+                        Utils.json(res, 0, '取消收藏成功')
+                    })
+                }
+            })
+        }
     })
 }

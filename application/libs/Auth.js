@@ -8,7 +8,7 @@ var Auth = {
 
     userRequiredAjax : function(req, res, next){
         if(!req.session.user)
-            return res.json({status : 0, msg : '请登录后再操作'})
+            return res.json({login : 0, msg : '请登录后再操作'})
         next()
     },
 
@@ -20,7 +20,7 @@ var Auth = {
 
     adminRequiredAjax : function(req, res, next){
         if(!req.session.user || req.session.user.role !== 'admin')
-            return res.json({status : 0, msg : '请登录后再操作'})
+            return res.json({login : 0, msg : '请登录后再操作'})
         next()
     }
 

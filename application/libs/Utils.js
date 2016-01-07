@@ -14,7 +14,7 @@ var Utils = {
     },
 
     //
-    jsonMsg : function(res, status, msg){
+    json : function(res, status, msg){
         res.json({
             status : status,
             msg : msg

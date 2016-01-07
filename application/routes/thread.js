@@ -9,4 +9,6 @@ router.post('/thread/new', Auth.userRequired, thread.doNew)
 
 router.get('/thread/:id', thread.detail)
 
+router.post('/thread/collect', Auth.userRequiredAjax, thread.collect)
+
 module.exports = router
