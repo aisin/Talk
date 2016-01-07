@@ -19,23 +19,20 @@ block append main
                         a(href="/category/#{category._id}") #{category.name}
                         .desc 这里讨论各种 Python 语言编程话题，也包括 Django，Tornado 等框架的讨论。
                         a.super.normal.button.inline-block(href="/thread/new") 创建新主题
-                    if threads
-                        each thread in threads
-                            .cell.item
-                                .avatar
-                                    a(href="/member/#{thread.author_id}")
-                                        img(src="/uploads/avatar/" + "#{thread.authorAvatar}")
-                                .all
-                                    h2.title
-                                        a(href="/thread/#{thread._id}") #{thread.title}
-                                    .meta.small.fade
-                                        strong
-                                            a(href="/member/#{thread.author_id}") #{thread.author}
-                                        span &nbsp;•&nbsp;#{moment(thread.create_at).fromNow()}
-                                .reply
-                                    a.replay-count(href="#") 18
-                    else
-                        p none...
+                    each thread in threads
+                        .cell.item
+                            .avatar
+                                a(href="/member/#{thread.author_id}")
+                                    img(src="/uploads/avatar/" + "#{thread.authorAvatar}")
+                            .all
+                                h2.title
+                                    a(href="/thread/#{thread._id}") #{thread.title}
+                                .meta.small.fade
+                                    strong
+                                        a(href="/member/#{thread.author_id}") #{thread.author}
+                                    span &nbsp;•&nbsp;#{moment(thread.create_at).fromNow()}
+                            .reply
+                                a.replay-count(href="#") #{thread.comments}
                     .inner
                         a(href="#")
                             span.chevron →&nbsp;

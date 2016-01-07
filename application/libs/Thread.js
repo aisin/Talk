@@ -16,3 +16,14 @@ exports.updateViewsOfThread = function(id, callback){
 exports.getCountByCategory = function(category, callback){
     Thread.count({category: category, deleted: false}, callback)
 }
+
+exports.getThreadsByCategory = function(category, callback){
+    Thread.find({category: category, deleted: false}, function(err, threads){
+        if(err) return callback(err)
+        if(threads.length === 0){
+            return callback(null, [])
+        }else{
+            return callback(null, threads)
+        }
+    }).sort({update_at: -1})
+}
