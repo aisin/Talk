@@ -67,26 +67,3 @@ block append main
 
 block footer
     include ../common/footer
-
-block append script
-    script(type="text/javascript", src="/essage/essage.js")
-    script(type="text/javascript").
-        jQuery(function($){
-            $('#submit').click(function(){
-                var formVal = $('#registerForm').serialize();
-                $.post('/register', formVal, function(data){
-                    if(data.status == 1){
-                        Essage.show({
-                            message: data.msg,
-                            status: 'success',
-                            redirect : '/'
-                        }, 2000);
-                    }else{
-                        Essage.show({
-                            message: data.msg,
-                            status: 'error'
-                        }, 2000);
-                    }
-                },'json');
-            });
-        });

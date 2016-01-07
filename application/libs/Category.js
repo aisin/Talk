@@ -8,7 +8,9 @@ var Category = require('../models/category')
  * @param {Function} callback 回调函数
  */
 exports.getAllCategories = function(callback){
-    Category.find({}, callback)
+    Category.find({}, function(err, categories){
+        callback(err, categories)
+    })
 }
 
 /**
@@ -20,6 +22,7 @@ exports.getAllCategories = function(callback){
  * @param {Function} callback 回调函数
  */
 exports.getCategoryById = function(id, callback){
-    if(!id) return callback()
-    Category.findOne({_id : id}, callback)
+    Category.findOne({_id : id}, function(err, category){
+        callback(err, category)
+    })
 }
