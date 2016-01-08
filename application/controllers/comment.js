@@ -2,6 +2,7 @@ var Comment = require('../models/comment')
 var Thread = require('../models/thread')
 var validator = require('validator')
 var EventProxy = require('eventproxy')
+var Utils = require('../libs/Utils')
 
 exports.add = function(req, res, next){
     var data = {
@@ -35,4 +36,11 @@ exports.add = function(req, res, next){
     }else{
         ep.emit('errors', "回复的内容不能为空")
     }
+}
+
+exports.thank = function(req, res, next){
+    var commentId = req.body.comment_id
+    Comment.update({_id: commentId}, {$inc: {thanks: 1}}).exec(function(){
+        Utils.json(res, 1, '感谢成功')
+    })
 }

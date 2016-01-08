@@ -6,11 +6,12 @@ else
     .box
         .cell
             span.grey #{comments.length}&nbsp;回复
-            //strong.snow &nbsp;&nbsp;|&nbsp;&nbsp;
-            //span.grey 直到 3 小时前
         each comment, i in comments
-            .cell(id="#{comment._id}")
+            .cell(data-comment-id="#{comment._id}")
                 .fr.fade
+                    .thank_area
+                        a.thank(href="javascript:;") 感谢 TA
+                    | &nbsp;&nbsp;
                     span.no #{i+1}
                 .avatar
                     a(href="/member/" + "#{comment.commenter_id}")
@@ -20,6 +21,10 @@ else
                         a(href="/member/" + "#{comment.commenter_id}") #{comment.nickname}
                     | &nbsp;&nbsp;
                     span.small.fade #{moment(comment.create_at).fromNow()}
+                    | &nbsp;&nbsp;
+                    span.thank_count.fade(class=comment.thanks > 0 ? '' : 'hide')
+                        | ♥&nbsp;
+                        span #{comment.thanks}
                     .major #{comment.content}
 if session
     .box

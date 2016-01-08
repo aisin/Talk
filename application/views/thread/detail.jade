@@ -64,5 +64,24 @@ block append script
                         status: 'success'
                     }, 2000);
                 }
-            });
+            },'json');
         }
+        $('.thank').click(function(){
+            var self = $(this);
+            var comment = self.parents('.cell');
+            var comment_id = comment.attr('data-comment-id');
+            var thankCount = parseInt(comment.find('.thank_count span').text());
+            $.post('/comment/thank', {comment_id: comment_id}, function(data) {
+                if(data.login == 0){
+                    Essage.show({
+                        message: data.msg,
+                        status: 'error'
+                    }, 2000);
+                }else{
+                    if(data.status == 1){
+                        comment.find('.thank_count span').text(++thankCount);
+                        comment.find('.thank_count').removeClass('hide');
+                    }
+                }
+            },'json');
+        });
