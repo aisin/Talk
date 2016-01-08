@@ -415,6 +415,34 @@ ul.actions li.highlight a:hover{
     line-height: 1.6em;
     margin-top: 5px;
 }
+.cell_tabs {
+    padding: 10px 10px 0px 10px;
+    border-bottom: 1px solid #e2e2e2;
+    /*text-align: center;*/
+}
+.cell_tab:link, .cell_tab:visited {
+    font-size: 14px;
+    border-bottom: 3px solid transparent;
+    display: inline-block;
+    text-decoration: none;
+    margin-right: 15px;
+    padding: 0px 5px 5px 5px;
+    color: #99a;
+}
+
+.cell_tab:hover {
+    color: #778087;
+    border-bottom: 3px solid #f0f0f0;
+}
+
+.cell_tab_current:link, .cell_tab_current:visited  {
+    font-size: 14px;
+    border-bottom: 3px solid #778087;
+    display: inline-block;
+    text-decoration: none;
+    margin-right: 15px;
+    padding: 0px 5px 5px 5px;
+}
 .full{
     padding: 0;
 }
@@ -553,8 +581,32 @@ ul.actions li.highlight a:hover{
     font-size: 12px;
 }
 
+/*member*/
+.member .photo{
+    float: left;
+}
+.member .photo img{
+    width: 72px;
+    height: 72px;
+    border-radius: 4px;
+}
+.member .info{
+    float: left;
+    padding: 0 0 0 10px;
+}
+.member .info .name{
+    font-size: 20px;
+    margin-bottom: 5px;
+}
+.member .info .archive{
+    color: #999;
+}
+.member .cell .all{
+    padding-left: 0;
+}
 
-/* #Footer */
+
+    /* #Footer */
 #Footer{
     text-align: center;
     font-size: 0.8em;

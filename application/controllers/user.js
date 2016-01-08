@@ -1,5 +1,6 @@
 var User = require('../models/user')
 var _User = require('../libs/User')
+var _Thread = require('../libs/Thread')
 var validator = require('validator')
 require('../libs/validator_extend')
 var Utils = require('../libs/Utils')
@@ -281,6 +282,42 @@ exports.doAvatar = function(req, res, next){
             if (err) return next(err)
             req.session.user = user
             res.redirect('/avatar')
+        })
+    })
+}
+
+//Get : 个人信息页
+exports.member = function(req, res, next){
+    var member = req.params.id
+    var ep = new EventProxy()
+
+    var events = ['member', 'getCollects']
+
+    ep.all(events, function(member, threads){
+        res.render('user/member', {
+            session : req.session.user,
+            member : member,
+            threads : threads
+        })
+    })
+    //查询用户信息
+    _User.getUserById(member, ep.done(function(member){
+        ep.emit('member', member)
+    }))
+    //准备收藏主题数据
+    _Thread.getMemberCollects(member, function(err, collects){
+        var idArray = []
+        var proxy = new EventProxy()
+        proxy.after('whole', collects.length, function(results){
+            _Thread.getThreadsByIdArray(idArray, function(err, threads){
+                _Thread.getMetas(threads, function(results){
+                    ep.emit('getCollects', results)
+                })
+            })
+        })
+        collects.forEach(function(collect, i){
+            idArray.push(collect.thread_id)
+            proxy.emit('whole')
         })
     })
 }

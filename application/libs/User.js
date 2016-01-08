@@ -9,7 +9,6 @@ var User = require('../models/user')
  * @param {Function} callback 回调函数
  */
 exports.getUserById = function(id, callback){
-    if(!id) return callback()
     User.findOne({_id : id}, callback)
 }
 

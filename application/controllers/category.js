@@ -11,16 +11,8 @@ exports.list = function(req, res, next){
         if(err) return next(err)
         var ep = new EventProxy()
         ep.fail(next)
-        //查询分类名称
-        _Category.getCategoryById(cate, ep.done(function(category){
-            ep.emit('category', category)
-        }))
-        //查询分类下主题数
-        _Thread.getCountByCategory(cate, ep.done(function(count){
-            ep.emit('count', count)
-        }))
-
-        ep.all(['threads_ready', 'category', 'count'], function(threads, category, count){
+        var events = ['category', 'count', 'threads_ready']
+        ep.all(events, function(category, count, threads){
             return res.render('category/list', {
                 session : req.session.user,
                 category : category,
@@ -29,26 +21,19 @@ exports.list = function(req, res, next){
             })
         })
 
-        ep.after('threads_all', threads.length, function(){
-            ep.emit('threads_ready', threads)
-        })
+        //查询分类名称
+        _Category.getCategoryById(cate, ep.done(function(category){
+            ep.emit('category', category)
+        }))
 
-        threads.forEach(function(thread, i){
-            var proxy = new EventProxy()
+        //查询分类下主题数
+        _Thread.getCountByCategory(cate, ep.done(function(count){
+            ep.emit('count', count)
+        }))
 
-            proxy.all('author', 'comments', function(author, comments){
-                if(author){
-                    thread.author = author.nickname
-                    thread.authorAvatar = author.avatar
-                    thread.comments = comments
-                }else{
-                    threads[i] = null
-                }
-                ep.emit('threads_all')
-            })
-
-            _User.getUserById(thread.author_id, proxy.done('author'))
-            _Comment.getCountByThread(thread._id, proxy.done('comments'))
+        //处理每一条主题
+        _Thread.getMetas(threads, function(results){
+            ep.emit('threads_ready', results)
         })
     })
 }

@@ -1,5 +1,9 @@
 var Thread = require('../models/thread')
 var ThreadCollect = require('../models/threadCollect')
+var _User = require('./User')
+var _Category = require('./Category')
+var _Comment = require('./Comment')
+var EventProxy = require('eventproxy')
 
 exports.getAllThreads = function(callback){
     Thread.find({deleted: false}).sort({update_at: -1}).exec(callback)
@@ -39,4 +43,37 @@ exports.collectThread = function(user_id, thread_id, callback){
 
 exports.removeCollectThread = function(user_id, thread_id, callback){
     ThreadCollect.remove({user_id: user_id, thread_id: thread_id}, callback)
+}
+
+exports.getMemberCollects = function(member, callback){
+    ThreadCollect.find({user_id: member}, callback).sort({create_at: -1})
+}
+
+exports.getMetas = function(threads, callback){
+    var ep = new EventProxy()
+    ep.after('whole', threads.length, function(){
+        callback(threads)
+    })
+    threads.forEach(function(thread, i){
+        var proxy = new EventProxy()
+        var events = ['author', 'category', 'comments', 'last_reply']
+        proxy.all(events, function(author, category, comments, lastReply){
+            if(author && category){
+                thread.author = author.nickname
+                thread.authorAvatar = author.avatar
+                thread.categoryName = category.name
+                thread.comments = comments
+                thread.lastReplyName = lastReply.nickname
+            }
+            ep.emit('whole', threads)
+        })
+        _User.getUserById(thread.author_id, proxy.done('author'))
+        _Category.getCategoryById(thread.category, proxy.done('category'))
+        _Comment.getCountByThread(thread._id, proxy.done('comments'))
+        _User.getUserById(thread.last_reply, proxy.done('last_reply'))
+    })
+}
+
+exports.getThreadsByIdArray = function(idAry, callback){
+    Thread.find({_id : {$in: idAry}}, callback)
 }

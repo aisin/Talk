@@ -1,0 +1,40 @@
+block variables
+    -var title = 'member'
+extends ../common/layout
+block header
+    include ../common/header
+block append main
+    #Wrap
+        .container
+            #Main
+                .box.member
+                    .cell
+                        .photo
+                            img(src="/uploads/avatar/" + '#{member.avatar}', width="72", height="72")
+                        .info
+                            h1.name #{member.nickname}
+                            .archive 加入于 #{moment(member.create_at).fromNow()}
+                .box.member
+                    .cell_tabs
+                        a.cell_tab_current(href="") #{member.nickname} 收藏的所有主题
+                        a.cell_tab(href="") 创建的主题
+                    each thread in threads
+                        .cell.item
+                            .all
+                                h2.title
+                                    a(href="/thread/#{thread._id}") #{thread.title}
+                                .meta.small.fade
+                                    a.node(href="/category/#{thread.category}") #{thread.categoryName}
+                                    span &nbsp;•&nbsp;
+                                    strong
+                                        a(href="/member/#{thread.author_id}") #{thread.author}
+                                    span &nbsp;•&nbsp;#{moment(thread.create_at).fromNow()}
+                                    if thread.comments > 0
+                                        span &nbsp;•&nbsp;最后回复来自&nbsp;
+                                        strong
+                                            a(href="/member/#{thread.last_reply}") #{thread.lastReplyName}
+                            .reply
+                                a.replay-count(href="#") #{thread.comments}
+            include ../common/sidebar
+block footer
+    include ../common/footer
