@@ -1,5 +1,5 @@
 block variables
-    -var title = 'member'
+    -var title = member.nickname
 extends ../common/layout
 block header
     include ../common/header
@@ -16,7 +16,7 @@ block append main
                             .archive 加入于 #{moment(member.create_at).fromNow()}
                 .box.member
                     .cell_tabs
-                        a.cell_tab_current(href="") #{member.nickname} 收藏的所有主题
+                        a.cell_tab_current(href="") #{member.nickname} 收藏的主题
                         a.cell_tab(href="") 创建的主题
                     each thread in threads
                         .cell.item

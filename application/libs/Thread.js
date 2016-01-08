@@ -75,5 +75,5 @@ exports.getMetas = function(threads, callback){
 }
 
 exports.getThreadsByIdArray = function(idAry, callback){
-    Thread.find({_id : {$in: idAry}}, callback)
+    Thread.find({_id : {$in: idAry}}, callback).sort({create_at: -1})
 }
