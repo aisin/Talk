@@ -33,14 +33,14 @@ exports.getThreadsByCategory = function(category, callback){
 }
 
 exports.getCollectById = function(user, thread, callback){
-    ThreadCollect.findOne({user_is: user, thread_id: thread}, callback)
+    ThreadCollect.findOne({user_id: user, thread_id: thread}, callback)
 }
 
 exports.collectThread = function(user, thread, callback){
-    var thread = new ThreadCollect({user_is: user, thread_id: thread})
+    var thread = new ThreadCollect({user_id: user, thread_id: thread})
     thread.save(callback)
 }
 
 exports.removeCollectThread = function(user, thread, callback){
-    ThreadCollect.remove({user_is: user, thread_id: thread}, callback)
+    ThreadCollect.remove({user_id: user, thread_id: thread}, callback)
 }

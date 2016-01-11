@@ -295,7 +295,6 @@ exports.member = function(req, res, next){
     var ep = new EventProxy()
     var events = ['member', 'threads']
     ep.all(events, function(member, threads){
-        console.log(threads)
         res.render('user/member', {
             session : req.session.user,
             member : member,

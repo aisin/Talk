@@ -125,23 +125,24 @@ exports.detail = function(req, res, next){
 
 //主题收藏
 exports.collect = function(req, res, next){
-    var user = req.session.user._id
-    var thread = req.body.thread_id
-    _Thread.getThreadById(thread, function(err, thread){
+    var user_id = req.session.user._id
+    var thread_id = req.body.thread_id
+    console.log(user_id)
+    _Thread.getThreadById(thread_id, function(err, thread){
         if(!thread){
             Utils.json(res, 0, '该主题不存在')
         }else{
             var ep = new EventProxy()
 
-            _Thread.getCollectById(user, thread, ep.done('handler'))
+            _Thread.getCollectById(user_id, thread_id, ep.done('handler'))
 
             ep.on('handler', function(result){
                 if(!result){
-                    _Thread.collectThread(user, thread, function(){
+                    _Thread.collectThread(user_id, thread_id, function(){
                         Utils.json(res, 1, '加入收藏成功')
                     })
                 }else{
-                    _Thread.removeCollectThread(user, thread, function(){
+                    _Thread.removeCollectThread(user_id, thread_id, function(){
                         Utils.json(res, 0, '取消收藏成功')
                     })
                 }
