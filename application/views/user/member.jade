@@ -22,19 +22,19 @@ block append main
                         .cell.item
                             .all
                                 h2.title
-                                    a(href="/thread/#{thread._id}") #{thread.title}
+                                    a(href="/thread/#{thread.thread_id._id}") #{thread.thread_id.title}
                                 .meta.small.fade
-                                    a.node(href="/category/#{thread.category}") #{thread.categoryName}
+                                    a.node(href="/category/#{thread.thread_id.category._id}") #{thread.thread_id.category.name}
                                     span &nbsp;•&nbsp;
                                     strong
-                                        a(href="/member/#{thread.author_id}") #{thread.author}
-                                    span &nbsp;•&nbsp;#{moment(thread.create_at).fromNow()}
-                                    if thread.comments > 0
+                                        a(href="/member/#{thread.thread_id.author_id._id}") #{thread.thread_id.author_id.nickname}
+                                    span &nbsp;•&nbsp;#{moment(thread.thread_id.create_at).fromNow()}
+                                    if thread.thread_id.comments > 0
                                         span &nbsp;•&nbsp;最后回复来自&nbsp;
                                         strong
-                                            a(href="/member/#{thread.last_reply}") #{thread.lastReplyName}
+                                            a(href="/member/#{thread.thread_id.last_reply._id}") #{thread.thread_id.last_reply.nickname}
                             .reply
-                                a.replay-count(href="#") #{thread.comments}
+                                a.replay-count(href="#") #{thread.thread_id.comments}
             include ../common/sidebar
 block footer
     include ../common/footer

@@ -1,6 +1,7 @@
 var mongoose = require('mongoose')
+var Schema = mongoose.Schema
 
-var userSchema = new mongoose.Schema({
+var userSchema = new Schema({
 
     username : String,
     nickname : String,
@@ -27,12 +28,4 @@ var userSchema = new mongoose.Schema({
 
 })
 
-userSchema.statics = {
-    findById: function(id, cb){
-        return this.findOne({_id : id}).exec(cb)
-    }
-}
-
-var User = mongoose.model('User', userSchema)
-
-module.exports = User
+module.exports = mongoose.model('User', userSchema)

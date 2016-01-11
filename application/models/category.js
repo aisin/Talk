@@ -1,7 +1,7 @@
 var mongoose = require('mongoose')
-var ObjectId  = mongoose.Schema.ObjectId
+var Schema = mongoose.Schema
 
-var categorySchema = new mongoose.Schema({
+var categorySchema = new Schema({
 
     name : String,
     create_at : {
@@ -15,6 +15,4 @@ var categorySchema = new mongoose.Schema({
 
 })
 
-var Category = mongoose.model('Category', categorySchema)
-
-module.exports = Category
+module.exports = mongoose.model('Category', categorySchema)

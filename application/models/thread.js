@@ -1,13 +1,22 @@
 var mongoose = require('mongoose')
-var ObjectId  = mongoose.Schema.ObjectId
+var Schema = mongoose.Schema
 
-var threadSchema = new mongoose.Schema({
+var threadSchema = new Schema({
 
     title : String,
     content : String,
-    category : ObjectId,
-    author_id: ObjectId,
-    last_reply: ObjectId,
+    category : {
+        type : Schema.Types.ObjectId,
+        ref : 'Category'
+    },
+    author_id: {
+        type : Schema.Types.ObjectId,
+        ref : 'User'
+    },
+    last_reply: {
+        type : Schema.Types.ObjectId,
+        ref : 'User'
+    },
     views: {
         type: Number,
         default: 0
@@ -27,6 +36,4 @@ var threadSchema = new mongoose.Schema({
 
 })
 
-var Thread = mongoose.model('Thread', threadSchema)
-
-module.exports = Thread
+module.exports = mongoose.model('Thread', threadSchema)

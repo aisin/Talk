@@ -1,10 +1,13 @@
+var EventProxy = require('eventproxy')
 var User = require('../models/user')
+var Thread = require('../models/thread')
+var Category = require('../models/category')
+var ThreadCollect = require('../models/threadCollect')
 var _User = require('../libs/User')
-var _Thread = require('../libs/Thread')
+var _Comment = require('../libs/Comment')
 var validator = require('validator')
 require('../libs/validator_extend')
 var Utils = require('../libs/Utils')
-var EventProxy = require('eventproxy')
 var _ = require('lodash')
 
 //Get : 注册页
@@ -290,34 +293,53 @@ exports.doAvatar = function(req, res, next){
 exports.member = function(req, res, next){
     var member = req.params.id
     var ep = new EventProxy()
-
-    var events = ['member', 'getCollects']
-
+    var events = ['member', 'threads']
     ep.all(events, function(member, threads){
+        console.log(threads)
         res.render('user/member', {
             session : req.session.user,
             member : member,
             threads : threads
         })
     })
+
     //查询用户信息
     _User.getUserById(member, ep.done(function(member){
         ep.emit('member', member)
     }))
-    //准备收藏主题数据
-    _Thread.getMemberCollects(member, function(err, collects){
-        var idArray = []
-        var proxy = new EventProxy()
-        proxy.after('whole', collects.length, function(results){
-            _Thread.getThreadsByIdArray(idArray, function(err, threads){
-                _Thread.getMetas(threads, function(results){
-                    ep.emit('getCollects', results)
+
+    ThreadCollect.find({user_id: member})
+        .populate('thread_id')
+        .sort({create_at: -1})
+        .exec(function(err, resultsA){
+            //deep `populate`
+            Category.populate(resultsA, {
+                path: 'thread_id.category',
+                select: 'name'
+            }, function(err, resultsB){
+
+                User.populate(resultsB, {
+                    path: 'thread_id.author_id',
+                    select: 'nickname',
+                }, function(err, resultsC){
+
+                    User.populate(resultsC, {
+                        path: 'thread_id.last_reply',
+                        select: 'nickname'
+                    }, function(err, resultsD){
+
+                        var proxy = new EventProxy()
+                        proxy.after('comments', resultsD.length, function(){
+                            ep.emit('threads', resultsD)
+                        })
+                        resultsD.forEach(function(thread, i){
+                            _Comment.getCountByThread(thread.thread_id._id, ep.done(function(count){
+                                thread.thread_id.comments = count
+                                proxy.emit('comments')
+                            }))
+                        })
+                    })
                 })
             })
         })
-        collects.forEach(function(collect, i){
-            idArray.push(collect.thread_id)
-            proxy.emit('whole')
-        })
-    })
 }
