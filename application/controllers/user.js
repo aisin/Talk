@@ -11,7 +11,7 @@ var Utils = require('../libs/Utils')
 var _ = require('lodash')
 
 //Get : 注册页
-exports.register = function (req, res) {
+exports.register = function (req, res, next) {
     res.render('user/register')
 }
 
@@ -35,7 +35,7 @@ exports.doRegister = function (req, res, next) {
             username : data.username,
             nickname : data.nickname,
             email : data.email,
-            description : description,
+            description : data.description,
             errors : msg
         })
     })

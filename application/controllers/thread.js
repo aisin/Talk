@@ -1,10 +1,10 @@
+var validator = require('validator')
+var EventProxy = require('eventproxy')
 var Thread = require('../models/thread')
 var Comment = require('../models/comment')
 var _Category = require('../libs/Category')
 var _Thread = require('../libs/Thread')
 var Utils = require('../libs/Utils')
-var validator = require('validator')
-var EventProxy = require('eventproxy')
 
 //Get : 发布主题页
 exports.new = function (req, res, next) {
@@ -119,7 +119,7 @@ exports.detail = function(req, res, next){
         })
 }
 
-//主题收藏
+//Ajax : 主题收藏
 exports.collect = function(req, res, next){
     var user_id = req.session.user._id
     var thread_id = req.body.thread_id

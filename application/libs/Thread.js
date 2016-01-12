@@ -1,9 +1,5 @@
 var Thread = require('../models/thread')
 var ThreadCollect = require('../models/threadCollect')
-var _User = require('./User')
-var _Category = require('./Category')
-var _Comment = require('./Comment')
-var EventProxy = require('eventproxy')
 
 exports.getAllThreads = function(callback){
     Thread.find({deleted: false}).sort({update_at: -1}).exec(callback)
@@ -19,17 +15,6 @@ exports.updateViewsOfThread = function(id, callback){
 
 exports.getCountByCategory = function(category, callback){
     Thread.count({category: category, deleted: false}, callback)
-}
-
-exports.getThreadsByCategory = function(category, callback){
-    Thread.find({category: category, deleted: false}, function(err, threads){
-        if(err) return callback(err)
-        if(threads.length === 0){
-            return callback(null, [])
-        }else{
-            return callback(null, threads)
-        }
-    }).sort({update_at: -1})
 }
 
 exports.getCollectById = function(user, thread, callback){

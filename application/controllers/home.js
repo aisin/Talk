@@ -2,8 +2,7 @@ var EventProxy = require('eventproxy')
 var Thread = require('../models/thread')
 var _Category = require('../libs/Category')
 var _Comment = require('../libs/Comment')
-var _User = require('../libs/User')
-var _Thread = require('../libs/Thread')
+var Common = require('../libs/Common')
 
 exports.index = function (req, res, next) {
     Thread.find({deleted: false})
@@ -21,15 +20,15 @@ exports.index = function (req, res, next) {
         .exec(function(err, threads){
             var ep = new EventProxy()
             ep.fail(next)
-            var events = ['threadsReady', 'categories', 'usersTotal', 'ThreadsTotal', 'commentsTotal']
-            ep.all(events, function(threads, categories, usersTotal, ThreadsTotal, commentsTotal){
+            var events = ['threadsReady', 'categories', 'communityData']
+            ep.all(events, function(threads, categories, communityData){
                 res.render('home', {
                     session : req.session.user,
                     threads : threads,
                     categories : categories,
-                    usersTotal : usersTotal,
-                    ThreadsTotal : ThreadsTotal,
-                    commentsTotal : commentsTotal
+                    usersTotal : communityData.usersTotal,
+                    threadsTotal : communityData.threadsTotal,
+                    commentsTotal : communityData.commentsTotal
                 })
             })
 
@@ -49,19 +48,9 @@ exports.index = function (req, res, next) {
                 ep.emit('categories', categories)
             })
 
-            //获取社区总用户数
-            _User.getTotalCount(function(err, count){
-                ep.emit('usersTotal', count)
-            })
-
-            //获取社区总主题数
-            _Thread.getTotalCount(function(err, count){
-                ep.emit('ThreadsTotal', count)
-            })
-
-            //获取社区总评论数
-            _Comment.getTotalCount(function(err, count){
-                ep.emit('commentsTotal', count)
+            //获取社区数据
+            Common.getCommunityData(function(communityData){
+                ep.emit('communityData', communityData)
             })
         })
 }
