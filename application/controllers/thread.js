@@ -1,13 +1,10 @@
 var Thread = require('../models/thread')
 var Comment = require('../models/comment')
 var _Category = require('../libs/Category')
-var _User = require('../libs/User')
 var _Thread = require('../libs/Thread')
-var _Comment = require('../libs/Comment')
 var Utils = require('../libs/Utils')
 var validator = require('validator')
 var EventProxy = require('eventproxy')
-var _ = require('lodash')
 
 //Get : 发布主题页
 exports.new = function (req, res, next) {
