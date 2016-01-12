@@ -81,6 +81,11 @@ block append script
                     if(data.status == 1){
                         comment.find('.thank_count span').text(++thankCount);
                         comment.find('.thank_count').removeClass('hide');
+                    }else{
+                        Essage.show({
+                            message: data.msg,
+                            status: 'error'
+                        }, 2000);
                     }
                 }
             },'json');

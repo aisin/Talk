@@ -234,6 +234,7 @@ a.replay-count:hover{
 textarea.tp{
     vertical-align: top;
     resize: none;
+    line-height: 1.5em;
 }
 .tp:disabled{
     background-color: #F9F9F9;

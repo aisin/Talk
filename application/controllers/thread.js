@@ -112,7 +112,6 @@ exports.detail = function(req, res, next){
             proxy.after('comments', comments.length, function(){
                 ep.emit('commentsReady', comments)
             })
-
             comments.forEach(function(comment, i){
                 comment.thanked = comment.thanks.indexOf(me) > -1 ? true : false
                 proxy.emit('comments')
@@ -124,15 +123,12 @@ exports.detail = function(req, res, next){
 exports.collect = function(req, res, next){
     var user_id = req.session.user._id
     var thread_id = req.body.thread_id
-    console.log(user_id)
     _Thread.getThreadById(thread_id, function(err, thread){
         if(!thread){
             Utils.json(res, 0, '该主题不存在')
         }else{
             var ep = new EventProxy()
-
             _Thread.getCollectById(user_id, thread_id, ep.done('handler'))
-
             ep.on('handler', function(result){
                 if(!result){
                     _Thread.collectThread(user_id, thread_id, function(){
