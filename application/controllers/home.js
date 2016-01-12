@@ -2,6 +2,8 @@ var EventProxy = require('eventproxy')
 var Thread = require('../models/thread')
 var _Category = require('../libs/Category')
 var _Comment = require('../libs/Comment')
+var _User = require('../libs/User')
+var _Thread = require('../libs/Thread')
 
 exports.index = function (req, res, next) {
     Thread.find({deleted: false})
@@ -19,11 +21,15 @@ exports.index = function (req, res, next) {
         .exec(function(err, threads){
             var ep = new EventProxy()
             ep.fail(next)
-            ep.all('threadsReady', 'categories', function(threads, categories){
+            var events = ['threadsReady', 'categories', 'usersTotal', 'ThreadsTotal', 'commentsTotal']
+            ep.all(events, function(threads, categories, usersTotal, ThreadsTotal, commentsTotal){
                 res.render('home', {
                     session : req.session.user,
                     threads : threads,
-                    categories : categories
+                    categories : categories,
+                    usersTotal : usersTotal,
+                    ThreadsTotal : ThreadsTotal,
+                    commentsTotal : commentsTotal
                 })
             })
 
@@ -41,6 +47,21 @@ exports.index = function (req, res, next) {
             //获取分类
             _Category.getAllCategories(function(err, categories){
                 ep.emit('categories', categories)
+            })
+
+            //获取社区总用户数
+            _User.getTotalCount(function(err, count){
+                ep.emit('usersTotal', count)
+            })
+
+            //获取社区总主题数
+            _Thread.getTotalCount(function(err, count){
+                ep.emit('ThreadsTotal', count)
+            })
+
+            //获取社区总评论数
+            _Comment.getTotalCount(function(err, count){
+                ep.emit('commentsTotal', count)
             })
         })
 }

@@ -20,3 +20,17 @@
                 .ladder.text-center
                     | 已注册用户请&nbsp;
                     a(href="/login") 登录
+    .box
+        .cell
+            span.fade 社区运行状况
+        .cell
+            ul
+                li.couple
+                    span.a.grey 注册会员
+                    strong.b #{usersTotal}
+                li.couple
+                    span.a.grey 主题
+                    strong.b #{ThreadsTotal}
+                li.couple
+                    span.a.grey 回复
+                    strong.b #{commentsTotal}

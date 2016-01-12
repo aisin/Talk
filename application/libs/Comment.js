@@ -11,3 +11,7 @@ var Comment = require('../models/comment')
 exports.getCountByThread = function(threadId, callback){
     Comment.count({thread_id: threadId}, callback)
 }
+
+exports.getTotalCount = function(callback){
+    Comment.count({}, callback)
+}

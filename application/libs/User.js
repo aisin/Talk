@@ -23,3 +23,7 @@ exports.getUserById = function(id, callback){
 exports.getUserByUsername = function(username, callback){
     User.findOne({username: username}, callback)
 }
+
+exports.getTotalCount = function(callback){
+    User.count({}, callback)
+}

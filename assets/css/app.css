@@ -484,6 +484,14 @@ ul.actions li.highlight a:hover{
     line-height: 1.2em;
     padding: 4px 0;
 }
+.couple{
+    line-height: 2em;
+}
+.couple .a{
+    width: 25%;
+    display: inline-block;
+    padding-right: 8px;
+}
 
 /* detail */
 .suggest{

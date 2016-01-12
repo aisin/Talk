@@ -59,7 +59,7 @@ exports.doRegister = function (req, res, next) {
                 var user = new User(data)
                 user.save(function(err, _user){
                     if(err) return next(err)
-                    req.session.user = _user
+                    req.session.user = _.pick(user, ['_id', 'username', 'nickname', 'email', 'avatar', 'gender', 'description', 'role'])
                     res.redirect('/')
                 })
             }))
@@ -79,7 +79,6 @@ exports.doLogin = function (req, res, next) {
     var password = validator.trim(req.body.password)
     var ep = new EventProxy()
     ep.fail(next)
-
     ep.on('errors', function(msg){
         res.status(403)
         return res.render('user/login', {
@@ -103,7 +102,7 @@ exports.doLogin = function (req, res, next) {
                 if(!bool){
                     ep.emit('errors', "用户名或密码错误")
                 }else{
-                    req.session.user = user
+                    req.session.user = _.pick(user, ['_id', 'username', 'nickname', 'email', 'avatar', 'gender', 'description', 'role'])
                     res.redirect('/')
                 }
             }))
@@ -168,7 +167,7 @@ exports.doSetting = function(req, res, next){
             _user = _.assign(user, data)
             _user.save(function (err, user) {
                 if (err) return next(err)
-                req.session.user = user
+                req.session.user = _.pick(user, ['_id', 'username', 'nickname', 'email', 'avatar', 'gender', 'description', 'role'])
                 res.redirect('/')
             })
         })

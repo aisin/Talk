@@ -44,3 +44,7 @@ exports.collectThread = function(user, thread, callback){
 exports.removeCollectThread = function(user, thread, callback){
     ThreadCollect.remove({user_id: user, thread_id: thread}, callback)
 }
+
+exports.getTotalCount = function(callback){
+    Thread.count({}, callback)
+}
