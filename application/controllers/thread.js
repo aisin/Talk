@@ -1,4 +1,5 @@
 var Thread = require('../models/thread')
+var Comment = require('../models/comment')
 var _Category = require('../libs/Category')
 var _User = require('../libs/User')
 var _Thread = require('../libs/Thread')
@@ -6,6 +7,7 @@ var _Comment = require('../libs/Comment')
 var Utils = require('../libs/Utils')
 var validator = require('validator')
 var EventProxy = require('eventproxy')
+var _ = require('lodash')
 
 //Get : 发布主题页
 exports.new = function (req, res, next) {
@@ -68,59 +70,57 @@ exports.doNew = function(req, res, next){
 
 //Get : 主题详情页
 exports.detail = function(req, res, next){
-    var myId = req.session.user && req.session.user._id
-    var thread = req.params.id
+    var me = req.session.user && req.session.user._id
+    var threadId = req.params.id
     var ep = new EventProxy()
-    var events = ['thread', 'author', 'category', 'comments_ready', 'collect']
-
+    var events = ['thread', 'commentsReady', 'collect']
     ep.fail(next)
-
-    ep.all(events, function (thread, author, category, comments, collect) {
+    ep.all(events, function (thread, comments, collect) {
         res.render('thread/detail', {
             session: req.session.user,
             thread : thread,
-            author : author,
-            category : category,
             comments : comments,
             collect : collect
         })
     })
 
-    if(myId){
-        _Thread.getCollectById(myId, thread, ep.done(function(thread){
+    //collect
+    if(me){
+        _Thread.getCollectById(me, threadId, ep.done(function(thread){
             return thread ? ep.emit('collect', true) : ep.emit('collect', false)
         }))
     }else{
         ep.emit('collect', null)
     }
 
-    _Thread.getThreadById(thread, function(err, thread){
-        if(err) return next(err)
-        _Thread.updateViewsOfThread(thread._id, function(){
-            thread.views += 1
-            thread.save()
+    //threads
+    Thread.findOne({_id: threadId, deleted: false})
+        .populate([{
+            path: 'category',
+            select: 'name'
+        }, {
+            path: 'author_id',
+            select: 'nickname avatar'
+        }])
+        .exec(function(err, thread){
             ep.emit('thread', thread)
         })
-        _User.getUserById(thread.author_id, ep.done('author'))
-        _Category.getCategoryById(thread.category, ep.done('category'))
-        _Comment.getCommentsByThread(thread._id, function(err, comments){
-            comments.forEach(function(comment, i){
-                var proxy = new EventProxy()
-                proxy.on('commenter', function(commenter){
-                    comment.avatar = commenter.avatar
-                    comment.nickname = commenter.nickname
 
-                    ep.emit('comments_all')
-                })
-
-                _User.getUserById(comment.commenter_id, proxy.done('commenter'))
+    //comments
+    Comment.find({thread_id: threadId})
+        .populate('commenter_id', 'nickname avatar')
+        .sort({create_at: 1})
+        .exec(function(err, comments){
+            var proxy = new EventProxy()
+            proxy.after('comments', comments.length, function(){
+                ep.emit('commentsReady', comments)
             })
 
-            ep.after('comments_all', comments.length, function(){
-                ep.emit('comments_ready', comments)
+            comments.forEach(function(comment, i){
+                comment.thanked = comment.thanks.indexOf(me) > -1 ? true : false
+                proxy.emit('comments')
             })
         })
-    })
 }
 
 //主题收藏

@@ -39,8 +39,9 @@ exports.add = function(req, res, next){
 }
 
 exports.thank = function(req, res, next){
+    var userId = req.session.user._id
     var commentId = req.body.comment_id
-    Comment.update({_id: commentId}, {$inc: {thanks: 1}}).exec(function(){
+    Comment.update({_id: commentId}, {$push: {thanks: userId}}).exec(function(){
         Utils.json(res, 1, '感谢成功')
     })
 }

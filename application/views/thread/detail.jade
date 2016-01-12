@@ -12,11 +12,11 @@ block append main
                 .box
                     .suggest
                         .fr
-                            a(href="")
-                                img.avatar(src="/uploads/avatar/" + "#{author.avatar}")
+                            a(href="/member/#{thread.author_id._id}")
+                                img.avatar(src="/uploads/avatar/" + "#{thread.author_id.avatar}")
                         a(href="/") V2EX
                         span.chevron &nbsp;›&nbsp;
-                        a(href="/category/#{category._id}") #{category.name}
+                        a(href="/category/#{thread.category._id}") #{thread.category.name}
                         h1 #{thread.title}
                         #thread_votes.votes
                             a.vote(href="javascript:;", onclick="upVote('#{thread._id}');")
@@ -26,7 +26,7 @@ block append main
                                 li.fa.fa-chevron-down
                         | &nbsp;&nbsp;
                         small.grey
-                            a(href="/member/#{author._id}") #{author.nickname}
+                            a(href="/member/#{thread.author_id._id}") #{thread.author_id.nickname}
                             | &nbsp;·&nbsp;#{moment(thread.create_at).fromNow()}&nbsp;·&nbsp;#{thread.views} 次点击
                     .cell
                         .detail
@@ -66,7 +66,7 @@ block append script
                 }
             },'json');
         }
-        $('.thank').click(function(){
+        $('.js-thank').click(function(){
             var self = $(this);
             var comment = self.parents('.cell');
             var comment_id = comment.attr('data-comment-id');

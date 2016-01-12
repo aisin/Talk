@@ -12,10 +12,7 @@ var commentSchema = new Schema({
         ref : 'User'
     },
     content : String,
-    thanks : {
-        type : Number,
-        default : 0
-    },
+    thanks : [Schema.Types.ObjectId],
     create_at : {
         type : Date,
         default : Date.now
