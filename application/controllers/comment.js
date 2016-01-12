@@ -42,12 +42,16 @@ exports.thank = function(req, res, next){
     var userId = req.session.user._id
     var commentId = req.body.comment_id
     Comment.findOne({_id: commentId}, function(err, comment){
-        if(comment.thanks.indexOf(userId) > -1){
-            Utils.json(res, 0, '只能感谢一次哦')
+        if(comment.commenter_id == userId){
+            Utils.json(res, 0, '不能感谢自己哦')
         }else{
-            Comment.update({_id: commentId}, {$push: {thanks: userId}}).exec(function(){
-                Utils.json(res, 1, '感谢成功')
-            })
+            if(comment.thanks.indexOf(userId) > -1){
+                Utils.json(res, 0, '只能感谢一次哦')
+            }else{
+                Comment.update({_id: commentId}, {$push: {thanks: userId}}).exec(function(){
+                    Utils.json(res, 1, '感谢成功')
+                })
+            }
         }
     })
 }
