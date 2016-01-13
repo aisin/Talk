@@ -20,6 +20,12 @@
                 .ladder.text-center
                     | 已注册用户请&nbsp;
                     a(href="/login") 登录
+    if session
+        .box
+            .inner
+                li.fa.fa-gift(style="color:#f90;")
+                | &nbsp;
+                a(href="/task/sign") 领取今日的登录奖励
     .box
         .cell
             span.fade 社区运行状况

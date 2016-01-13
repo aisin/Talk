@@ -46,7 +46,19 @@ router.post('/avatar', Auth.userRequired, upload.single('avatar'), user.doAvatar
 
 router.get('/member/:id', user.member)
 
-//
+
+/**
+ * Task 部分
+ */
+
+//balance
+router.get('/balance', Auth.userRequired, user.balance)
+
+//sign
+router.get('/task/sign', Auth.userRequired, user.sign)
+
+//signed
+router.get('/task/signed', Auth.userRequired, user.signed)
 
 
 

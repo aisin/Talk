@@ -8,6 +8,7 @@ var _Comment = require('../libs/Comment')
 var validator = require('validator')
 require('../libs/validator_extend')
 var Utils = require('../libs/Utils')
+var moment = require('moment')
 var _ = require('lodash')
 
 //Get : 注册页
@@ -66,7 +67,6 @@ exports.doRegister = function (req, res, next) {
         }
     })
 }
-
 
 //Get : 登录页
 exports.login = function (req, res) {
@@ -340,4 +340,64 @@ exports.member = function(req, res, next){
                 })
             })
         })
+}
+
+/**
+ * Task 部分
+ */
+
+//Get : balance
+exports.balance = function(req, res, next){
+    res.render('user/balance', {
+        session : req.session.user
+    })
+}
+
+//Get : daily
+exports.sign = function(req, res, next){
+    res.render('task/sign', {
+        session : req.session.user
+    })
+}
+
+//签到送积分
+exports.signed = function(req, res, next){
+    var userId = req.session.user._id
+    var ep = new EventProxy()
+    ep.on('ok', function(data){
+        res.render('task/signed', {
+            session : req.session.user,
+            isSigned : data.isSigned,
+            score : data.score,
+            days : data.days
+        })
+    })
+
+    ep.on('sign', function(user){
+        console.log('333')
+        var signScore = Math.floor(Math.random() * (40 - 0) + 10) //随机获取 [10, 49] 个铜币
+        var continuousSignDays = moment().diff(user.last_sign, 'days') === 1 ? user.continuous_sign_days + 1 : 0
+        var now = Date.now()
+        User.update({_id: userId}, {$inc: {score: signScore}, $set: {last_sign: now, continuous_sign_days: continuousSignDays}}).exec(function(){
+            var data = {
+                isSigned : false,
+                score : signScore,
+                days : continuousSignDays
+            }
+            ep.emit('ok', data)
+        })
+    })
+
+    User.findOne({_id: userId}, function(err, user){
+        if(moment().diff(user.last_sign, 'days') === 0){
+            var data = {
+                isSigned : true,
+                score : '',
+                days : user.continuous_sign_days
+            }
+            ep.emit('ok', data)
+        }else{
+            ep.emit('sign', user)
+        }
+    })
 }

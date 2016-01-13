@@ -1,0 +1,21 @@
+block variables
+    -var title = '日常任务'
+extends ../common/layout
+block header
+    include ../common/header
+block append main
+    #Wrap
+        .container
+            #Main
+                .box
+                    .crumbs
+                        a(href="/") V2EX
+                        span.chevron &nbsp;›&nbsp;
+                        | 日常任务
+                    .cell
+                        h1.Mb10 每日登录奖励 20160113
+                        a.super.normal.button.inline-block(href="/task/signed") 领取 X 铜币
+                    .cell 已连续登录 0 天
+            include ../common/sidebar
+block footer
+    include ../common/footer

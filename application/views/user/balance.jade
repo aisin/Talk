@@ -1,0 +1,76 @@
+block variables
+    -var title = '账户余额'
+extends ../common/layout
+block header
+    include ../common/header
+block append main
+    #Wrap
+        .container
+            #Main
+                .box
+                    .crumbs
+                        a(href="/") V2EX
+                        span.chevron &nbsp;›&nbsp;
+                        | 账户余额
+                    .cell
+                        .grey.Mb15 当前账户余额
+                        .balance_area(style="font-size: 24px; line-height: 24px;")
+                            | 8&nbsp;
+                            img(src="//cdn.v2ex.com/static/img/gold.png")
+                            | &nbsp;18&nbsp;
+                            img(src="//cdn.v2ex.com/static/img/silver.png")
+                            | &nbsp;20&nbsp;
+                            img(src="//cdn.v2ex.com/static/img/bronze.png")
+                    div
+                        table.data(cellpadding="0", cellspacing="0", border="0", width="100%")
+                            thead
+                                tr
+                                    td.h(width="130") &#26102;&#38388;
+                                    td.h(width="100") &#31867;&#22411;
+                                    td.h(width="60") &#25968;&#39069;
+                                    td.h(width="60") &#20313;&#39069;
+                                    td.h(width="auto", style="border-right: none;") &#25551;&#36848;
+                            tbody
+                                tr
+                                    td.d
+                                        small.gray 2015-01-12 21:42:43 +08:00
+                                    td.d 主题回复收益
+                                    td.d(style="text-align: right;")
+                                        span.positive
+                                            strong 5.0
+                                    td.d(style="text-align: right;") 8555.27
+                                    td.d(style="border-right: none;")
+                                        span.gray
+                                            | 收到&nbsp;
+                                            a(href="/member/bellchu") bellchu&nbsp;
+                                            | 的回复 &#8250;&nbsp;
+                                            a(href="#") Quora 也被墙了吗？大家帮测一下
+                                tr
+                                    td.d
+                                        small.gray 2015-01-12 21:34:18 +08:00
+                                    td.d 创建主题
+                                    td.d(style="text-align: right;")
+                                        span.negative
+                                            strong -20.0
+                                    td.d(style="text-align: right;") 8540.27
+                                    td.d(style="border-right: none;")
+                                        span.gray
+                                            | 创建了主题 &#8250;&nbsp;
+                                            a(href="/t/161539") Quora 也被墙了吗？大家帮测一下
+                .box
+                    .crumbs 可完成的任务
+                    .inner
+                        h2.line 获得初始资本
+                        p 欢迎来到 V2EX，这是一个关于分享和探索的社区。你在进入这里时，你会获得 2000 铜币。接下来你在社区内的一切行为，包括创建主题和回复等，都将会消耗铜币。而当你完成了一些有意义的事情时，你就会收获铜币，以及，好心情。
+
+
+                .box
+                    .cell
+                        span.fade
+                            strong V2EX
+                            | &nbsp;/ 节点导航
+                        .fr
+                            a(href="#") 浏览全部节点
+            include ../common/sidebar
+block footer
+    include ../common/footer

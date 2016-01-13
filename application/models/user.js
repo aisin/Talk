@@ -17,6 +17,20 @@ var userSchema = new Schema({
         type : String,
         default : 'user'
     },
+
+    score : {
+        type : Number,
+        default : 0
+    },
+    last_sign : {
+        type : Date,
+        default : Date.now
+    },
+    continuous_sign_days : {
+        type : Number,
+        default : 0
+    },
+
     create_at : {
         type : Date,
         default : Date.now
