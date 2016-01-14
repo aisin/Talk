@@ -12,6 +12,9 @@ block append main
                         a(href="/") V2EX
                         span.chevron &nbsp;›&nbsp;
                         | 账户余额
+                        .fr(style="margin: -3px -8px -4px 0px;")
+                            a.tab(href="#") 社区财富排行榜
+                            a.tab(href="#") 金额
                     .cell
                         .grey.Mb15 当前账户余额
                         .balance_area(style="font-size: 24px; line-height: 24px;")
@@ -33,7 +36,51 @@ block append main
                                     td.h(width="60") &#20313;&#39069;
                                     td.h(width="auto", style="border-right: none;") &#25551;&#36848;
                             tbody
-                                tr
+                                each record in records
+                                    tr
+                                        td.d
+                                            small.grey #{moment(record.create_at).format("YYYY-MM-DD HH:mm:ss")}
+                                        case record.type
+                                            when 0
+                                                td.d 每日签到奖励
+                                            when 1
+                                                td.d 创建主题
+                                            when 2
+                                                td.d 发送谢意（题主）
+                                            when 3
+                                                td.d 发送谢意（答主）
+                                            when 4
+                                                td.d 收到感谢（题主）
+                                            when 5
+                                                td.d 收到感谢（答主）
+                                        case record.type
+                                            when 0
+                                                td.d(style="text-align: right;")
+                                                    span.positive
+                                                        strong #{record.amount}
+                                            when 1
+                                                td.d(style="text-align: right;")
+                                                    span.positive
+                                                        strong #{record.amount}
+                                            when 2
+                                                td.d(style="text-align: right;")
+                                                    span.negative
+                                                        strong #{record.amount}
+                                            when 3
+                                                td.d(style="text-align: right;")
+                                                    span.negative
+                                                        strong #{record.amount}
+                                            when 4
+                                                td.d(style="text-align: right;")
+                                                    span.positive
+                                                        strong #{record.amount}
+                                            when 5
+                                                td.d(style="text-align: right;")
+                                                    span.positive
+                                                        strong #{record.amount}
+                                        td.d(style="text-align: right;") #{record.asset}
+                                        td.d 每日签到奖励 #{record.amount} 铜币
+                                //tr
                                     td.d
                                         small.gray 2015-01-12 21:42:43 +08:00
                                     td.d 主题回复收益
@@ -47,7 +94,7 @@ block append main
                                             a(href="/member/bellchu") bellchu&nbsp;
                                             | 的回复 &#8250;&nbsp;
                                             a(href="#") Quora 也被墙了吗？大家帮测一下
-                                tr
+                                //tr
                                     td.d
                                         small.gray 2015-01-12 21:34:18 +08:00
                                     td.d 创建主题

@@ -116,7 +116,7 @@ h2.line{
 }
 
 /*a*/
-#Tab a:link, #Tab a:visited, #Tab a:active {
+a.tab:link, a.tab:visited, a.tab:active {
     display: inline-block;
     font-size: 13px;
     line-height: 13px;
@@ -126,7 +126,7 @@ h2.line{
     color: #555;
 }
 
-#Tab a:hover {
+a.tab:hover {
     background-color: #f5f5f5;
     color: #000;
     text-decoration: none;

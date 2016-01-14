@@ -13,7 +13,7 @@ block append main
                 .box
                     #Tab.inner
                         each category in categories
-                            a(href="/category/#{category._id}") #{category.name}
+                            a.tab(href="/category/#{category._id}") #{category.name}
                     each thread in threads
                         .cell.item
                             .avatar

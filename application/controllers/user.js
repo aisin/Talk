@@ -2,6 +2,7 @@ var EventProxy = require('eventproxy')
 var User = require('../models/user')
 var Thread = require('../models/thread')
 var Category = require('../models/category')
+var ScoreRecord = require('../models/scoreRecord')
 var ThreadCollect = require('../models/threadCollect')
 var _User = require('../libs/User')
 var _Comment = require('../libs/Comment')
@@ -349,6 +350,16 @@ exports.member = function(req, res, next){
 //Get : balance
 exports.balance = function(req, res, next){
     var userId = req.session.user._id
+    var ep = new EventProxy()
+    var events = ['score', 'records']
+    ep.all(events, function(score, records){
+        res.render('user/balance', {
+            session : req.session.user,
+            score : score,
+            records : records
+        })
+    })
+    //积分查询
     User.findOne({_id: userId}, function(err, user){
         var userScore = user.score
         var score = {
@@ -356,11 +367,12 @@ exports.balance = function(req, res, next){
             silver : Math.floor((userScore / 100) % 100),
             gold : Math.floor(userScore / 10000)
         }
-        res.render('user/balance', {
-            session : req.session.user,
-            score : score
-        })
+        ep.emit('score', score)
     })
+    //积分记录查询
+    ScoreRecord.find({user: userId}, function(err, scoreRecord){
+        ep.emit('records', scoreRecord)
+    }).sort({create_at: -1})
 }
 
 //Get : daily
@@ -389,6 +401,25 @@ exports.signed = function(req, res, next){
         var todayStamp = moment().startOf('day').unix() //取今天 00:00:00 的时间戳，不含毫秒
         var lastSignStamp = moment(user.last_sign).startOf('day').unix() //取最后签到当天 00:00:00 的时间戳，不含毫秒
         var continuousSignDays = (todayStamp - lastSignStamp) / 86400 === 1 ? user.continuous_sign_days + 1 : 0
+
+        User.findByIdAndUpdate(userId, {$inc: {score: signScore}, $set: {last_sign: now, continuous_sign_days: continuousSignDays}}, function(err, user){
+            var data = {
+                isSigned : false,
+                score : signScore,
+                days : continuousSignDays
+            }
+            ep.emit('ok', data)
+            //创建积分记录
+            var record = {
+                user : userId,
+                type : 0,
+                amount : signScore,
+                asset : user.score + signScore
+            }
+            var scoreRecord = new ScoreRecord(record)
+            scoreRecord.save()
+        })
+        /*
         User.update({_id: userId}, {$inc: {score: signScore}, $set: {last_sign: now, continuous_sign_days: continuousSignDays}}).exec(function(){
             var data = {
                 isSigned : false,
@@ -396,7 +427,19 @@ exports.signed = function(req, res, next){
                 days : continuousSignDays
             }
             ep.emit('ok', data)
+            //
+            /////////////////////////
+            var record = {
+                user : userId,
+                type : 0,
+                amount : signScore,
+                //asset :
+            }
+            var scoreRecord = new ScoreRecord()
+            scoreRecord.save()
+            ///////////////
         })
+        */
     })
 
     User.findOne({_id: userId}, function(err, user){
