@@ -60,7 +60,7 @@ block append main
                                                         strong #{record.amount}
                                             when 1
                                                 td.d(style="text-align: right;")
-                                                    span.positive
+                                                    span.negative
                                                         strong #{record.amount}
                                             when 2
                                                 td.d(style="text-align: right;")
@@ -79,33 +79,13 @@ block append main
                                                     span.positive
                                                         strong #{record.amount}
                                         td.d(style="text-align: right;") #{record.asset}
-                                        td.d 每日签到奖励 #{record.amount} 铜币
-                                //tr
-                                    td.d
-                                        small.gray 2015-01-12 21:42:43 +08:00
-                                    td.d 主题回复收益
-                                    td.d(style="text-align: right;")
-                                        span.positive
-                                            strong 5.0
-                                    td.d(style="text-align: right;") 8555.27
-                                    td.d(style="border-right: none;")
-                                        span.gray
-                                            | 收到&nbsp;
-                                            a(href="/member/bellchu") bellchu&nbsp;
-                                            | 的回复 &#8250;&nbsp;
-                                            a(href="#") Quora 也被墙了吗？大家帮测一下
-                                //tr
-                                    td.d
-                                        small.gray 2015-01-12 21:34:18 +08:00
-                                    td.d 创建主题
-                                    td.d(style="text-align: right;")
-                                        span.negative
-                                            strong -20.0
-                                    td.d(style="text-align: right;") 8540.27
-                                    td.d(style="border-right: none;")
-                                        span.gray
-                                            | 创建了主题 &#8250;&nbsp;
-                                            a(href="/t/161539") Quora 也被墙了吗？大家帮测一下
+                                        case record.type
+                                            when 0
+                                                td.d 每日签到奖励 #{record.amount} 铜币
+                                            when 1
+                                                td.d
+                                                    |创建了主题&nbsp;
+                                                    a(href="/thread/#{record.detail.thread._id}") #{record.detail.thread.title}
                 .box
                     .crumbs 可完成的任务
                     .inner

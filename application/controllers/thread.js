@@ -2,8 +2,10 @@ var validator = require('validator')
 var EventProxy = require('eventproxy')
 var Thread = require('../models/thread')
 var Comment = require('../models/comment')
+var ScoreRecord = require('../models/scoreRecord')
 var _Category = require('../libs/Category')
 var _Thread = require('../libs/Thread')
+var _User = require('../libs/User')
 var Utils = require('../libs/Utils')
 
 //Get : 发布主题页
@@ -29,6 +31,9 @@ exports.doNew = function(req, res, next){
     }
     var ep = new EventProxy()
     ep.fail(next)
+    ep.on('ok', function(){
+        res.redirect('/')
+    })
 
     ep.on('errors', function(msg){
         res.status(403)
@@ -57,10 +62,35 @@ exports.doNew = function(req, res, next){
     }else if(!_thread.category){
         return ep.emit('errors', "请选择一个分类")
     }else{
+        var proxy = new EventProxy()
+        var deductScore = -20 //需要扣除的积分
         var thread = new Thread(_thread)
-        thread.save(function(err, thread){
-            if (err) return next(err)
-            res.redirect('/')
+        thread.save(function(err, result){
+            //if (err) return next(err)
+            proxy.emit('save', result)
+        })
+
+        //扣除积分
+        _User.modifyScore(_thread.author_id, deductScore, function(err, result){
+            proxy.emit('record', result)
+        })
+
+        //创建积分记录
+        proxy.all('save', 'record', function(thread, user){
+            var record = {
+                user : _thread.author_id,
+                type : 1,
+                amount : deductScore,
+                asset : user.score,
+                detail : {
+                    person : _thread.author_id,
+                    thread : thread._id
+                }
+            }
+            var scoreRecord = new ScoreRecord(record)
+            scoreRecord.save(function(err, result){
+                ep.emit('ok')
+            })
         })
     }
 }

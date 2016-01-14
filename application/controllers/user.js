@@ -370,9 +370,13 @@ exports.balance = function(req, res, next){
         ep.emit('score', score)
     })
     //积分记录查询
-    ScoreRecord.find({user: userId}, function(err, scoreRecord){
-        ep.emit('records', scoreRecord)
-    }).sort({create_at: -1})
+    ScoreRecord.find({user: userId})
+        .populate('detail.person', 'nickname')
+        .populate('detail.thread', 'title')
+        .sort({create_at: -1})
+        .exec(function(err, scoreRecord){
+            ep.emit('records', scoreRecord)
+        })
 }
 
 //Get : daily

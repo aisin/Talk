@@ -11,11 +11,11 @@ var scoreRecordSchema = new Schema({
     amount : Number,
     asset : Number,
     detail : {
-        beneficiary : {
+        person : {
             type : Schema.Types.ObjectId,
             ref : 'User'
         },
-        source : {
+        thread : {
             type : Schema.Types.ObjectId,
             ref : 'Thread'
         }
