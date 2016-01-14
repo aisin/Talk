@@ -374,10 +374,11 @@ exports.signed = function(req, res, next){
     })
 
     ep.on('sign', function(user){
-        console.log('333')
         var signScore = Math.floor(Math.random() * (40 - 0) + 10) //随机获取 [10, 49] 个铜币
-        var continuousSignDays = moment().diff(user.last_sign, 'days') === 1 ? user.continuous_sign_days + 1 : 0
         var now = Date.now()
+        var todayStamp = moment().startOf('day').unix() //取今天 00:00:00 的时间戳，不含毫秒
+        var lastSignStamp = moment(user.last_sign).startOf('day').unix() //取最后签到当天 00:00:00 的时间戳，不含毫秒
+        var continuousSignDays = (todayStamp - lastSignStamp) / 86400 === 1 ? user.continuous_sign_days + 1 : 0
         User.update({_id: userId}, {$inc: {score: signScore}, $set: {last_sign: now, continuous_sign_days: continuousSignDays}}).exec(function(){
             var data = {
                 isSigned : false,
@@ -389,7 +390,9 @@ exports.signed = function(req, res, next){
     })
 
     User.findOne({_id: userId}, function(err, user){
-        if(moment().diff(user.last_sign, 'days') === 0){
+        var todayStamp = moment().startOf('day').unix() //取今天 00:00:00 的时间戳，不含毫秒
+        var lastSignStamp = moment(user.last_sign).startOf('day').unix() //取最后签到当天 00:00:00 的时间戳，不含毫秒
+        if((todayStamp - lastSignStamp) / 86400 === 0){
             var data = {
                 isSigned : true,
                 score : '',
