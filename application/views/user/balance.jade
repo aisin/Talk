@@ -15,12 +15,14 @@ block append main
                     .cell
                         .grey.Mb15 当前账户余额
                         .balance_area(style="font-size: 24px; line-height: 24px;")
-                            | 8&nbsp;
-                            img(src="//cdn.v2ex.com/static/img/gold.png")
-                            | &nbsp;18&nbsp;
-                            img(src="//cdn.v2ex.com/static/img/silver.png")
-                            | &nbsp;20&nbsp;
-                            img(src="//cdn.v2ex.com/static/img/bronze.png")
+                            if score.gold > 0
+                                | #{score.gold}&nbsp;
+                                img(src="/images/gold.png")
+                            if score.silver > 0
+                                | &nbsp;#{score.silver}&nbsp;
+                                img(src="/images/silver.png")
+                            | &nbsp;#{score.bronze}&nbsp;
+                            img(src="/images/bronze.png")
                     div
                         table.data(cellpadding="0", cellspacing="0", border="0", width="100%")
                             thead
