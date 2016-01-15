@@ -132,11 +132,12 @@ exports.detail = function(req, res, next){
             select: 'nickname avatar'
         }])
         .exec(function(err, thread){
-            _Thread.updateViewsOfThread(threadId, function(){
-                thread.views += 1
-                thread.save()
-                ep.emit('thread', thread)
-            })
+            //_Thread.updateViewsOfThread(threadId, function(){
+            thread.views += 1
+            thread.save()
+            thread.thanked = thread.thanks.indexOf(me) > -1 ? true : false
+            ep.emit('thread', thread)
+            //})
         })
 
     //comments
@@ -176,6 +177,68 @@ exports.collect = function(req, res, next){
                     })
                 }
             })
+        }
+    })
+}
+
+//Ajax : 主题感谢
+exports.thank = function(req, res, next){
+    var userId = req.session.user._id
+    var threadId = req.body.thread_id
+    var thankScore = 15 //感谢主题 15 积分
+    var ep = new EventProxy()
+    ep.fail(next)
+    ep.all('downScore', 'upScore', function(downUser, upUser){
+        var downRecord = {
+            user : userId,
+            type : 3,
+            amount : -thankScore,
+            asset : downUser.score - thankScore,
+            detail : {
+                person : userId,
+                thread : threadId
+            }
+        }
+        var upRecord = {
+            user : upUser._id,
+            type : 2,
+            amount : thankScore,
+            asset : upUser.score + thankScore,
+            detail : {
+                person : userId,
+                thread : threadId
+            }
+        }
+        Common.scoreCalculation(upRecord, downRecord, upUser._id, userId, thankScore)
+    })
+
+    //感谢
+    ep.on('thanks', function(thread){
+        //主题更新感谢
+        Thread.update({_id: threadId}, {$push: {thanks: userId}}).exec(function(){
+            Utils.json(res, 1, '感谢成功')
+        })
+        //查询当前用户积分
+        _User.getUserById(userId, function(err, downUser){
+            if(downUser.score >= thankScore){
+                ep.emit('downScore', downUser)
+                //查询主题作者
+                _User.getUserById(thread.author_id, function(err, upUser){
+                    ep.emit('upScore', upUser)
+                })
+            }
+        })
+    })
+
+    Thread.findOne({_id: threadId}, function(err, thread){
+        if(thread.author_id == userId){
+            Utils.json(res, 0, '不能感谢自己哦')
+        }else{
+            if(thread.thanks.indexOf(userId) > -1){
+                Utils.json(res, 0, '只能感谢一次哦')
+            }else{
+                ep.emit('thanks', thread)
+            }
         }
     })
 }

@@ -9,7 +9,7 @@ block append main
     #Wrap
         .container
             #Main
-                #thread.box(data-thread="#{thread._id}")
+                #thread.box(data-thread-id="#{thread._id}")
                     .suggest
                         .fr
                             a(href="/member/#{thread.author_id._id}")
@@ -37,7 +37,10 @@ block append main
                         | &nbsp;
                         a.tb(href="#") 忽略主题
                         | &nbsp;
-                        a.tb(href="#") 感谢
+                        if thread.thanked
+                            span.tb 已感谢
+                        else
+                            a.tb.js-thread-thank(href="javascript:;") 感谢
 
                 include ../common/comment
 
@@ -66,12 +69,37 @@ block append script
                 }
             },'json');
         }
-        $('.js-thank').click(function(){
+        //主题感谢
+        $('.js-thread-thank').click(function(){
+            var self = $(this);
+            var thread_id = $('#thread').attr('data-thread-id');
+            $.post('/thread/thank', {
+                thread_id: thread_id
+            }, function(data) {
+                if(data.login == 0){
+                    Essage.show({
+                        message: data.msg,
+                        status: 'error'
+                    }, 2000);
+                }else{
+                    if(data.status == 1){
+                        self.replaceWith('<span class="tb">已感谢</span>');
+                    }else{
+                        Essage.show({
+                            message: data.msg,
+                            status: 'error'
+                        }, 2000);
+                    }
+                }
+            },'json');
+        });
+        //评论感谢
+        $('.js-comment-thank').click(function(){
             var self = $(this);
             var comment = self.parents('.cell');
             var comment_id = comment.attr('data-comment-id');
             var commenter_id = self.attr('data-commenter-id');
-            var thread_id = $('#thread').attr('data-thread');
+            var thread_id = $('#thread').attr('data-thread-id');
             var thankCount = parseInt(comment.find('.thank_count span').text());
             $.post('/comment/thank', {
                 comment_id: comment_id,
@@ -85,8 +113,8 @@ block append script
                     }, 2000);
                 }else{
                     if(data.status == 1){
-                        comment.find('.thank_count span').text(++thankCount);
-                        comment.find('.thank_count').removeClass('hide');
+                        comment.find('.thank_count').removeClass('hide').find('span').text(++thankCount);
+                        self.replaceWith('<span class="thank">已感谢</span>');
                     }else{
                         Essage.show({
                             message: data.msg,

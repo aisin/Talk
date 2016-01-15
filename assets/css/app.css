@@ -33,7 +33,7 @@ a:hover{
     color:#3c3c3c;
     text-decoration:none;
 }
-a.tb:link, a.tb:visited, a.tb:active {
+a.tb:link, a.tb:visited, a.tb:active, span.tb{
     font-size: 11px;
     line-height: 12px;
     color: #333;
@@ -752,7 +752,7 @@ table.data td.h, table.data th.h {
 }
 
 table.data td.d {
-    padding: 3px 5px;
+    padding: 5px 5px;
     text-align: left;
     font-size: 12px;
     font-weight: normal;

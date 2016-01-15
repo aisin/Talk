@@ -25,6 +25,7 @@ var threadSchema = new Schema({
         type: Boolean,
         default: false
     },
+    thanks : [Schema.Types.ObjectId],
     create_at : {
         type : Date,
         default : Date.now

@@ -11,4 +11,7 @@ router.get('/thread/:id', thread.detail)
 
 router.post('/thread/collect', Auth.userRequiredAjax, thread.collect)
 
+//主题感谢
+router.post('/thread/thank', Auth.userRequiredAjax, thread.thank)
+
 module.exports = router
