@@ -46,14 +46,18 @@ block append main
                                             when 1
                                                 td.d 创建主题
                                             when 2
-                                                td.d 发送主题谢意
+                                                td.d 主题感谢收益
                                             when 3
-                                                td.d 发送评论谢意
+                                                td.d 主题感谢
                                             when 4
-                                                td.d 收到感谢（题主）
+                                                td.d 评论感谢收益
                                             when 5
-                                                td.d 收到感谢（答主）
-                                        case record.type
+                                                td.d 评论感谢
+                                            when 6
+                                                td.d 主题评论收益
+                                            when 7
+                                                td.d 主题评论
+                                        case record.type % 2
                                             when 0
                                                 td.d(style="text-align: right;")
                                                     span.positive
@@ -61,22 +65,6 @@ block append main
                                             when 1
                                                 td.d(style="text-align: right;")
                                                     span.negative
-                                                        strong #{record.amount}
-                                            when 2
-                                                td.d(style="text-align: right;")
-                                                    span.negative
-                                                        strong #{record.amount}
-                                            when 3
-                                                td.d(style="text-align: right;")
-                                                    span.negative
-                                                        strong #{record.amount}
-                                            when 4
-                                                td.d(style="text-align: right;")
-                                                    span.positive
-                                                        strong #{record.amount}
-                                            when 5
-                                                td.d(style="text-align: right;")
-                                                    span.positive
                                                         strong #{record.amount}
                                         td.d(style="text-align: right;") #{record.asset}
                                         case record.type
@@ -88,13 +76,37 @@ block append main
                                                     a(href="/thread/#{record.detail.thread._id}") #{record.detail.thread.title}
                                             when 2
                                                 td.d
-                                                    |创建了主题&nbsp;
+                                                    |收到&nbsp;
+                                                    a(href="/member/#{record.detail.person._id}") #{record.detail.person.nickname}
+                                                    |&nbsp;的感谢&nbsp;&#8250;&nbsp;
                                                     a(href="/thread/#{record.detail.thread._id}") #{record.detail.thread.title}
                                             when 3
                                                 td.d
                                                     |感谢&nbsp;
                                                     a(href="/member/#{record.detail.person._id}") #{record.detail.person.nickname}
+                                                    |&nbsp;的主题&nbsp;&#8250;&nbsp;
+                                                    a(href="/thread/#{record.detail.thread._id}") #{record.detail.thread.title}
+                                            when 4
+                                                td.d
+                                                    |收到&nbsp;
+                                                    a(href="/member/#{record.detail.person._id}") #{record.detail.person.nickname}
+                                                    |&nbsp;的感谢&nbsp;&#8250;&nbsp;
+                                                    a(href="/thread/#{record.detail.thread._id}") #{record.detail.thread.title}
+                                            when 5
+                                                td.d
+                                                    |感谢&nbsp;
+                                                    a(href="/member/#{record.detail.person._id}") #{record.detail.person.nickname}
                                                     |&nbsp;的评论&nbsp;&#8250;&nbsp;
+                                                    a(href="/thread/#{record.detail.thread._id}") #{record.detail.thread.title}
+                                            when 6
+                                                td.d
+                                                    |收到&nbsp;
+                                                    a(href="/member/#{record.detail.person._id}") #{record.detail.person.nickname}
+                                                    |&nbsp;的评论&nbsp;&#8250;&nbsp;
+                                                    a(href="/thread/#{record.detail.thread._id}") #{record.detail.thread.title}
+                                            when 7
+                                                td.d
+                                                    |创建回复&nbsp;&#8250;&nbsp;
                                                     a(href="/thread/#{record.detail.thread._id}") #{record.detail.thread.title}
                 .box
                     .crumbs 可完成的任务

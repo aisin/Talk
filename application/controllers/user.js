@@ -4,6 +4,7 @@ var Thread = require('../models/thread')
 var Category = require('../models/category')
 var ScoreRecord = require('../models/scoreRecord')
 var ThreadCollect = require('../models/threadCollect')
+var Common = require('../libs/Common')
 var _User = require('../libs/User')
 var _Comment = require('../libs/Comment')
 var validator = require('validator')
@@ -399,6 +400,7 @@ exports.signed = function(req, res, next){
         })
     })
 
+    //执行签到 && 积分收益
     ep.on('sign', function(user){
         var signScore = Math.floor(Math.random() * (40 - 0) + 10) //随机获取 [10, 49] 个铜币
         var now = Date.now()
@@ -413,43 +415,24 @@ exports.signed = function(req, res, next){
                 days : continuousSignDays
             }
             ep.emit('ok', data)
-            //创建积分记录
-            var record = {
+
+            //创建积分变动记录
+            var upRecord = {
                 user : userId,
                 type : 0,
                 amount : signScore,
                 asset : user.score + signScore
             }
-            var scoreRecord = new ScoreRecord(record)
-            scoreRecord.save()
+            Common.scoreCalculation(upRecord, '', userId, '', signScore)
         })
-        /*
-        User.update({_id: userId}, {$inc: {score: signScore}, $set: {last_sign: now, continuous_sign_days: continuousSignDays}}).exec(function(){
-            var data = {
-                isSigned : false,
-                score : signScore,
-                days : continuousSignDays
-            }
-            ep.emit('ok', data)
-            //
-            /////////////////////////
-            var record = {
-                user : userId,
-                type : 0,
-                amount : signScore,
-                //asset :
-            }
-            var scoreRecord = new ScoreRecord()
-            scoreRecord.save()
-            ///////////////
-        })
-        */
     })
 
+    //查询用户当天签到状态
     User.findOne({_id: userId}, function(err, user){
         var todayStamp = moment().startOf('day').unix() //取今天 00:00:00 的时间戳，不含毫秒
         var lastSignStamp = moment(user.last_sign).startOf('day').unix() //取最后签到当天 00:00:00 的时间戳，不含毫秒
         if((todayStamp - lastSignStamp) / 86400 === 0){
+            //当天已经签过到
             var data = {
                 isSigned : true,
                 score : '',
@@ -457,6 +440,7 @@ exports.signed = function(req, res, next){
             }
             ep.emit('ok', data)
         }else{
+            //当天未曾签到
             ep.emit('sign', user)
         }
     })

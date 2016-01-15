@@ -3,6 +3,7 @@ var EventProxy = require('eventproxy')
 var Thread = require('../models/thread')
 var Comment = require('../models/comment')
 var ScoreRecord = require('../models/scoreRecord')
+var Common = require('../libs/Common')
 var _Category = require('../libs/Category')
 var _Thread = require('../libs/Thread')
 var _User = require('../libs/User')
@@ -63,44 +64,33 @@ exports.doNew = function(req, res, next){
         return ep.emit('errors', "请选择一个分类")
     }else{
         var proxy = new EventProxy()
-        var deductScore = -20 //需要扣除的积分
+        var threadScore = 20 //需要扣除的积分
         var thread = new Thread(_thread)
 
         //查询用户积分
         _User.getUserById(_thread.author_id, function(err, user){
-            if(user.score >= (-deductScore)){
-                proxy.emit('enough')
+            if(user.score >= threadScore){
+                proxy.emit('enough', user)
             }else{
                 var notice = '你目前的铜币数量 ' + user.score + ' 不足以创建主题 &#8250; <a href="/balance">查看余额</a>'
                 return ep.emit('errors', notice)
             }
         })
 
-        proxy.on('enough', function(){
-            //扣除积分
-            _User.modifyScore(_thread.author_id, deductScore, function(err, user){
-                proxy.emit('record', user)
-            })
-            //保存主题
+        //发布主题 && 扣除积分
+        proxy.on('enough', function(user){
             thread.save(function(err, result){
-                proxy.emit('save', result)
-            })
-        })
-
-        //创建积分记录
-        proxy.all('save', 'record', function(thread, user){
-            var record = {
-                user : _thread.author_id,
-                type : 1,
-                amount : deductScore,
-                asset : user.score,
-                detail : {
-                    person : _thread.author_id,
-                    thread : thread._id
+                var downRecord = {
+                    user : _thread.author_id,
+                    type : 1,
+                    amount : -threadScore,
+                    asset : user.score - threadScore,
+                    detail : {
+                        person : _thread.author_id,
+                        thread : result._id
+                    }
                 }
-            }
-            var scoreRecord = new ScoreRecord(record)
-            scoreRecord.save(function(err, result){
+                Common.scoreCalculation('', downRecord, '', _thread.author_id, threadScore)
                 ep.emit('ok')
             })
         })

@@ -4,7 +4,7 @@ var validator = require('validator')
 var EventProxy = require('eventproxy')
 var Utils = require('../libs/Utils')
 var _User = require('../libs/User')
-var ScoreRecord = require('../models/scoreRecord')
+var Common = require('../libs/Common')
 
 exports.add = function(req, res, next){
     var data = {
@@ -45,9 +45,32 @@ exports.thank = function(req, res, next){
     var commentId = req.body.comment_id
     var commenter_id = req.body.commenter_id
     var thread_id = req.body.thread_id
-    var thankScore = -5 //感谢需要赠送（扣除） 5 个铜币，对方增加 5 个
+    var thankScore = 5 //感谢需要赠送（扣除） 5 个铜币，对方增加 5 个
     var ep = new EventProxy()
     ep.fail(next)
+    ep.all('downScore', 'upScore', function(downUser, upUser){
+        var downRecord = {
+            user : userId,
+            type : 5,
+            amount : -thankScore,
+            asset : downUser.score - thankScore,
+            detail : {
+                person : commenter_id,
+                thread : thread_id
+            }
+        }
+        var upRecord = {
+            user : commenter_id,
+            type : 4,
+            amount : thankScore,
+            asset : upUser.score + thankScore,
+            detail : {
+                person : userId,
+                thread : thread_id
+            }
+        }
+        Common.scoreCalculation(upRecord, downRecord, commenter_id, userId, thankScore)
+    })
 
     //感谢
     ep.on('thanks', function(){
@@ -56,35 +79,15 @@ exports.thank = function(req, res, next){
             Utils.json(res, 1, '感谢成功')
         })
         //查询当前用户积分
-        _User.getUserById(userId, function(err, user){
-            if(user.score >= -thankScore){
-                ep.emit('enough', user)
+        _User.getUserById(userId, function(err, downUser){
+            if(downUser.score >= thankScore){
+                ep.emit('downScore', downUser)
+                //查询评论人
+                _User.getUserById(commenter_id, function(err, upUser){
+                    ep.emit('upScore', upUser)
+                })
             }
         })
-    })
-
-    //积分赠送
-    ep.on('enough', function(user){
-        _User.modifyScore(userId, thankScore, function(){
-            _User.modifyScore(commenter_id, -thankScore, function(){})
-            ep.emit('record', user)
-        })
-    })
-
-    //当前用户创建积分消耗记录
-    ep.on('record', function(user){
-        var record = {
-            user : userId,
-            type : 3,
-            amount : thankScore,
-            asset : user.score + thankScore,
-            detail : {
-                person : commenter_id,
-                thread : thread_id
-            }
-        }
-        var scoreRecord = new ScoreRecord(record)
-        scoreRecord.save()
     })
 
     Comment.findOne({_id: commentId}, function(err, comment){
