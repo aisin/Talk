@@ -408,7 +408,7 @@ exports.signed = function(req, res, next){
         var lastSignStamp = moment(user.last_sign).startOf('day').unix() //取最后签到当天 00:00:00 的时间戳，不含毫秒
         var continuousSignDays = (todayStamp - lastSignStamp) / 86400 === 1 ? user.continuous_sign_days + 1 : 0
 
-        User.findByIdAndUpdate(userId, {$inc: {score: signScore}, $set: {last_sign: now, continuous_sign_days: continuousSignDays}}, function(err, user){
+        User.findByIdAndUpdate(userId, {$set: {last_sign: now, continuous_sign_days: continuousSignDays}}, function(err, user){
             var data = {
                 isSigned : false,
                 score : signScore,
