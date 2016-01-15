@@ -46,9 +46,9 @@ block append main
                                             when 1
                                                 td.d 创建主题
                                             when 2
-                                                td.d 发送谢意（题主）
+                                                td.d 发送主题谢意
                                             when 3
-                                                td.d 发送谢意（答主）
+                                                td.d 发送评论谢意
                                             when 4
                                                 td.d 收到感谢（题主）
                                             when 5
@@ -85,6 +85,16 @@ block append main
                                             when 1
                                                 td.d
                                                     |创建了主题&nbsp;
+                                                    a(href="/thread/#{record.detail.thread._id}") #{record.detail.thread.title}
+                                            when 2
+                                                td.d
+                                                    |创建了主题&nbsp;
+                                                    a(href="/thread/#{record.detail.thread._id}") #{record.detail.thread.title}
+                                            when 3
+                                                td.d
+                                                    |感谢&nbsp;
+                                                    a(href="/member/#{record.detail.person._id}") #{record.detail.person.nickname}
+                                                    |&nbsp;的评论&nbsp;&#8250;&nbsp;
                                                     a(href="/thread/#{record.detail.thread._id}") #{record.detail.thread.title}
                 .box
                     .crumbs 可完成的任务

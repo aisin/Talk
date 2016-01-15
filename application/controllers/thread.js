@@ -142,7 +142,11 @@ exports.detail = function(req, res, next){
             select: 'nickname avatar'
         }])
         .exec(function(err, thread){
-            ep.emit('thread', thread)
+            _Thread.updateViewsOfThread(threadId, function(){
+                thread.views += 1
+                thread.save()
+                ep.emit('thread', thread)
+            })
         })
 
     //comments

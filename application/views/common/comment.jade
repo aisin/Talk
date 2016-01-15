@@ -13,7 +13,7 @@ else
                         if comment.thanked
                             span.thank 已感谢
                         else
-                            a.thank.js-thank(href="javascript:;") 感谢 TA
+                            a.thank.js-thank(href="javascript:;", data-commenter-id="#{comment.commenter_id._id}") 感谢 TA
                     | &nbsp;&nbsp;
                     span.no #{i+1}
                 .avatar
