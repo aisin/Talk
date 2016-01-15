@@ -1,0 +1,32 @@
+block variables
+    -var title = '创建评论'
+extends ../common/layout
+block header
+    include ../common/header
+block append main
+    #Wrap
+        .container
+            #Main
+                .box
+                    .crumbs
+                        a(href="/") V2EX
+                        span.chevron &nbsp;&#8250&nbsp;
+                        a(href="/thread/#{thread_id}") #{thread_title}
+                        span.chevron &nbsp;&#8250&nbsp;
+                        | 创建新评论
+                    -if (errors)
+                     .problem
+                        | 请解决以下问题然后再提交：
+                        ul
+                            li !{errors}
+                    .cell
+                        form.wide(method="post", action="/thread/comment/#{thread_id}")
+                            textarea.tp(name="content", rows="4")
+                                -if (content)
+                                    | #{content}
+                            .bx
+                                .fr.grey(style="line-height: 22px;") 请尽量让自己的回复能够对别人有帮助
+                                input.super.normal.button(type="submit", value="回复")
+            include ../common/sidebar
+block footer
+    include ../common/footer

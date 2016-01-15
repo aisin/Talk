@@ -29,14 +29,14 @@ exports.list = function(req, res, next){
                 })
             })
 
-            ep.after('comment', threads.length, function(){
+            ep.after('comments', threads.length, function(){
                 ep.emit('threadsReady', threads)
             })
 
             threads.forEach(function(thread, i){
                 _Comment.getCountByThread(thread._id, ep.done(function(count){
                     thread.comments = count
-                    ep.emit('comment')
+                    ep.emit('comments')
                 }))
             })
 

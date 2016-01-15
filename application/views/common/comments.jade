@@ -15,7 +15,7 @@ else
                         else
                             a.thank.js-comment-thank(href="javascript:;", data-commenter-id="#{comment.commenter_id._id}") 感谢 TA
                     | &nbsp;&nbsp;
-                    span.no #{i+1}
+                    span.no #{i + 1}
                 .avatar
                     a(href="/member/" + "#{comment.commenter_id._id}")
                         img(src="/uploads/avatar/" + "#{comment.commenter_id.avatar}")
@@ -39,5 +39,5 @@ if session
             form.wide(method="post", action="/thread/comment/#{thread._id}")
                 textarea.tp(name="content", rows="4")
                 .bx
-                    .fr.grey 请尽量让自己的回复能够对别人有帮助
+                    .fr.grey(style="line-height: 22px;") 请尽量让自己的回复能够对别人有帮助
                     input.super.normal.button(type="submit", value="回复")
