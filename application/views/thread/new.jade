@@ -22,7 +22,7 @@ block append main
                      .problem
                         | 请解决以下问题然后再提交：
                         ul
-                            li #{errors}
+                            li !{errors}
                     form(action="/thread/new", method="post")
                         .cell 主题标题
                             #titleLength.fr.fade 120
