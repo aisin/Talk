@@ -10,6 +10,16 @@
                         a(href="/member/" + "#{session._id}") #{session.nickname}
                     .meta.small.fade
                         | #{session.description}
+            .inner.clearfix.money
+                .fr
+                    a.balance_area(href="/balance")
+                        | &nbsp;2&nbsp;
+                        img(src="/images/gold.png")
+                        | &nbsp;68&nbsp;
+                        img(src="/images/silver.png")
+                        | &nbsp;88&nbsp;
+                        img(src="/images/bronze.png")
+                a(href="#") 0 条未读提醒
         else
             .cell.lh
                 strong V2ex = way to explore

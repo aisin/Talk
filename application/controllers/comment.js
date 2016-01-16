@@ -64,7 +64,11 @@ exports.add = function(req, res, next){
                 thread : data.thread_id
             }
         }
-        Common.scoreCalculation(upRecord, downRecord, upUser._id, data.commenter_id, commentScore)
+        if(downUser._id.equals(upUser._id)){
+            Common.scoreCalculation('', downRecord, '', downUser._id, commentScore)
+        }else{
+            Common.scoreCalculation(upRecord, downRecord, upUser._id, downUser._id, commentScore)
+        }
         res.redirect('/thread/' + data.thread_id)
     })
 

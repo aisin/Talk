@@ -522,6 +522,12 @@ ul.actions li.highlight a:hover{
     display: inline-block;
     padding-right: 8px;
 }
+.money .balance_area{
+    margin: -4px -4px -4px 0;
+}
+.money .balance_area img{
+    vertical-align: -4px;
+}
 
 /* detail */
 .suggest{
