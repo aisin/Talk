@@ -133,6 +133,10 @@ exports.detail = function(req, res, next){
         }])
         .exec(function(err, thread){
             //_Thread.updateViewsOfThread(threadId, function(){
+            if(thread.deleted){
+                ep.unbind()
+                return res.renderErr('主题已被删除')
+            }
             thread.views += 1
             thread.save()
             thread.thanked = thread.thanks.indexOf(me) > -1 ? true : false

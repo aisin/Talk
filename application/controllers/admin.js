@@ -117,7 +117,7 @@ exports.threadDelete = function(req, res, next){
 exports.threadSetfree = function(req, res, next){
     var threadId = req.params.id
     Thread.findByIdAndUpdate(threadId, {$set: {deleted: false}}).exec(function(err, thread){
-        var message = '主题： ' + thread.title + ' 已经被恢复成功！返回' + '<a href="/admin/threads">主题列表</a>'
+        var message = '主题： ' + thread.title + ' 已经被恢复成功！返回 ' + '<a href="/admin/threads">主题列表</a>'
         res.render('admin/common/message', {
             message : message
         })

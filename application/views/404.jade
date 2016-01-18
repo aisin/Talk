@@ -1,0 +1,20 @@
+block variables
+    -var title = 'Error'
+extends common/layout
+block header
+    include common/header
+block append main
+    #Wrap
+        .container
+            #Main
+                .box
+                    .crumbs
+                        a(href="/") V2EX
+                        span.chevron &nbsp;›&nbsp;Not Found
+                    .problem
+                        | 出错啦：
+                        ul
+                            li 没有找到你想要的页面...
+            include common/sidebar
+block footer
+    include common/footer

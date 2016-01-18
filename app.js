@@ -6,6 +6,7 @@ var mongoose = require('mongoose')
 var session = require('client-sessions')
 var moment = require('moment')
 var config = require('./config.js').config
+var msgPageMiddleware = require('./application/middlewares/msg');
 moment.locale('zh-cn')
 
 app.use(bodyParser.urlencoded({extended: true}))
@@ -23,6 +24,7 @@ app.use(session({
   activeDuration : config.session.activeDuration
 }))
 
+app.use(msgPageMiddleware.msg)
 //Bootstrap routes
 require(config.routes)(app)
 
