@@ -37,6 +37,7 @@ block append main
                                     th 创建时间
                                     th 作者
                                     th 状态
+                                    th 操作
                                 each thread, i in threads
                                     tr
                                         td= i + 1
@@ -47,7 +48,13 @@ block append main
                                             a(href="/member/#{thread.author_id._id}", target="_blank") #{thread.author_id.nickname}
                                         if thread.deleted
                                             td
-                                                a.label.label-danger(href="/admin/thread/#{thread._id}/setfree") OK
+                                                span.label.label-danger Deleted
                                         else
                                             td
-                                                a.label.label-success(href="/admin/thread/#{thread._id}/delete") Deleted
+                                                span.label.label-success Normal
+                                        if thread.deleted
+                                            td
+                                                a(href="/admin/thread/#{thread._id}/setfree") 恢复
+                                        else
+                                            td
+                                                a(href="/admin/thread/#{thread._id}/delete") 删除
