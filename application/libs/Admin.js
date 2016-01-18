@@ -1,4 +1,8 @@
+var EventProxy = require('eventproxy')
 var User = require('../models/user')
+var Category = require('../models/category')
+var Thread = require('../models/thread')
+var _Thread = require('./Thread')
 
 /**
  * 根据用户名，查找管理员用户
@@ -10,4 +14,28 @@ var User = require('../models/user')
  */
 exports.getAdminByUsername = function(username, callback){
     User.findOne({username: username}, callback)
+}
+
+exports.getAllCategories = function(callback){
+    Category.find({}, function(err, categories){
+        var ep = new EventProxy()
+        ep.after('count', categories.length, function(){
+            callback(err, categories)
+        })
+        categories.forEach(function(cate, i){
+            _Thread.getCountByCategory(cate._id, ep.done(function(count){
+                cate.count = count
+                ep.emit('count')
+            }))
+        })
+    })
+}
+
+exports.getAllThreads = function(callback){
+    Thread.find({})
+        .populate('author_id', 'nickname')
+        .sort({update_at: -1})
+        .exec(function(err, threads){
+            callback(err, threads)
+        })
 }

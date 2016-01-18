@@ -1,0 +1,24 @@
+block variables
+    -var title = 'Message'
+extends ./layout
+block append main
+    .content-wrapper
+        // Content Header (Page header)
+        section.content-header
+            h1
+                | 分类列表
+                small List of all Categories
+            ol.breadcrumb
+                li
+                    a(href="#")
+                        i.fa.fa-dashboard
+                        | Home
+                li
+                    a(href="#") Tables
+                li.active Simple
+        .pad.margin.no-print
+            .callout.callout-info(style="margin-bottom: 0!important;")
+                h4
+                    i.fa.fa-info
+                    | Note:
+                | !{message}

@@ -1,0 +1,53 @@
+block variables
+    -var title = 'Threads'
+extends ../common/layout
+block append main
+    .content-wrapper
+        // Content Header (Page header)
+        section.content-header
+            h1
+                | 主题列表
+                small List of all Threads
+            ol.breadcrumb
+                li
+                    a(href="#")
+                        i.fa.fa-dashboard
+                        | Home
+                li
+                    a(href="#") Tables
+                li.active Simple
+        // Main content
+        section.content
+            .row
+                .col-xs-12
+                    .box
+                        .box-header
+                            h3.box-title 所有主题
+                            .box-tools
+                                .input-group(style="width: 150px;")
+                                    input.form-control.input-sm.pull-right(type="text", name="table_search", placeholder="Search")
+                                    .input-group-btn
+                                        button.btn.btn-sm.btn-default
+                                            i.fa.fa-search
+                        .box-body.table-responsive.no-padding
+                            table.table.table-hover
+                                tr
+                                    th ID
+                                    th 名称
+                                    th 创建时间
+                                    th 作者
+                                    th 状态
+                                each thread, i in threads
+                                    tr
+                                        td= i + 1
+                                        td
+                                            a(href="/thread/#{thread._id}", target="_blank") #{thread.title}
+                                        td #{moment(thread.create_at).format("YYYY-MM-DD HH:mm:ss")}
+                                        td
+                                            a(href="/member/#{thread.author_id._id}", target="_blank") #{thread.author_id.nickname}
+                                        if thread.deleted
+                                            td
+                                                a.label.label-danger(href="/admin/thread/#{thread._id}/setfree") OK
+                                        else
+                                            td
+                                                a.label.label-success(href="/admin/thread/#{thread._id}/delete") Deleted

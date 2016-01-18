@@ -38,11 +38,11 @@ block append main
                                     th 名称
                                     th 创建时间
                                     th 修改时间
-                                    th Reason
+                                    th 主题数
                                 each category, i in categories
                                     tr
                                         td= i+1
                                         td #{category.name}
-                                        td #{moment(category.create_at).fromNow()}
-                                        td #{moment(category.update_at).fromNow()}
-                                        td Bacon ipsum
+                                        td #{moment(category.create_at).format("YYYY-MM-DD HH:mm:ss")}
+                                        td #{moment(category.update_at).format("YYYY-MM-DD HH:mm:ss")}
+                                        td #{category.count}

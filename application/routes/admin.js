@@ -19,4 +19,11 @@ router.get('/admin/category/add', Admin.categoryAdd)
 
 router.post('/admin/category/add', Admin.categoryDoAdd)
 
+//thread
+router.get('/admin/threads', Admin.threadList)
+
+router.get('/admin/thread/:id/delete', Admin.threadDelete)
+
+router.get('/admin/thread/:id/setfree', Admin.threadSetfree)
+
 module.exports = router

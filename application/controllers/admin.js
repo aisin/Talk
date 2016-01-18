@@ -1,11 +1,11 @@
-var User = require('../models/user')
-var Category = require('../models/category')
+var EventProxy = require('eventproxy')
 var validator = require('validator')
+var User = require('../models/user')
+var Thread = require('../models/thread')
+var Category = require('../models/category')
 require('../libs/validator_extend')
 var Utils = require('../libs/Utils')
 var _Admin = require('../libs/Admin')
-var _Category = require('../libs/Category')
-var EventProxy = require('eventproxy')
 
 //Get : 登录页
 exports.login = function (req, res) {
@@ -62,20 +62,22 @@ exports.dashboard = function(req, res, next){
     res.render('admin/dashboard')
 }
 
-//分类
+//分类列表页面
 exports.category = function(req, res, next){
-    _Category.getAllCategories(function(err, categories){
+    _Admin.getAllCategories(function(err, categories){
         if(err) return next(err)
-        res.render('admin/category/categoryList', {
+        res.render('admin/category/list', {
             categories : categories
         })
     })
 }
 
+//分类增加页面
 exports.categoryAdd = function(req, res, next){
-    res.render('admin/category/categoryAdd')
+    res.render('admin/category/add')
 }
 
+//分类增加操作
 exports.categoryDoAdd = function(req, res, next){
     var name = validator.trim(req.body.categoryName)
     var category = new Category()
@@ -85,8 +87,39 @@ exports.categoryDoAdd = function(req, res, next){
             res.redirect('/admin/category')
         })
     }else{
-        res.render('admin/category/categoryAdd', {
+        res.render('admin/category/add', {
             errors: "分类名称不能为空"
         })
     }
+}
+
+exports.threadList = function(req, res, next){
+    _Admin.getAllThreads(function(err, threads){
+        if(err) return next(err)
+        res.render('admin/thread/list', {
+            threads : threads
+        })
+    })
+}
+
+//主题删除
+exports.threadDelete = function(req, res, next){
+    var threadId = req.params.id
+    Thread.findByIdAndUpdate(threadId, {$set: {deleted: true}}).exec(function(err, thread){
+        var message = '主题： ' + thread.title + ' 已经被（逻辑）删除成功！返回' + '<a href="/admin/threads">主题列表</a>'
+        res.render('admin/common/message', {
+            message : message
+        })
+    })
+}
+
+//主题恢复
+exports.threadSetfree = function(req, res, next){
+    var threadId = req.params.id
+    Thread.findByIdAndUpdate(threadId, {$set: {deleted: false}}).exec(function(err, thread){
+        var message = '主题： ' + thread.title + ' 已经被恢复成功！返回' + '<a href="/admin/threads">主题列表</a>'
+        res.render('admin/common/message', {
+            message : message
+        })
+    })
 }

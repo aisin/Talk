@@ -123,7 +123,7 @@ exports.detail = function(req, res, next){
     }
 
     //threads
-    Thread.findOne({_id: threadId, deleted: false})
+    Thread.findOne({_id: threadId/*, deleted: false*/})
         .populate([{
             path: 'category',
             select: 'name'
