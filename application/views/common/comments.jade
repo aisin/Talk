@@ -22,6 +22,9 @@ else
                 .whole
                     strong
                         a(href="/member/" + "#{comment.commenter_id._id}") #{comment.commenter_id.nickname}
+                    if comment.commenter_id.role == 'admin'
+                        | &nbsp;&nbsp;
+                        img(src="/images/mod.png", style="width:30px;height:14px;vertical-align: middle;margin-bottom:4px;")
                     | &nbsp;&nbsp;
                     span.small.fade #{moment(comment.create_at).fromNow()}
                     | &nbsp;&nbsp;

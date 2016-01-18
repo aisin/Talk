@@ -142,7 +142,7 @@ exports.detail = function(req, res, next){
 
     //comments
     Comment.find({thread_id: threadId})
-        .populate('commenter_id', 'nickname avatar')
+        .populate('commenter_id', 'nickname avatar role')
         .sort({create_at: 1})
         .exec(function(err, comments){
             var proxy = new EventProxy()
