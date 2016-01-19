@@ -26,4 +26,8 @@ router.get('/admin/thread/:id/delete', Admin.threadDelete)
 
 router.get('/admin/thread/:id/setfree', Admin.threadSetfree)
 
+router.get('/admin/thread/:id/locking', Admin.threadLocking)
+
+router.get('/admin/thread/:id/unlock', Admin.threadUnlock)
+
 module.exports = router

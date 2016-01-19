@@ -36,8 +36,10 @@ block append main
                                     th 名称
                                     th 创建时间
                                     th 作者
-                                    th 状态
-                                    th 操作
+                                    th 锁定状态
+                                    th.text-center 锁定操作
+                                    th 删除状态
+                                    th.text-center 删除操作
                                 each thread, i in threads
                                     tr
                                         td= i + 1
@@ -46,15 +48,23 @@ block append main
                                         td #{moment(thread.create_at).format("YYYY-MM-DD HH:mm:ss")}
                                         td
                                             a(href="/member/#{thread.author_id._id}", target="_blank") #{thread.author_id.nickname}
+                                        if thread.locked
+                                            td
+                                                span.label.label-danger Locked
+                                            td.text-center
+                                                a(href="/admin/thread/#{thread._id}/unlock") 解锁
+                                        else
+                                            td
+                                                span.label.label-success Unlocked
+                                            td.text-center
+                                                a(href="/admin/thread/#{thread._id}/locking") 锁定
                                         if thread.deleted
                                             td
                                                 span.label.label-danger Deleted
-                                        else
-                                            td
-                                                span.label.label-success Normal
-                                        if thread.deleted
-                                            td
+                                            td.text-center
                                                 a(href="/admin/thread/#{thread._id}/setfree") 恢复
                                         else
                                             td
+                                                span.label.label-success Normal
+                                            td.text-center
                                                 a(href="/admin/thread/#{thread._id}/delete") 删除

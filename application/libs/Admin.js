@@ -23,7 +23,7 @@ exports.getAllCategories = function(callback){
             callback(err, categories)
         })
         categories.forEach(function(cate, i){
-            _Thread.getCountByCategory(cate._id, ep.done(function(count){
+            _Thread.getCountByCategory({category: cate._id}, ep.done(function(count){
                 cate.count = count
                 ep.emit('count')
             }))

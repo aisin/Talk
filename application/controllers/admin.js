@@ -106,7 +106,7 @@ exports.threadList = function(req, res, next){
 exports.threadDelete = function(req, res, next){
     var threadId = req.params.id
     Thread.findByIdAndUpdate(threadId, {$set: {deleted: true}}).exec(function(err, thread){
-        var message = '主题： ' + thread.title + ' 已经被（逻辑）删除成功！返回' + '<a href="/admin/threads">主题列表</a>'
+        var message = '主题： ' + thread.title + ' 已经被<strong>（逻辑）删除</strong>成功！返回' + '<a href="/admin/threads">主题列表</a>'
         res.render('admin/common/message', {
             message : message
         })
@@ -117,7 +117,29 @@ exports.threadDelete = function(req, res, next){
 exports.threadSetfree = function(req, res, next){
     var threadId = req.params.id
     Thread.findByIdAndUpdate(threadId, {$set: {deleted: false}}).exec(function(err, thread){
-        var message = '主题： ' + thread.title + ' 已经被恢复成功！返回 ' + '<a href="/admin/threads">主题列表</a>'
+        var message = '主题： ' + thread.title + ' 已经<strong>恢复</strong>成功！返回 ' + '<a href="/admin/threads">主题列表</a>'
+        res.render('admin/common/message', {
+            message : message
+        })
+    })
+}
+
+//主题锁定
+exports.threadLocking = function(req, res, next){
+    var threadId = req.params.id
+    Thread.findByIdAndUpdate(threadId, {$set: {locked: true}}).exec(function(err, thread){
+        var message = '主题： ' + thread.title + ' 已经<strong>锁定</strong>成功！返回 ' + '<a href="/admin/threads">主题列表</a>'
+        res.render('admin/common/message', {
+            message : message
+        })
+    })
+}
+
+//主题解锁
+exports.threadUnlock = function(req, res, next){
+    var threadId = req.params.id
+    Thread.findByIdAndUpdate(threadId, {$set: {locked: false}}).exec(function(err, thread){
+        var message = '主题： ' + thread.title + ' 已经<strong>解锁</strong>成功！返回 ' + '<a href="/admin/threads">主题列表</a>'
         res.render('admin/common/message', {
             message : message
         })

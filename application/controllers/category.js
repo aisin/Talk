@@ -46,7 +46,7 @@ exports.list = function(req, res, next){
             }))
 
             //查询分类下主题数
-            _Thread.getCountByCategory(cate, ep.done(function(count){
+            _Thread.getCountByCategory({category: cate, deleted: false}, ep.done(function(count){
                 ep.emit('count', count)
             }))
         })

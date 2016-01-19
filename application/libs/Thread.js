@@ -13,8 +13,8 @@ exports.updateViewsOfThread = function(id, callback){
     Thread.update({_id: id}, {$inc: {views: 1}}).exec(callback)
 }
 
-exports.getCountByCategory = function(category, callback){
-    Thread.count({category: category, deleted: false}, callback)
+exports.getCountByCategory = function(query, callback){
+    Thread.count(query, callback)
 }
 
 exports.getCollectById = function(user, thread, callback){

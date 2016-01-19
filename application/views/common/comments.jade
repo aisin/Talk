@@ -1,4 +1,8 @@
-if comments.length < 1
+if thread.locked
+    .box.transparent
+        .inner.grey.text-center
+            span 主题已被锁定，暂时无法回复
+if !thread.locked && comments.length < 1
     .box.transparent
         .inner.grey.text-center
             span 目前尚无回复
@@ -32,7 +36,7 @@ else
                         | ♥&nbsp;
                         span #{comment.thanks.length}
                     .major #{comment.content}
-if session
+if !thread.locked && session
     .box
         .cell
             .fr
