@@ -199,7 +199,7 @@ exports.thank = function(req, res, next){
             amount : -thankScore,
             asset : downUser.score - thankScore,
             detail : {
-                person : userId,
+                person : upUser._id,
                 thread : threadId
             }
         }
