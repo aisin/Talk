@@ -144,6 +144,7 @@ exports.doSetting = function(req, res, next){
         nickname : validator.trim(req.body.nickname),
         email : validator.trim(req.body.email).toLowerCase(),
         gender : req.body.gender,
+        privacy : req.body.privacy,
         description : validator.trim(req.body.description)
     }
     var ep = new EventProxy()
@@ -170,7 +171,7 @@ exports.doSetting = function(req, res, next){
             _user.save(function (err, user) {
                 if (err) return next(err)
                 req.session.user = _.pick(user, ['_id', 'username', 'nickname', 'email', 'avatar', 'gender', 'description', 'role'])
-                res.redirect('/')
+                res.redirect('/setting')
             })
         })
     }else{
@@ -292,56 +293,85 @@ exports.doAvatar = function(req, res, next){
 
 //Get : 个人信息页
 exports.member = function(req, res, next){
+    var sessionId = req.session.user && req.session.user._id
     var member = req.params.id
     var ep = new EventProxy()
-    var events = ['member', 'threads']
-    ep.all(events, function(member, threads){
+    var events = ['member', 'threads', 'showType']
+    ep.all(events, function(member, threads, showType){
         res.render('user/member', {
             session : req.session.user,
             member : member,
-            threads : threads
+            threads : threads,
+            showType : showType
         })
     })
 
     //查询用户信息
     _User.getUserById(member, ep.done(function(member){
         ep.emit('member', member)
+        switch (member.privacy){
+            //用户设置只有自己可以查看
+            case 2 :{
+                if(member._id.equals(sessionId)){
+                    ep.emit('getThreads')
+                    ep.emit('showType', 0)
+                }else{
+                    ep.emit('showType', 2)
+                }
+            }
+            //用户设置只有登录用户可以查看
+            case 1 :{
+                if(!_.isUndefined(sessionId)){
+                    ep.emit('getThreads')
+                    ep.emit('showType', 0)
+                }else{
+                    ep.emit('showType', 1)
+                }
+            }
+            //用户设置所有人可以查看
+            default :{
+                ep.emit('getThreads')
+                ep.emit('showType', 0)
+            }
+        }
     }))
 
-    ThreadCollect.find({user_id: member})
-        .populate('thread_id')
-        .sort({create_at: -1})
-        .exec(function(err, resultsA){
-            //deep `populate`
-            Category.populate(resultsA, {
-                path: 'thread_id.category',
-                select: 'name'
-            }, function(err, resultsB){
+    ep.on('getThreads', function(){
+        ThreadCollect.find({user_id: member})
+            .populate('thread_id')
+            .sort({create_at: -1})
+            .exec(function(err, resultsA){
+                //deep `populate`
+                Category.populate(resultsA, {
+                    path: 'thread_id.category',
+                    select: 'name'
+                }, function(err, resultsB){
 
-                User.populate(resultsB, {
-                    path: 'thread_id.author_id',
-                    select: 'nickname',
-                }, function(err, resultsC){
+                    User.populate(resultsB, {
+                        path: 'thread_id.author_id',
+                        select: 'nickname',
+                    }, function(err, resultsC){
 
-                    User.populate(resultsC, {
-                        path: 'thread_id.last_reply',
-                        select: 'nickname'
-                    }, function(err, resultsD){
+                        User.populate(resultsC, {
+                            path: 'thread_id.last_reply',
+                            select: 'nickname'
+                        }, function(err, resultsD){
 
-                        var proxy = new EventProxy()
-                        proxy.after('comments', resultsD.length, function(){
-                            ep.emit('threads', resultsD)
-                        })
-                        resultsD.forEach(function(thread, i){
-                            _Comment.getCountByThread(thread.thread_id._id, ep.done(function(count){
-                                thread.thread_id.comments = count
-                                proxy.emit('comments')
-                            }))
+                            var proxy = new EventProxy()
+                            proxy.after('comments', resultsD.length, function(){
+                                ep.emit('threads', resultsD)
+                            })
+                            resultsD.forEach(function(thread, i){
+                                _Comment.getCountByThread(thread.thread_id._id, ep.done(function(count){
+                                    thread.thread_id.comments = count
+                                    proxy.emit('comments')
+                                }))
+                            })
                         })
                     })
                 })
             })
-        })
+    })
 }
 
 /**

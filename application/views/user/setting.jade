@@ -25,15 +25,15 @@ block append main
                             .form-unit
                                 span.key 用户名
                                 span.val
-                                    input.tp(type="text", name="username",value="#{user.username}", disabled)
+                                    input.tp(type="text", name="username", value="#{user.username}", disabled)
                             .form-unit
                                 span.key 昵称
                                 span.val
-                                    input.tp(type="text", name="nickname",value="#{user.nickname}")
+                                    input.tp(type="text", name="nickname", value="#{user.nickname}")
                             .form-unit
                                 span.key 邮箱
                                 span.val
-                                    input.tp(type="text", name="email",value="#{user.email}")
+                                    input.tp(type="text", name="email", value="#{user.email}")
                             .form-unit
                                 span.key 性别
                                 span.val
@@ -51,6 +51,19 @@ block append main
                                         label
                                             input(type="radio", name="gender", value="female", checked)
                                             | 女
+                            .form-unit
+                                span.key 隐私
+                                span.val
+                                    select(name="privacy")
+                                        mixin privacy-option(val, name)
+                                            if (user.privacy === val)
+                                                option(value=val, selected="selected")= name
+                                            else
+                                                option(value=val)= name
+                                        +privacy-option(0, '所有人')
+                                        +privacy-option(1, '已登录的用户')
+                                        +privacy-option(2, '只有我自己')
+                                .tips 谁可以看到我的主题列表
                             .form-unit
                                 span.key 描述
                                 span.val

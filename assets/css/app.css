@@ -228,7 +228,11 @@ a.replay-count:hover{
     display: inline-block;
 }
 /*form & input*/
-.form-unit{padding: 5px 0;}
+.form-unit{
+    padding: 5px 0;
+    min-height: 29px;
+    line-height: 29px;
+}
 .form-unit span.key{
     display: inline-block;
     width: 120px;
@@ -238,6 +242,7 @@ a.replay-count:hover{
 }
 .form-unit span.val{
     vertical-align: middle;
+    display: inline-block;
 }
 .form-unit span.val label{
     margin-right: 10px;
@@ -250,11 +255,15 @@ a.replay-count:hover{
     border: 1px solid #ccc;
     width: 310px;
     line-height: 1.2;
+    vertical-align: middle;
 }
 textarea.tp{
     vertical-align: top;
     resize: none;
     line-height: 1.5em;
+}
+input.tp[type="checkbox"]{
+    width: auto;
 }
 .tp:disabled{
     background-color: #F9F9F9;
@@ -265,7 +274,8 @@ textarea.tp{
 }
 .form-unit .tips{
     color: #ccc;
-    margin-left: 120px;
+    line-height: 1em;
+    margin: 5px 0 5px 120px;
     padding-top: 2px;
 }
 .form-unit input[type=radio]{
@@ -672,6 +682,19 @@ ul.actions li.highlight a:hover{
 }
 .member .cell .all{
     padding-left: 0;
+}
+.lock{
+    text-align: center;
+    font-size: 16px;
+}
+.lock img{
+    vertical-align: middle;
+}
+.lock span{
+    vertical-align: middle;
+    margin-left: 10px;
+    font-size: 16px;
+    color: #999;
 }
 
 /* Balance */

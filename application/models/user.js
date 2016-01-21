@@ -30,6 +30,10 @@ var userSchema = new Schema({
         type : Number,
         default : 0
     },
+    privacy : {
+        type : Number,
+        default : 0
+    },
 
     create_at : {
         type : Date,
