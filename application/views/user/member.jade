@@ -16,36 +16,59 @@ block append main
                             .archive 加入于 #{moment(member.create_at).fromNow()}
                 .box.member
                     .cell_tabs
-                        a.cell_tab_current(href="") #{member.nickname} 收藏的主题
-                        a.cell_tab(href="") 创建的主题
-                    if showType === 2
+                        if channel == 'created'
+                            a.cell_tab_current(href="/member/#{member._id}") #{member.nickname} 创建的主题
+                            a.cell_tab(href="/member/#{member._id}/collect") 收藏的主题
+                        else if channel == 'collected'
+                            a.cell_tab(href="/member/#{member._id}") #{member.nickname} 创建的主题
+                            a.cell_tab_current(href="/member/#{member._id}/collect") 收藏的主题
+                    if showPrivacyType === 2
                         .cell
                             .lock
                                 img(src="/images/lock.png")
                                 span 根据 #{member.nickname} 的设置，主题列表只允许自己查看
-                    else if showType === 1
+                    else if showPrivacyType === 1
                         .cell
                             .lock
                                 img(src="/images/lock.png")
                                 span 根据 #{member.nickname} 的设置，主题列表只允许登录用户查看
                     else
-                        each thread in threads
-                            .cell.item
-                                .all
-                                    h2.title
-                                        a(href="/thread/#{thread.thread_id._id}") #{thread.thread_id.title}
-                                    .meta.small.fade
-                                        a.node(href="/category/#{thread.thread_id.category._id}") #{thread.thread_id.category.name}
-                                        span &nbsp;•&nbsp;
-                                        strong
-                                            a(href="/member/#{thread.thread_id.author_id._id}") #{thread.thread_id.author_id.nickname}
-                                        span &nbsp;•&nbsp;#{moment(thread.thread_id.create_at).fromNow()}
-                                        if thread.thread_id.comments > 0
-                                            span &nbsp;•&nbsp;最后回复来自&nbsp;
+                        if channel == 'collected'
+                            each thread in threads
+                                .cell.item
+                                    .all
+                                        h2.title
+                                            a(href="/thread/#{thread.thread_id._id}") #{thread.thread_id.title}
+                                        .meta.small.fade
+                                            a.node(href="/category/#{thread.thread_id.category._id}") #{thread.thread_id.category.name}
+                                            span &nbsp;•&nbsp;
                                             strong
-                                                a(href="/member/#{thread.thread_id.last_reply._id}") #{thread.thread_id.last_reply.nickname}
-                                .reply
-                                    a.replay-count(href="#") #{thread.thread_id.comments}
+                                                a(href="/member/#{thread.thread_id.author_id._id}") #{thread.thread_id.author_id.nickname}
+                                            span &nbsp;•&nbsp;#{moment(thread.thread_id.create_at).fromNow()}
+                                            if thread.thread_id.comments > 0
+                                                span &nbsp;•&nbsp;最后回复来自&nbsp;
+                                                strong
+                                                    a(href="/member/#{thread.thread_id.last_reply._id}") #{thread.thread_id.last_reply.nickname}
+                                    .reply
+                                        a.replay-count(href="#") #{thread.thread_id.comments}
+                        else if channel == 'created'
+                            each thread in threads
+                                .cell.item
+                                    .all
+                                        h2.title
+                                            a(href="/thread/#{thread._id}") #{thread.title}
+                                        .meta.small.fade
+                                            a.node(href="/category/#{thread.category._id}") #{thread.category.name}
+                                            span &nbsp;•&nbsp;
+                                            strong
+                                                a(href="/member/#{thread.author_id._id}") #{thread.author_id.nickname}
+                                            span &nbsp;•&nbsp;#{moment(thread.create_at).fromNow()}
+                                            if thread.comments > 0
+                                                span &nbsp;•&nbsp;最后回复来自&nbsp;
+                                                strong
+                                                    a(href="/member/#{thread.last_reply._id}") #{thread.last_reply.nickname}
+                                    .reply
+                                        a.replay-count(href="#") #{thread.comments}
             include ../common/sidebar
 block footer
     include ../common/footer

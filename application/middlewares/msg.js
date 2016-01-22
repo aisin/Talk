@@ -1,5 +1,5 @@
 exports.msg = function(req, res, next){
-    res.renderMsg = function(message){
+    res.render404 = function(){
         return res.status(404).render('404')
     }
 

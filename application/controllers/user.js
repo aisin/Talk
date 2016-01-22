@@ -6,7 +6,8 @@ var ScoreRecord = require('../models/scoreRecord')
 var ThreadCollect = require('../models/threadCollect')
 var Common = require('../libs/Common')
 var _User = require('../libs/User')
-var _Comment = require('../libs/Comment')
+//var _Comment = require('../libs/Comment')
+var _Thread = require('../libs/Thread')
 var validator = require('validator')
 require('../libs/validator_extend')
 var Utils = require('../libs/Utils')
@@ -291,18 +292,28 @@ exports.doAvatar = function(req, res, next){
     })
 }
 
-//Get : 个人信息页
+//Get : 个人信息页（收藏的主题列表）
 exports.member = function(req, res, next){
     var sessionId = req.session.user && req.session.user._id
     var member = req.params.id
+    var channelParam = req.params[0]
+    var channel;
+    if(channelParam == '/collect'){
+        channel = 'collected'
+    }else if(channelParam == ''){
+        channel = 'created'
+    }else{
+        res.render404()
+    }
     var ep = new EventProxy()
-    var events = ['member', 'threads', 'showType']
-    ep.all(events, function(member, threads, showType){
+    var events = ['member', 'threads', 'showPrivacyType']
+    ep.all(events, function(member, threads, showPrivacyType){
         res.render('user/member', {
             session : req.session.user,
+            channel : channel,
             member : member,
             threads : threads,
-            showType : showType
+            showPrivacyType : showPrivacyType
         })
     })
 
@@ -314,63 +325,39 @@ exports.member = function(req, res, next){
             case 2 :{
                 if(member._id.equals(sessionId)){
                     ep.emit('getThreads')
-                    ep.emit('showType', 0)
+                    ep.emit('showPrivacyType', 0)
                 }else{
-                    ep.emit('showType', 2)
+                    ep.emit('showPrivacyType', 2)
                 }
             }
             //用户设置只有登录用户可以查看
             case 1 :{
                 if(!_.isUndefined(sessionId)){
                     ep.emit('getThreads')
-                    ep.emit('showType', 0)
+                    ep.emit('showPrivacyType', 0)
                 }else{
-                    ep.emit('showType', 1)
+                    ep.emit('showPrivacyType', 1)
                 }
             }
             //用户设置所有人可以查看
             default :{
                 ep.emit('getThreads')
-                ep.emit('showType', 0)
+                ep.emit('showPrivacyType', 0)
             }
         }
     }))
 
+    //获取收藏主题列表
     ep.on('getThreads', function(){
-        ThreadCollect.find({user_id: member})
-            .populate('thread_id')
-            .sort({create_at: -1})
-            .exec(function(err, resultsA){
-                //deep `populate`
-                Category.populate(resultsA, {
-                    path: 'thread_id.category',
-                    select: 'name'
-                }, function(err, resultsB){
-
-                    User.populate(resultsB, {
-                        path: 'thread_id.author_id',
-                        select: 'nickname',
-                    }, function(err, resultsC){
-
-                        User.populate(resultsC, {
-                            path: 'thread_id.last_reply',
-                            select: 'nickname'
-                        }, function(err, resultsD){
-
-                            var proxy = new EventProxy()
-                            proxy.after('comments', resultsD.length, function(){
-                                ep.emit('threads', resultsD)
-                            })
-                            resultsD.forEach(function(thread, i){
-                                _Comment.getCountByThread(thread.thread_id._id, ep.done(function(count){
-                                    thread.thread_id.comments = count
-                                    proxy.emit('comments')
-                                }))
-                            })
-                        })
-                    })
-                })
+        if(channel == 'collected'){
+            _Thread.getCollectsByMember(member, function(threads){
+                ep.emit('threads', threads)
             })
+        }else if(channel == 'created'){
+            _Thread.getCreatesByMember(member, function(threads){
+                ep.emit('threads', threads)
+            })
+        }
     })
 }
 
