@@ -113,15 +113,6 @@ exports.detail = function(req, res, next){
         })
     })
 
-    //collect
-    if(me){
-        _Thread.getCollectById(me, threadId, ep.done(function(thread){
-            return thread ? ep.emit('collect', true) : ep.emit('collect', false)
-        }))
-    }else{
-        ep.emit('collect', null)
-    }
-
     //threads
     Thread.findOne({_id: threadId/*, deleted: false*/})
         .populate([{
@@ -132,7 +123,10 @@ exports.detail = function(req, res, next){
             select: 'nickname avatar'
         }])
         .exec(function(err, thread){
-            //_Thread.updateViewsOfThread(threadId, function(){
+            if(!thread){
+                ep.unbind()
+                return res.renderErr('主题未找到')
+            }
             if(thread.deleted){
                 ep.unbind()
                 return res.renderErr('主题已被删除')
@@ -141,23 +135,33 @@ exports.detail = function(req, res, next){
             thread.save()
             thread.thanked = thread.thanks.indexOf(me) > -1 ? true : false
             ep.emit('thread', thread)
-            //})
         })
 
+    //collect
+    if(me){
+        _Thread.getCollectById(me, threadId, ep.done(function(thread){
+            return thread ? ep.emit('collect', true) : ep.emit('collect', false)
+        }))
+    }else{
+        ep.emit('collect', null)
+    }
+
     //comments
-    Comment.find({thread_id: threadId})
-        .populate('commenter_id', 'nickname avatar role')
-        .sort({create_at: 1})
-        .exec(function(err, comments){
-            var proxy = new EventProxy()
-            proxy.after('comments', comments.length, function(){
-                ep.emit('commentsReady', comments)
+    ep.on('thread', function(){
+        Comment.find({thread_id: threadId})
+            .populate('commenter_id', 'nickname avatar role')
+            .sort({create_at: 1})
+            .exec(function(err, comments){
+                var proxy = new EventProxy()
+                proxy.after('comments', comments.length, function(){
+                    ep.emit('commentsReady', comments)
+                })
+                comments.forEach(function(comment, i){
+                    comment.thanked = comment.thanks.indexOf(me) > -1 ? true : false
+                    proxy.emit('comments')
+                })
             })
-            comments.forEach(function(comment, i){
-                comment.thanked = comment.thanks.indexOf(me) > -1 ? true : false
-                proxy.emit('comments')
-            })
-        })
+    })
 }
 
 //Ajax : 主题收藏

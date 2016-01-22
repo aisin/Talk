@@ -318,7 +318,11 @@ exports.member = function(req, res, next){
     })
 
     //查询用户信息
-    _User.getUserById(member, ep.done(function(member){
+    _User.getUserById(member, function(member){
+        if(!member){
+            ep.unbind()
+            return res.renderErr('用户未找到')
+        }
         ep.emit('member', member)
         switch (member.privacy){
             //用户设置只有自己可以查看
@@ -345,7 +349,7 @@ exports.member = function(req, res, next){
                 ep.emit('showPrivacyType', 0)
             }
         }
-    }))
+    })
 
     //获取收藏主题列表
     ep.on('getThreads', function(){

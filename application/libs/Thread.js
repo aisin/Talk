@@ -10,7 +10,9 @@ exports.getAllThreads = function(callback){
 }
 
 exports.getThreadById = function(id, callback){
-    Thread.findOne({_id : id, deleted: false}, callback)
+    Thread.findOne({_id : id, deleted: false}, function(err, result){
+        callback(result)
+    })
 }
 
 exports.updateViewsOfThread = function(id, callback){
