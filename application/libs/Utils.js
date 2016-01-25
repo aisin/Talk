@@ -24,6 +24,11 @@ var Utils = {
     //Md5
     md5 : function(str){
         return crypto.createHash('md5').update(str).digest("hex")
+    },
+
+    random : function(len){
+        var len = len || 10
+        return crypto.randomBytes(len).toString('hex')
     }
 
 }

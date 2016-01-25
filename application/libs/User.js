@@ -10,7 +10,7 @@ var User = require('../models/user')
  */
 exports.getUserById = function(id, callback){
     User.findOne({_id : id}, function(err, result){
-        callback(result)
+        callback(err, result)
     })
 }
 
@@ -24,6 +24,15 @@ exports.getUserById = function(id, callback){
  */
 exports.getUserByUsername = function(username, callback){
     User.findOne({username: username}, callback)
+}
+
+/**
+ * 根据邮箱，查找用户
+ * @param email
+ * @param callback
+ */
+exports.getUserByEmail = function(email, callback){
+    User.findOne({email: email}, callback)
 }
 
 exports.getTotalCount = function(callback){

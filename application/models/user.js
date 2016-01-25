@@ -42,7 +42,11 @@ var userSchema = new Schema({
     update_at : {
         type : Date,
         default : Date.now
-    }
+    },
+
+    //重置密码
+    reset_token : String,
+    reset_at : Date
 
 })
 

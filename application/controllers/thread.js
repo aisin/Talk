@@ -125,11 +125,17 @@ exports.detail = function(req, res, next){
         .exec(function(err, thread){
             if(!thread){
                 ep.unbind()
-                return res.renderErr('主题未找到')
+                return res.renderMsg({
+                    way : '主题详情',
+                    error : '主题未找到'
+                })
             }
             if(thread.deleted){
                 ep.unbind()
-                return res.renderErr('主题已被删除')
+                return res.renderMsg({
+                    way : '主题详情',
+                    error : '主题已经被删除'
+                })
             }
             thread.views += 1
             thread.save()

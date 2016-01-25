@@ -312,12 +312,12 @@ input.tp[type="checkbox"]{
     border-bottom: 1px solid #e2e2e2;
     color: #333;
 }
-.problem ul{
+.problem ul, .message ul{
     list-style: square;
     margin: 1em 0px 1em 1em;
     padding: 0px;
 }
-.problem > *:last-child{
+.problem > *:last-child, .message > *:last-child{
     margin-bottom: 0!important;
 }
 .message{

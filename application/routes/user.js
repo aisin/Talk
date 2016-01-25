@@ -46,6 +46,16 @@ router.post('/avatar', Auth.userRequired, upload.single('avatar'), user.doAvatar
 
 router.get('/member/:id*', user.member)
 
+//重置密码
+
+router.get('/forgot', user.forgot)
+
+router.post('/forgot', user.resetApply)
+
+router.get('/reset', user.resetPassword)
+
+router.post('/reset', user.doResetPassword)
+
 
 /**
  * Task 部分
@@ -61,6 +71,9 @@ router.get('/task/sign', Auth.userRequired, user.sign)
 router.get('/task/signed', Auth.userRequired, user.signed)
 
 
+// Emial test
+
+router.get('/emailtest', user.emailtest)
 
 
 

@@ -26,7 +26,7 @@ block append main
                             .form-unit
                                 span.key 用户名
                                 span.val
-                                    input.tp(type="text", name="username", value=username ? "#{username}" : "",)
+                                    input.tp(type="text", name="username", value=username ? "#{username}" : "")
                             .form-unit
                                 span.key 密码
                                 span.val
@@ -34,7 +34,7 @@ block append main
                             .form-submit
                                 input.super.normal.button(type="submit", value="登录")
                                 | &nbsp;&nbsp;
-                                a(href="") 忘记密码？
+                                a(href="/forgot") 忘记密码？
                     .inner
                         a(href="#")
                             span.chevron →&nbsp;

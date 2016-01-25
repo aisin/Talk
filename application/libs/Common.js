@@ -1,8 +1,12 @@
 var EventProxy = require('eventproxy')
+var mailer = require('nodemailer')
+var smtpTransport = require('nodemailer-smtp-transport')
 var _Comment = require('../libs/Comment')
 var _User = require('../libs/User')
 var _Thread = require('../libs/Thread')
 var ScoreRecord = require('../models/scoreRecord')
+var config = require('../../config.js').config
+var transporter = mailer.createTransport(smtpTransport(config.emailOptions))
 
 
 /**
@@ -66,4 +70,32 @@ exports.scoreCalculation = function(upRecordObj, downRecordObj, upUser, downUser
         })
 
     }
+}
+
+// 发邮件
+exports.sendEmail = function (data) {
+    transporter.sendMail(data, function (err) {
+        if (err) {
+            console.log(err)
+        }
+    })
+}
+
+//发送重置密码邮件
+exports.sendResetPassMail = function(email, user, token){
+    var from = config.emailOptions.auth.name + config.emailOptions.auth.user
+    var to = email
+    var subject = '社区密码重置';
+    var html = '<p>您好：' + user + '</p>' +
+        '<p>我们收到您在社区重置密码的请求，请在24小时内单击下面的链接来重置密码：</p>' +
+        '<a href="' + config.site.url + '/reset?token=' + token + '&user=' + user + '">重置密码链接</a>' +
+        '<p>若您没有在社区填写过注册信息，说明有人滥用了您的电子邮箱，请删除此邮件，我们对给您造成的打扰感到抱歉。</p>' +
+        '<p>社区 谨上。</p>';
+
+    exports.sendEmail({
+        from: from,
+        to: to,
+        subject: subject,
+        html: html
+    });
 }

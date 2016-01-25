@@ -321,7 +321,9 @@ exports.member = function(req, res, next){
     _User.getUserById(member, function(member){
         if(!member){
             ep.unbind()
-            return res.renderErr('用户未找到')
+            return res.renderMsg({
+                error : '用户未找到'
+            })
         }
         ep.emit('member', member)
         switch (member.privacy){
@@ -464,5 +466,124 @@ exports.signed = function(req, res, next){
             //当天未曾签到
             ep.emit('sign', user)
         }
+    })
+}
+
+//忘记密码页
+exports.forgot = function(req, res, next){
+    res.render('user/forgotPassword', {
+        session : req.session.user
+    })
+}
+
+exports.resetApply = function(req, res, next){
+    var user = validator.trim(req.body.user)
+    var getUser
+    if(user.indexOf('@') > -1){
+        user = user.toLowerCase()
+        getUser = _User.getUserByEmail
+    }else{
+        getUser = _User.getUserByUsername
+    }
+    var resetToken = Utils.random()
+    var resetAt = Date.now()
+    getUser(user, function(err, userRes){
+        if(!userRes){
+            return res.render('user/forgotPassword', {
+                session : req.session.user,
+                user : user,
+                errors : '该用户不存在'
+            })
+        }else{
+            userRes.reset_token = resetToken
+            userRes.reset_at = resetAt
+            userRes.save(function(err){
+                if(err){
+                    return next(err)
+                }
+                Common.sendResetPassMail(userRes.email, userRes.username, resetToken)
+                res.renderMsg({
+                    way : '忘记密码',
+                    message : '我们已给您填写的电子邮箱发送了一封邮件，请在24小时内点击里面的链接来重置密码。'
+                })
+            })
+        }
+    })
+}
+
+//Get : 打开重置密码页面
+exports.resetPassword = function(req, res, next){
+    var username = req.query.user
+    var token = req.query.token
+    var now = Date.now()
+    _User.getUserByUsername(username, function(err, user){
+        if(!user){
+            return res.renderMsg({
+                way : '重置密码',
+                error : '该用户不存在，您的重置密码链接有问题。'
+            })
+        }else if(token !== user.reset_token){
+            return res.renderMsg({
+                way : '重置密码',
+                error : '您的重置密码链接不正确。'
+            })
+        }else if(user.reset_at && moment(now).diff(user.reset_at, 'seconds') > 86400){
+            return res.renderMsg({
+                way : '重置密码',
+                error : '您的重置密码链接已经失效。'
+            })
+        }else{
+            res.render('user/resetPassword', {
+                session : req.session.user,
+                username : user.username
+        })
+        }
+    })
+}
+
+//Post : 重置密码
+exports.doResetPassword = function(req, res, next){
+    var username = req.body.username
+    var password = validator.trim(req.body.newpassword)
+    var passwordcf = validator.trim(req.body.newpasswordcf)
+    var ep = new EventProxy()
+    ep.fail(next)
+    ep.on('errors', function(msg){
+        res.status(403)
+        return res.render('user/resetPassword', {
+            session : req.session.user,
+            username : username,
+            errors : msg
+        })
+    })
+
+    if(!password || password !== passwordcf){
+        return ep.emit('errors', "密码不能为空，并且两次要输入一致")
+    }else{
+        _User.getUserByUsername(username, function(err, user){
+            if(err) return next(err)
+            Utils.pwHash(password, ep.done(function(passwordHash){
+                user.password = passwordHash
+                user.reset_token = null
+                user.reset_at = null
+                user.save(function(err, _user){
+                    if(err) return next(err)
+                    res.renderMsg({
+                        way : '重置密码',
+                        message : '密码重置完成，现在可以使用新密码登录了。'
+                    })
+                })
+            }))
+        })
+    }
+}
+
+//邮件测试
+exports.emailtest = function(req, res, next){
+    Common.sendEmail({
+        from: 'Aisin iaisin@qq.com',
+        to: 'prccn@qq.com',
+        subject: 'node emial testing',
+        html: 'hello, this email is sended by using Node.'
     })
 }
