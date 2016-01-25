@@ -1,5 +1,6 @@
 var express = require('express')
 var app = express()
+//var flash = require('connect-flash')
 var path = require('path')
 var bodyParser = require('body-parser')
 var mongoose = require('mongoose')
@@ -9,6 +10,7 @@ var config = require('./config.js').config
 var msgPageMiddleware = require('./application/middlewares/msg');
 moment.locale('zh-cn')
 
+//app.use(flash())
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(express.static(path.join(__dirname, config.assets)))
 app.set('views', path.join(__dirname, config.views))
