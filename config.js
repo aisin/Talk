@@ -22,6 +22,11 @@ var config = {
     "activeDuration" : 60 * 1000
   },
 
+  "cache" : {
+    "max" : 50,
+    "maxAge" : 5 * 60 * 1000
+  },
+
   emailOptions: {
     host: 'smtp.qq.com',
     port: 465,

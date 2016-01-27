@@ -77,6 +77,15 @@ router.get('/emailtest', user.emailtest)
 
 
 
+// Test...
+router.get('/t1', function(req, res, next){
+    cache.set('fm', '123...456')
+})
+
+router.get('/t2', function(req, res, next){
+    cache.get('fm')
+})
+
 //测试 Ajax
 
 //router.post('/ajax', Auth.userRequiredAjax, user.ajax)

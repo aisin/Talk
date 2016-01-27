@@ -1,6 +1,5 @@
 var express = require('express')
 var app = express()
-//var flash = require('connect-flash')
 var path = require('path')
 var bodyParser = require('body-parser')
 var mongoose = require('mongoose')
@@ -10,7 +9,12 @@ var config = require('./config.js').config
 var msgPageMiddleware = require('./application/middlewares/msg');
 moment.locale('zh-cn')
 
-//app.use(flash())
+// Sidebar Global newComments
+app.use(require('./application/middlewares/global')(app).newComments)
+
+// Sidebar Global communityData
+app.use(require('./application/middlewares/global')(app).communityData)
+
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(express.static(path.join(__dirname, config.assets)))
 app.set('views', path.join(__dirname, config.views))
@@ -26,7 +30,14 @@ app.use(session({
   activeDuration : config.session.activeDuration
 }))
 
+// Global Session
+app.use(function(req, res, next){
+    res.locals.session = req.session && req.session.user
+    next()
+})
+
 app.use(msgPageMiddleware.msg)
+
 //Bootstrap routes
 require(config.routes)(app)
 

@@ -38,15 +38,23 @@
                 a(href="/task/sign") 领取今日的登录奖励
     .box
         .cell
+            span.fade 今日热议主题
+        each comment in newComments
+            .cell.clauses
+                a.im(href="#")
+                    img(src="/uploads/avatar/" + "#{comment.commenter_id.avatar}")
+                a.tx(href="/thread/#{comment.thread_id._id}") #{comment.thread_id.title}
+    .box
+        .cell
             span.fade 社区运行状况
         .cell
-            ul
-                li.couple
+            ul.smp
+                li
                     span.a.grey 注册会员
-                    strong.b #{usersTotal}
-                li.couple
+                    strong.b #{communityData.usersTotal}
+                li
                     span.a.grey 主题
-                    strong.b #{threadsTotal}
-                li.couple
+                    strong.b #{communityData.threadsTotal}
+                li
                     span.a.grey 回复
-                    strong.b #{commentsTotal}
+                    strong.b #{communityData.commentsTotal}

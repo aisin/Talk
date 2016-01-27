@@ -2,7 +2,6 @@ var EventProxy = require('eventproxy')
 var Thread = require('../models/thread')
 var _Category = require('../libs/Category')
 var _Comment = require('../libs/Comment')
-var Common = require('../libs/Common')
 
 exports.index = function (req, res, next) {
     Thread.find({deleted: false})
@@ -20,15 +19,11 @@ exports.index = function (req, res, next) {
         .exec(function(err, threads){
             var ep = new EventProxy()
             ep.fail(next)
-            var events = ['threadsReady', 'categories', 'communityData']
-            ep.all(events, function(threads, categories, communityData){
+            var events = ['threadsReady', 'categories']
+            ep.all(events, function(threads, categories){
                 res.render('home', {
-                    session : req.session.user,
                     threads : threads,
-                    categories : categories,
-                    usersTotal : communityData.usersTotal,
-                    threadsTotal : communityData.threadsTotal,
-                    commentsTotal : communityData.commentsTotal
+                    categories : categories
                 })
             })
 
@@ -46,11 +41,6 @@ exports.index = function (req, res, next) {
             //获取分类
             _Category.getAllCategories(function(err, categories){
                 ep.emit('categories', categories)
-            })
-
-            //获取社区数据
-            Common.getCommunityData(function(communityData){
-                ep.emit('communityData', communityData)
             })
         })
 }

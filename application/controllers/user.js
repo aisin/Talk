@@ -130,7 +130,6 @@ exports.setting = function(req, res){
             res.render('user/login')
         }else{
             res.render('user/setting', {
-                session : req.session.user,
                 user : user
             })
         }
@@ -155,7 +154,6 @@ exports.doSetting = function(req, res, next){
         res.status(403)
         return res.render('user/setting', {
             user: req.session.user,
-            session : req.session.user,
             errors : msg
         })
     })
@@ -188,7 +186,6 @@ exports.password = function (req, res) {
             res.render('user/login')
         }else{
             res.render('user/password', {
-                session : req.session.user,
                 user : user
             })
         }
@@ -208,7 +205,6 @@ exports.doPassword = function(req, res, next){
     ep.on('errors', function(msg){
         res.status(403)
         return res.render('user/password', {
-            session : req.session.user,
             errors : msg
         })
     })
@@ -253,7 +249,6 @@ exports.avatar = function(req, res, next){
             res.render('user/login')
         }else{
             res.render('user/avatar', {
-                session : req.session.user,
                 user : user
             })
         }
@@ -269,7 +264,6 @@ exports.doAvatar = function(req, res, next){
         res.status(403)
         return res.render('user/avatar', {
             user: req.session.user,
-            session : req.session.user,
             errors : msg
         })
     })
@@ -309,7 +303,6 @@ exports.member = function(req, res, next){
     var events = ['member', 'threads', 'showPrivacyType']
     ep.all(events, function(member, threads, showPrivacyType){
         res.render('user/member', {
-            session : req.session.user,
             channel : channel,
             member : member,
             threads : threads,
@@ -378,7 +371,6 @@ exports.balance = function(req, res, next){
     var events = ['score', 'records']
     ep.all(events, function(score, records){
         res.render('user/balance', {
-            session : req.session.user,
             score : score,
             records : records
         })
@@ -405,9 +397,7 @@ exports.balance = function(req, res, next){
 
 //Get : daily
 exports.sign = function(req, res, next){
-    res.render('task/sign', {
-        session : req.session.user
-    })
+    res.render('task/sign')
 }
 
 //签到送积分
@@ -416,7 +406,6 @@ exports.signed = function(req, res, next){
     var ep = new EventProxy()
     ep.on('ok', function(data){
         res.render('task/signed', {
-            session : req.session.user,
             isSigned : data.isSigned,
             score : data.score,
             days : data.days
@@ -471,9 +460,7 @@ exports.signed = function(req, res, next){
 
 //忘记密码页
 exports.forgot = function(req, res, next){
-    res.render('user/forgotPassword', {
-        session : req.session.user
-    })
+    res.render('user/forgotPassword')
 }
 
 exports.resetApply = function(req, res, next){
@@ -490,7 +477,6 @@ exports.resetApply = function(req, res, next){
     getUser(user, function(err, userRes){
         if(!userRes){
             return res.render('user/forgotPassword', {
-                session : req.session.user,
                 user : user,
                 errors : '该用户不存在'
             })
@@ -534,7 +520,6 @@ exports.resetPassword = function(req, res, next){
             })
         }else{
             res.render('user/resetPassword', {
-                session : req.session.user,
                 username : user.username
         })
         }
@@ -551,7 +536,6 @@ exports.doResetPassword = function(req, res, next){
     ep.on('errors', function(msg){
         res.status(403)
         return res.render('user/resetPassword', {
-            session : req.session.user,
             username : username,
             errors : msg
         })

@@ -14,7 +14,6 @@ exports.new = function (req, res, next) {
     _Category.getAllCategories(function (err, categories) {
         if (err) return next(err)
         res.render('thread/new', {
-            session: req.session.user,
             categories: categories
         })
     })
@@ -22,7 +21,6 @@ exports.new = function (req, res, next) {
 
 //Post : 发布话题操作
 exports.doNew = function(req, res, next){
-
     var _thread = {
         title : validator.trim(req.body.title),
         content : validator.trim(req.body.content),
@@ -47,7 +45,6 @@ exports.doNew = function(req, res, next){
                     threadContent : _thread.content,
                     threadCategory : _thread.category,
                     categories: categories,
-                    session : req.session.user,
                     errors : msg
                 })
             }
@@ -106,7 +103,6 @@ exports.detail = function(req, res, next){
     ep.fail(next)
     ep.all(events, function (thread, comments, collect) {
         res.render('thread/detail', {
-            session: req.session.user,
             thread : thread,
             comments : comments,
             collect : collect

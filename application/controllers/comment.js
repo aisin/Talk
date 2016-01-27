@@ -12,7 +12,6 @@ exports.comment = function(req, res, next){
     var threadId = req.params.id
     _Thread.getThreadById(threadId, function(err, thread){
         res.render('thread/comment', {
-            session : req.session.user,
             thread_id : threadId,
             thread_title : thread.title
         })
@@ -34,7 +33,6 @@ exports.add = function(req, res, next){
     ep.on('errors', function(msg){
         res.status(403)
         return res.render('thread/comment', {
-            session : req.session.user,
             thread_id : data.thread_id,
             thread_title : msg.title,
             content : data.content,

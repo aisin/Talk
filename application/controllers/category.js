@@ -22,7 +22,6 @@ exports.list = function(req, res, next){
             var events = ['threadsReady', 'category', 'count']
             ep.all(events, function(threads, category, count){
                 res.render('category/list', {
-                    session : req.session.user,
                     category : category,
                     threads : threads,
                     count : count

@@ -524,10 +524,28 @@ ul.actions li.highlight a:hover{
     line-height: 1.2em;
     padding: 4px 0;
 }
-.couple{
+.clauses li:after{
+    content: "";
+    clear: both;
+    display: table;
+}
+.clauses img{
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+}
+.clauses .im{
+    float: left;
+    margin-right: 10px;
+    line-height: 0;
+}
+.clauses .tx{
+    line-height: 1.5em;
+}
+.smp li{
     line-height: 2em;
 }
-.couple .a{
+.smp li .a{
     width: 25%;
     display: inline-block;
     padding-right: 8px;
