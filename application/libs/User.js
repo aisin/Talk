@@ -1,3 +1,4 @@
+var moment = require('moment')
 var User = require('../models/user')
 
 /**
@@ -50,6 +51,19 @@ exports.modifyScore = function(user, score, callback){
 }
 
 
+exports.hasSigned = function(userId, callback){
+    User.findOne({_id: userId}, function(err, user){
+        var todayStamp = moment().startOf('day').unix() //取今天 00:00:00 的时间戳，不含毫秒
+        var lastSignStamp = moment(user.last_sign).startOf('day').unix() //取最后签到当天 00:00:00 的时间戳，不含毫秒
+        if((todayStamp - lastSignStamp) / 86400 === 0){
+            //当天已经签过到
+            callback(true)
+        }else{
+            //当天未曾签到
+            callback(false)
+        }
+    })
+}
 
 
 

@@ -30,7 +30,7 @@
                 .ladder.text-center
                     | 已注册用户请&nbsp;
                     a(href="/login") 登录
-    if session
+    if !signed
         .box
             .inner
                 li.fa.fa-gift(style="color:#f90;")

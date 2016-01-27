@@ -405,6 +405,7 @@ exports.signed = function(req, res, next){
     var userId = req.session.user._id
     var ep = new EventProxy()
     ep.on('ok', function(data){
+        res.locals.signed = true
         res.render('task/signed', {
             isSigned : data.isSigned,
             score : data.score,

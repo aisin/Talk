@@ -9,12 +9,6 @@ var config = require('./config.js').config
 var msgPageMiddleware = require('./application/middlewares/msg');
 moment.locale('zh-cn')
 
-// Sidebar Global newComments
-app.use(require('./application/middlewares/global')(app).newComments)
-
-// Sidebar Global communityData
-app.use(require('./application/middlewares/global')(app).communityData)
-
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(express.static(path.join(__dirname, config.assets)))
 app.set('views', path.join(__dirname, config.views))
@@ -32,11 +26,20 @@ app.use(session({
 
 // Global Session
 app.use(function(req, res, next){
-    res.locals.session = req.session && req.session.user
+    res.locals.session = req.session.user
     next()
 })
 
 app.use(msgPageMiddleware.msg)
+
+// Sidebar Global newComments
+app.use(require('./application/middlewares/global')(app).newComments)
+
+// Sidebar Global communityData
+app.use(require('./application/middlewares/global')(app).communityData)
+
+// Sidebar Global signed
+app.use(require('./application/middlewares/global')(app).signed)
 
 //Bootstrap routes
 require(config.routes)(app)
