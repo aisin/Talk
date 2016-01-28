@@ -26,8 +26,9 @@ module.exports = function(app){
     module.newComments = function(req, res, next){
         if(typeof app.locals.newComments === 'undefined' || !cache.has('newComments')){
             Comment.find({})
-                .populate('commenter_id', 'avatar')
+                .populate('commenter_id', 'username avatar')
                 .populate('thread_id', 'title')
+                .sort({create_at: -1})
                 .exec(function(err, comments){
                     cache.set('newComments', comments)
                     app.locals.newComments = cache.get('newComments')

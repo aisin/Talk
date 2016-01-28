@@ -44,7 +44,7 @@
             span.fade 今日热议主题
         each comment in newComments
             .cell.clauses
-                a.im(href="#")
+                a.im(href="/member/#{comment.commenter_id.username}")
                     img(src="/uploads/avatar/" + "#{comment.commenter_id.avatar}")
                 a.tx(href="/thread/#{comment.thread_id._id}") #{comment.thread_id.title}
     .box

@@ -7,6 +7,7 @@ var Utils = require('../libs/Utils')
 var _At = require('../libs/At')
 var _User = require('../libs/User')
 var _Thread = require('../libs/Thread')
+var _Comment = require('../libs/Comment')
 var Common = require('../libs/Common')
 var xss = new XSS.FilterXSS({
     whiteList: {
@@ -32,6 +33,7 @@ exports.add = function(req, res, next){
         thread_id : req.params.id,
         content : xss.process(validator.trim(req.body.content)).replace(/\r\n/g, '<br>')
     }
+    var content = data.content
     var commentScore = 5 //需要扣除的积分
     var ep = new EventProxy()
     ep.fail(next)
@@ -77,10 +79,12 @@ exports.add = function(req, res, next){
 
     ep.on('enough', function(user){
         //给所 at 的用户添加链接
-        data.content = _At.linkUsers(data.content)
+        data.content = _At.linkUsers(content)
         //提交评论
         var comment = new Comment(data)
-        comment.save()
+        comment.save(function(err, comment){
+            ep.emit('sendAtMsg', comment)
+        })
         //更新主题的最后回复字段
         Thread.findByIdAndUpdate(data.thread_id, {$set: {last_reply: data.commenter_id}}).exec(function(err, thread){
             _User.getUserById(thread.author_id, function(err, upUser){
@@ -88,6 +92,18 @@ exports.add = function(req, res, next){
             })
             ep.emit('downUser', user)
         })
+    })
+
+    //给所有被 @ 的用户推送消息
+    ep.on('sendAtMsg', function(comment){
+        var atUsers = _At.fetchUsers(content)
+        if(atUsers.length > 0){
+            atUsers.forEach(function(username, i){
+                _User.getUserByUsername(username, function(err, user){
+                    _Comment.sendAtMessage(data.commenter_id, user._id, data.thread_id, comment._id)
+                })
+            })
+        }
     })
 
     if(data.content){
