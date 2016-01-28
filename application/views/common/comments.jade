@@ -25,7 +25,7 @@ else
                         img(src="/uploads/avatar/" + "#{comment.commenter_id.avatar}")
                 .whole
                     strong
-                        a(href="/member/" + "#{comment.commenter_id._id}") #{comment.commenter_id.nickname}
+                        a(href="/member/" + "#{comment.commenter_id._id}") #{comment.commenter_id.username}
                     if comment.commenter_id.role == 'admin'
                         | &nbsp;&nbsp;
                         img(src="/images/mod.png", style="width:30px;height:14px;vertical-align: middle;margin-bottom:4px;")

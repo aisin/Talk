@@ -33,7 +33,7 @@ exports.getAllCategories = function(callback){
 
 exports.getAllThreads = function(callback){
     Thread.find({})
-        .populate('author_id', 'nickname')
+        .populate('author_id', 'username')
         .sort({update_at: -1})
         .exec(function(err, threads){
             callback(err, threads)

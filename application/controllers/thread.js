@@ -116,7 +116,7 @@ exports.detail = function(req, res, next){
             select: 'name'
         }, {
             path: 'author_id',
-            select: 'nickname avatar'
+            select: 'username avatar'
         }])
         .exec(function(err, thread){
             if(!thread){
@@ -151,7 +151,7 @@ exports.detail = function(req, res, next){
     //comments
     ep.on('thread', function(){
         Comment.find({thread_id: threadId})
-            .populate('commenter_id', 'nickname avatar role')
+            .populate('commenter_id', 'username avatar role')
             .sort({create_at: 1})
             .exec(function(err, comments){
                 var proxy = new EventProxy()

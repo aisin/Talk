@@ -25,7 +25,7 @@ exports.add = function(req, res, next){
     var data = {
         commenter_id : req.session.user._id,
         thread_id : req.params.id,
-        content : xss(validator.trim(req.body.content).replace(/\n/g, '<br>'))
+        content : xss(validator.trim(req.body.content).replace(/\r\n/g, '<br>'))
     }
     var commentScore = 5 //需要扣除的积分
     var ep = new EventProxy()

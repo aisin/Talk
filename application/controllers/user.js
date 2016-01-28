@@ -23,7 +23,6 @@ exports.register = function (req, res, next) {
 exports.doRegister = function (req, res, next) {
     var data = {
         username : validator.trim(req.body.username).toLowerCase(),
-        nickname : validator.trim(req.body.nickname),
         email : validator.trim(req.body.email).toLowerCase(),
         gender : req.body.gender,
         description : validator.trim(req.body.description) || '这个人很懒，什么也没有留下~'
@@ -37,7 +36,6 @@ exports.doRegister = function (req, res, next) {
         res.status(403)
         return res.render('user/register', {
             username : data.username,
-            nickname : data.nickname,
             email : data.email,
             description : data.description,
             errors : msg
@@ -59,11 +57,10 @@ exports.doRegister = function (req, res, next) {
         }else{
             Utils.pwHash(password, ep.done(function(passwordHash){
                 data.password = passwordHash
-                if(!data.nickname) data.nickname = data.username
                 var user = new User(data)
                 user.save(function(err, _user){
                     if(err) return next(err)
-                    req.session.user = _.pick(user, ['_id', 'username', 'nickname', 'email', 'avatar', 'gender', 'description', 'role'])
+                    req.session.user = _.pick(user, ['_id', 'username', 'email', 'avatar', 'gender', 'description', 'role'])
                     res.redirect('/')
                 })
             }))
@@ -105,7 +102,7 @@ exports.doLogin = function (req, res, next) {
                 if(!bool){
                     ep.emit('errors', "用户名或密码错误")
                 }else{
-                    req.session.user = _.pick(user, ['_id', 'username', 'nickname', 'email', 'avatar', 'gender', 'description', 'role'])
+                    req.session.user = _.pick(user, ['_id', 'username', 'email', 'avatar', 'gender', 'description', 'role'])
                     res.redirect('/')
                 }
             }))
@@ -141,7 +138,6 @@ exports.doSetting = function(req, res, next){
     var id = req.session.user._id
     var username = req.body.username
     var data = {
-        nickname : validator.trim(req.body.nickname),
         email : validator.trim(req.body.email).toLowerCase(),
         gender : req.body.gender,
         privacy : req.body.privacy,
@@ -160,16 +156,13 @@ exports.doSetting = function(req, res, next){
 
     if(id){
         if(!validator.isEmail(data.email)) return ep.emit('errors', "请填写正确的邮箱地址")
-
-        if(!data.nickname) data.nickname = username
-
         _User.getUserById(id, function (err, user) {
             if (err) return next(err)
             data.update_at = Date.now()
             _user = _.assign(user, data)
             _user.save(function (err, user) {
                 if (err) return next(err)
-                req.session.user = _.pick(user, ['_id', 'username', 'nickname', 'email', 'avatar', 'gender', 'description', 'role'])
+                req.session.user = _.pick(user, ['_id', 'username', 'email', 'avatar', 'gender', 'description', 'role'])
                 res.redirect('/setting')
             })
         })
@@ -289,9 +282,10 @@ exports.doAvatar = function(req, res, next){
 //Get : 个人信息页（收藏的主题列表）
 exports.member = function(req, res, next){
     var sessionId = req.session.user && req.session.user._id
-    var member = req.params.id
+    var memberId = req.params.id
     var channelParam = req.params[0]
-    var channel;
+    var channel
+    console.log(memberId)
     if(channelParam == '/collect'){
         channel = 'collected'
     }else if(channelParam == ''){
@@ -311,7 +305,8 @@ exports.member = function(req, res, next){
     })
 
     //查询用户信息
-    _User.getUserById(member, function(member){
+    _User.getUserById(memberId, function(err, member){
+        console.log(member)
         if(!member){
             ep.unbind()
             return res.renderMsg({
@@ -349,11 +344,11 @@ exports.member = function(req, res, next){
     //获取收藏主题列表
     ep.on('getThreads', function(){
         if(channel == 'collected'){
-            _Thread.getCollectsByMember(member, function(threads){
+            _Thread.getCollectsByMember(memberId, function(threads){
                 ep.emit('threads', threads)
             })
         }else if(channel == 'created'){
-            _Thread.getCreatesByMember(member, function(threads){
+            _Thread.getCreatesByMember(memberId, function(threads){
                 ep.emit('threads', threads)
             })
         }
@@ -387,7 +382,7 @@ exports.balance = function(req, res, next){
     })
     //积分记录查询
     ScoreRecord.find({user: userId})
-        .populate('detail.person', 'nickname')
+        .populate('detail.person', 'username')
         .populate('detail.thread', 'title')
         .sort({create_at: -1})
         .exec(function(err, scoreRecord){

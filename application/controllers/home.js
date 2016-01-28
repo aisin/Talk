@@ -10,10 +10,10 @@ exports.index = function (req, res, next) {
             select : 'name'
         }, {
             path : 'author_id',
-            select : 'nickname avatar'
+            select : 'username avatar'
         }, {
             path : 'last_reply',
-            select : 'nickname'
+            select : 'username'
         }])
         .sort({update_at: -1})
         .exec(function(err, threads){

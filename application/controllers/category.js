@@ -9,10 +9,10 @@ exports.list = function(req, res, next){
     Thread.find({category: cate, deleted:false})
         .populate([{
             path : 'author_id',
-            select : 'nickname avatar'
+            select : 'username avatar'
         }, {
             path : 'last_reply',
-            select : 'nickname'
+            select : 'username'
         }])
         .sort({update_at: -1})
         .exec(function(err, threads){

@@ -58,12 +58,12 @@ exports.getCollectsByMember = function(member, callback){
 
                 User.populate(resultsB, {
                     path: 'thread_id.author_id',
-                    select: 'nickname',
+                    select: 'username',
                 }, function(err, resultsC){
 
                     User.populate(resultsC, {
                         path: 'thread_id.last_reply',
-                        select: 'nickname'
+                        select: 'username'
                     }, function(err, resultsD){
 
                         var ep = new EventProxy()
@@ -94,10 +94,10 @@ exports.getCreatesByMember = function(member, callback){
             select: 'name'
         }, {
             path: 'author_id',
-            select: 'nickname'
+            select: 'username'
         }, {
             path: 'last_reply',
-            select: 'nickname'
+            select: 'username'
         }])
         .sort({update_at: -1})
         .exec(function(err, results){

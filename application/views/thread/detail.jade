@@ -26,7 +26,7 @@ block append main
                                 li.fa.fa-chevron-down
                         | &nbsp;&nbsp;
                         small.grey
-                            a(href="/member/#{thread.author_id._id}") #{thread.author_id.nickname}
+                            a(href="/member/#{thread.author_id._id}") #{thread.author_id.username}
                             | &nbsp;·&nbsp;#{moment(thread.create_at).fromNow()}&nbsp;·&nbsp;#{thread.views} 次点击
                     .cell
                         .detail
