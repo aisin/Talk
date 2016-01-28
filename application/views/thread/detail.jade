@@ -98,7 +98,7 @@ block append script
             var self = $(this);
             var comment = self.parents('.cell');
             var comment_id = comment.attr('data-comment-id');
-            var commenter_id = self.attr('data-commenter-id');
+            var commenter_id = self.attr('data-commenter');
             var thread_id = $('#thread').attr('data-thread-id');
             var thankCount = parseInt(comment.find('.thank_count span').text());
             $.post('/comment/thank', {
@@ -123,4 +123,15 @@ block append script
                     }
                 }
             },'json');
+        });
+        //回复
+        $('.js-reply').click(function(){
+            var self = $(this);
+            var commenter = self.attr('data-commenter');
+            var content = $.trim($('#replyContent').val());
+            if(content){
+                $('#replyContent').val(content + '\r\n@' + commenter + ' ').focus();
+            }else{
+                $('#replyContent').val('@' + commenter + ' ').focus();
+            }
         });

@@ -1,6 +1,6 @@
 var _ = require('lodash')
 
-exports.fetchUsers = function(text){
+var fetchUsers = function(text){
     if (!text) return []
 
     var ignoreRegexs = [
@@ -27,4 +27,18 @@ exports.fetchUsers = function(text){
     }
     names = _.uniq(names)
     return names
+}
+
+exports.fetchUsers = fetchUsers
+
+exports.linkUsers = function (text, callback) {
+    var users = fetchUsers(text)
+    for (var i = 0, l = users.length; i < l; i++) {
+        var name = users[i]
+        text = text.replace(new RegExp('@' + name + '\\b(?!\\])', 'g'), '@<a href="/member/'+name+'">'+name+'</a> ')
+    }
+    if (!callback) {
+        return text
+    }
+    return callback(null, text)
 }

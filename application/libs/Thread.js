@@ -11,7 +11,7 @@ exports.getAllThreads = function(callback){
 
 exports.getThreadById = function(id, callback){
     Thread.findOne({_id : id, deleted: false}, function(err, result){
-        callback(result)
+        callback(err, result)
     })
 }
 

@@ -4,7 +4,7 @@ var Comment = require('../models/comment')
 var Thread = require('../models/thread')
 var validator = require('validator')
 var Utils = require('../libs/Utils')
-//var _At = require('../libs/At')
+var _At = require('../libs/At')
 var _User = require('../libs/User')
 var _Thread = require('../libs/Thread')
 var Common = require('../libs/Common')
@@ -35,7 +35,6 @@ exports.add = function(req, res, next){
     var commentScore = 5 //需要扣除的积分
     var ep = new EventProxy()
     ep.fail(next)
-
     ep.on('errors', function(msg){
         res.status(403)
         return res.render('thread/comment', {
@@ -45,9 +44,6 @@ exports.add = function(req, res, next){
             errors : msg.msg
         })
     })
-
-    //var nn = _At.fetchUsers(data.content)
-    //console.log(nn)
 
     //积分核算
     ep.all('downUser', 'upUser', function(downUser, upUser){
@@ -80,6 +76,8 @@ exports.add = function(req, res, next){
     })
 
     ep.on('enough', function(user){
+        //给所 at 的用户添加链接
+        data.content = _At.linkUsers(data.content)
         //提交评论
         var comment = new Comment(data)
         comment.save()
