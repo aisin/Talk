@@ -4,6 +4,7 @@ var Comment = require('../models/comment')
 var Thread = require('../models/thread')
 var validator = require('validator')
 var Utils = require('../libs/Utils')
+//var _At = require('../libs/At')
 var _User = require('../libs/User')
 var _Thread = require('../libs/Thread')
 var Common = require('../libs/Common')
@@ -22,7 +23,6 @@ exports.comment = function(req, res, next){
             thread_title : thread.title
         })
     })
-
 }
 
 //发布评论
@@ -45,6 +45,9 @@ exports.add = function(req, res, next){
             errors : msg.msg
         })
     })
+
+    //var nn = _At.fetchUsers(data.content)
+    //console.log(nn)
 
     //积分核算
     ep.all('downUser', 'upUser', function(downUser, upUser){
