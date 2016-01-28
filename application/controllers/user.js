@@ -282,10 +282,9 @@ exports.doAvatar = function(req, res, next){
 //Get : 个人信息页（收藏的主题列表）
 exports.member = function(req, res, next){
     var sessionId = req.session.user && req.session.user._id
-    var memberId = req.params.id
+    var username = req.params.username
     var channelParam = req.params[0]
     var channel
-    console.log(memberId)
     if(channelParam == '/collect'){
         channel = 'collected'
     }else if(channelParam == ''){
@@ -305,8 +304,7 @@ exports.member = function(req, res, next){
     })
 
     //查询用户信息
-    _User.getUserById(memberId, function(err, member){
-        console.log(member)
+    _User.getUserByUsername(username, function(err, member){
         if(!member){
             ep.unbind()
             return res.renderMsg({
@@ -314,11 +312,12 @@ exports.member = function(req, res, next){
             })
         }
         ep.emit('member', member)
+        var memberId = member._id
         switch (member.privacy){
             //用户设置只有自己可以查看
             case 2 :{
-                if(member._id.equals(sessionId)){
-                    ep.emit('getThreads')
+                if(memberId.equals(sessionId)){
+                    ep.emit('getThreads', memberId)
                     ep.emit('showPrivacyType', 0)
                 }else{
                     ep.emit('showPrivacyType', 2)
@@ -327,7 +326,7 @@ exports.member = function(req, res, next){
             //用户设置只有登录用户可以查看
             case 1 :{
                 if(!_.isUndefined(sessionId)){
-                    ep.emit('getThreads')
+                    ep.emit('getThreads', memberId)
                     ep.emit('showPrivacyType', 0)
                 }else{
                     ep.emit('showPrivacyType', 1)
@@ -335,14 +334,14 @@ exports.member = function(req, res, next){
             }
             //用户设置所有人可以查看
             default :{
-                ep.emit('getThreads')
+                ep.emit('getThreads', memberId)
                 ep.emit('showPrivacyType', 0)
             }
         }
     })
 
     //获取收藏主题列表
-    ep.on('getThreads', function(){
+    ep.on('getThreads', function(memberId){
         if(channel == 'collected'){
             _Thread.getCollectsByMember(memberId, function(threads){
                 ep.emit('threads', threads)

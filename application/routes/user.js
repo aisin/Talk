@@ -44,7 +44,7 @@ router.get('/avatar', Auth.userRequired, user.avatar)
 
 router.post('/avatar', Auth.userRequired, upload.single('avatar'), user.doAvatar)
 
-router.get('/member/:id*', user.member)
+router.get('/member/:username*', user.member)
 
 //重置密码
 

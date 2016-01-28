@@ -22,19 +22,19 @@ block append main
                     each thread in threads
                         .cell.item
                             .avatar
-                                a(href="/member/#{thread.author_id._id}")
+                                a(href="/member/#{thread.author_id.username}")
                                     img(src="/uploads/avatar/" + "#{thread.author_id.avatar}")
                             .all
                                 h2.title
                                     a(href="/thread/#{thread._id}") #{thread.title}
                                 .meta.small.fade
                                     strong
-                                        a(href="/member/#{thread.author_id._id}") #{thread.author_id.username}
+                                        a(href="/member/#{thread.author_id.username}") #{thread.author_id.username}
                                     span &nbsp;•&nbsp;#{moment(thread.create_at).fromNow()}
                                     if thread.comments > 0
                                         span &nbsp;•&nbsp;最后回复来自&nbsp;
                                         strong
-                                            a(href="/member/#{thread.last_reply._id}") #{thread.last_reply.username}
+                                            a(href="/member/#{thread.last_reply.username}") #{thread.last_reply.username}
                             .reply
                                 a.replay-count(href="#") #{thread.comments}
                     .inner

@@ -47,7 +47,7 @@ block append main
                                             a(href="/thread/#{thread._id}", target="_blank") #{thread.title}
                                         td #{moment(thread.create_at).format("YYYY-MM-DD HH:mm:ss")}
                                         td
-                                            a(href="/member/#{thread.author_id._id}", target="_blank") #{thread.author_id.username}
+                                            a(href="/member/#{thread.author_id.username}", target="_blank") #{thread.author_id.username}
                                         if thread.locked
                                             td
                                                 span.label.label-danger Locked

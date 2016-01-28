@@ -17,11 +17,11 @@ block append main
                 .box.member
                     .cell_tabs
                         if channel == 'created'
-                            a.cell_tab_current(href="/member/#{member._id}") #{member.username} 创建的主题
-                            a.cell_tab(href="/member/#{member._id}/collect") 收藏的主题
+                            a.cell_tab_current(href="/member/#{member.username}") #{member.username} 创建的主题
+                            a.cell_tab(href="/member/#{member.username}/collect") 收藏的主题
                         else if channel == 'collected'
-                            a.cell_tab(href="/member/#{member._id}") #{member.username} 创建的主题
-                            a.cell_tab_current(href="/member/#{member._id}/collect") 收藏的主题
+                            a.cell_tab(href="/member/#{member.username}") #{member.username} 创建的主题
+                            a.cell_tab_current(href="/member/#{member.username}/collect") 收藏的主题
                     if showPrivacyType === 2
                         .cell
                             .lock
@@ -43,12 +43,12 @@ block append main
                                             a.node(href="/category/#{thread.thread_id.category._id}") #{thread.thread_id.category.name}
                                             span &nbsp;•&nbsp;
                                             strong
-                                                a(href="/member/#{thread.thread_id.author_id._id}") #{thread.thread_id.author_id.username}
+                                                a(href="/member/#{thread.thread_id.author_id.username}") #{thread.thread_id.author_id.username}
                                             span &nbsp;•&nbsp;#{moment(thread.thread_id.create_at).fromNow()}
                                             if thread.thread_id.comments > 0
                                                 span &nbsp;•&nbsp;最后回复来自&nbsp;
                                                 strong
-                                                    a(href="/member/#{thread.thread_id.last_reply._id}") #{thread.thread_id.last_reply.username}
+                                                    a(href="/member/#{thread.thread_id.last_reply.username}") #{thread.thread_id.last_reply.username}
                                     .reply
                                         a.replay-count(href="#") #{thread.thread_id.comments}
                         else if channel == 'created'
@@ -61,12 +61,12 @@ block append main
                                             a.node(href="/category/#{thread.category._id}") #{thread.category.name}
                                             span &nbsp;•&nbsp;
                                             strong
-                                                a(href="/member/#{thread.author_id._id}") #{thread.author_id.username}
+                                                a(href="/member/#{thread.author_id.username}") #{thread.author_id.username}
                                             span &nbsp;•&nbsp;#{moment(thread.create_at).fromNow()}
                                             if thread.comments > 0
                                                 span &nbsp;•&nbsp;最后回复来自&nbsp;
                                                 strong
-                                                    a(href="/member/#{thread.last_reply._id}") #{thread.last_reply.username}
+                                                    a(href="/member/#{thread.last_reply.username}") #{thread.last_reply.username}
                                     .reply
                                         a.replay-count(href="#") #{thread.comments}
             include ../common/sidebar

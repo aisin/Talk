@@ -17,15 +17,15 @@ else
                         if comment.thanked
                             span.thank 已感谢
                         else
-                            a.thank.js-comment-thank(href="javascript:;", data-commenter-id="#{comment.commenter_id._id}") 感谢 TA
+                            a.thank.js-comment-thank(href="javascript:;", data-commenter-id="#{comment.commenter_id.username}") 感谢 TA
                     | &nbsp;&nbsp;
                     span.no #{i + 1}
                 .avatar
-                    a(href="/member/" + "#{comment.commenter_id._id}")
+                    a(href="/member/" + "#{comment.commenter_id.username}")
                         img(src="/uploads/avatar/" + "#{comment.commenter_id.avatar}")
                 .whole
                     strong
-                        a(href="/member/" + "#{comment.commenter_id._id}") #{comment.commenter_id.username}
+                        a(href="/member/" + "#{comment.commenter_id.username}") #{comment.commenter_id.username}
                     if comment.commenter_id.role == 'admin'
                         | &nbsp;&nbsp;
                         img(src="/images/mod.png", style="width:30px;height:14px;vertical-align: middle;margin-bottom:4px;")

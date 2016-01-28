@@ -3,11 +3,11 @@
         if session
             .cell
                 .avatar
-                    a(href="/member/" + "#{session._id}")
+                    a(href="/member/" + "#{session.username}")
                         img(src="/uploads/avatar/" + "#{session.avatar}" + "?v=#{moment(session.update_at).unix()}")
                 .all
                     h2.title
-                        a(href="/member/" + "#{session._id}") #{session.username}
+                        a(href="/member/" + "#{session.username}") #{session.username}
                     .meta.small.fade
                         | #{session.description}
             .inner.clearfix.money
