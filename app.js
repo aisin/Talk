@@ -41,6 +41,8 @@ app.use(require('./application/middlewares/global')(app).communityData)
 // Sidebar Global signed
 app.use(require('./application/middlewares/global')(app).signed)
 
+app.use(require('./application/middlewares/global')(app).money)
+
 //Bootstrap routes
 require(config.routes)(app)
 

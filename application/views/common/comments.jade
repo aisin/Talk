@@ -35,7 +35,7 @@ else
                     span.thank_count.fade(class=comment.thanks.length > 0 ? '' : 'hide')
                         | ♥&nbsp;
                         span #{comment.thanks.length}
-                    .major #{comment.content}
+                    .major !{comment.content}
 if !thread.locked && session
     .box
         .cell
