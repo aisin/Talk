@@ -1,5 +1,5 @@
 var EventProxy = require('eventproxy')
-var xss = require('xss')
+var XSS = require('xss')
 var Comment = require('../models/comment')
 var Thread = require('../models/thread')
 var validator = require('validator')
@@ -7,6 +7,11 @@ var Utils = require('../libs/Utils')
 var _User = require('../libs/User')
 var _Thread = require('../libs/Thread')
 var Common = require('../libs/Common')
+var xss = new XSS.FilterXSS({
+    whiteList: {
+        a: ['href', 'title', 'target']
+    }
+})
 
 //
 exports.comment = function(req, res, next){
@@ -25,7 +30,7 @@ exports.add = function(req, res, next){
     var data = {
         commenter_id : req.session.user._id,
         thread_id : req.params.id,
-        content : xss(validator.trim(req.body.content).replace(/\r\n/g, '<br>'))
+        content : xss.process(validator.trim(req.body.content)).replace(/\r\n/g, '<br>')
     }
     var commentScore = 5 //需要扣除的积分
     var ep = new EventProxy()
