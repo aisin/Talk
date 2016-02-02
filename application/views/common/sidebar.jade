@@ -8,7 +8,7 @@
                 .all
                     h2.title
                         a(href="/member/" + "#{session.username}") #{session.username}
-                    .meta.small.fade
+                    .meta.small.fade(style="line-height:1.5em;")
                         | #{session.description}
             .inner.clearfix.money
                 .fr

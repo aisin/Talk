@@ -24,7 +24,9 @@ exports.getUserById = function(id, callback){
  * @param {Function} callback 回调函数
  */
 exports.getUserByUsername = function(username, callback){
-    User.findOne({username: username}, callback)
+    User.findOne({username: username}, function(err, result){
+        callback(err, result)
+    })
 }
 
 /**

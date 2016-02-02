@@ -22,7 +22,7 @@ exports.register = function (req, res, next) {
 //Post : 注册操作
 exports.doRegister = function (req, res, next) {
     var data = {
-        username : validator.trim(req.body.username).toLowerCase(),
+        username : validator.trim(req.body.username),
         email : validator.trim(req.body.email).toLowerCase(),
         gender : req.body.gender,
         description : validator.trim(req.body.description) || '这个人很懒，什么也没有留下~'
@@ -75,7 +75,7 @@ exports.login = function (req, res) {
 
 //Post : 登录操作
 exports.doLogin = function (req, res, next) {
-    var username = validator.trim(req.body.username).toLowerCase()
+    var username = validator.trim(req.body.username)
     var password = validator.trim(req.body.password)
     var ep = new EventProxy()
     ep.fail(next)
