@@ -37,7 +37,7 @@ var config = {
       pass: 'wanghc815147aisin'
     }
   }
-}
+};
 
 
-exports.config = config
+exports.config = config;
