@@ -112,8 +112,10 @@ exports.add = function(req, res, next){
             if(user.score >= commentScore){
                 ep.emit('enough', user)
             }else{
-                var notice = '你目前的铜币数量 ' + user.score + ' 不足以评论 &#8250; <a href="/balance">查看余额</a>'
-                return ep.emit('errors', notice)
+                var error = {
+                    msg : '你目前的铜币数量 ' + user.score + ' 不足以评论 &#8250; <a href="/balance">查看余额</a>'
+                }
+                return ep.emit('errors', error)
             }
         })
     }else{
