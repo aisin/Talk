@@ -33,8 +33,8 @@ var config = {
     secure: true,
     auth: {
       name: 'Admin ',
-      user: 'iaisin@qq.com',
-      pass: 'wanghc815147aisin'
+      user: 'foo@qq.com',
+      pass: 'bar'
     }
   }
 };

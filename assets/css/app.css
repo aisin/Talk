@@ -842,20 +842,3 @@ table.data td.d {
 .simditor{
     border: none;
 }
-
-
-
-
-
-
-
-
-/*注册 & 登录页面 with weui.css*/
-.wrap{position:relative;overflow-y:auto;margin:0 auto;max-width:640px;-webkit-overflow-scrolling:touch;}
-.hd{padding:2em 0;}
-.page_desc{color:#888;text-align:center;font-size:14px;}
-.bd.spacing{padding:0 15px;}
-.page_title{margin:0 15%;color:#3CC51F;text-align:center;font-weight:400;font-size:34px;}
-
-/* Fixed For WeUI.css*/
-.weui_label{width: 5em;}
